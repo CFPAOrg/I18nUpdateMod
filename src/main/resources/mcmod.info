@@ -1,0 +1,16 @@
+[
+{
+  "modid": "i18nmod",
+  "name": "I18n Update Mod",
+  "description": "专为更新本地化的模组",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["CFPAOrg"],
+  "credits": "所有参与本地化的玩家",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
