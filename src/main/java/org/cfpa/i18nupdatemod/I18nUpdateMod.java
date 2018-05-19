@@ -4,11 +4,17 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.cfpa.i18nupdatemod.command.NoticeCommand;
 import org.cfpa.i18nupdatemod.download.MainDownloader;
+import org.cfpa.i18nupdatemod.key.ReportKey;
 
 import java.io.*;
 import java.util.Iterator;
@@ -28,8 +34,18 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) {
-        resourceDownloader();
+        //resourceDownloader();
         applyOption();
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        new ReportKey();
+    }
+
+    @Mod.EventHandler
+    public void serverLoad(FMLServerStartingEvent event) {
+        event.registerServerCommand(new NoticeCommand());
     }
 
     public void resourceDownloader() {
@@ -38,10 +54,11 @@ public class I18nUpdateMod {
         //记录开始时间
         long startTime = System.currentTimeMillis();
         try {
-            MainDownloader.downloadResource("https://github.com/CFPAOrg/Minecraft-Mod-Language-Package/releases/download/%E6%B1%89%E5%8C%96%E8%B5%84%E6%BA%90%E5%8C%85-Snapshot-20180518064901/Minecraft-Mod-Language-Modpack.zip", "Minecraft-Mod-Language-Modpack.zip", mc.getResourcePackRepository().getDirResourcepacks().toString());
+            MainDownloader.downloadResource("http://ys-i.ys168.com/604554341/TKfTkKq2K6K4T5IK1MON/Minecraft-Mod-Language-Modpack.zip", "Minecraft-Mod-Language-Modpack.zip", mc.getResourcePackRepository().getDirResourcepacks().toString());
             logger.info("下载成功！");
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error("下载失败！");
+            e.printStackTrace();
         }
 
         //记录结束时间
