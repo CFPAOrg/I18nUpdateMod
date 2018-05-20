@@ -25,6 +25,7 @@ public class DownloadWindow {
         bar = new JProgressBar();
         bar.setStringPainted(true);
         contentPane.add(bar);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         //进度条更新线程
         new Thread(() -> {
@@ -36,8 +37,13 @@ public class DownloadWindow {
 
                 }
             }
-            onDownloadSuccess();
-            frame.setVisible(false);
+            onDownloadFinish();
+            if (manager.getStatus() == DownloadStatus.FAIL) {
+                bar.setString("下载失败！");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            } else {
+                frame.setVisible(false);
+            }
         }, "I18n-Window-Thread").start();
     }
 
@@ -45,7 +51,7 @@ public class DownloadWindow {
         frame.setVisible(true);
     }
 
-    private static void onDownloadSuccess() {
+    private static void onDownloadFinish() {
         //TODO
     }
 }
