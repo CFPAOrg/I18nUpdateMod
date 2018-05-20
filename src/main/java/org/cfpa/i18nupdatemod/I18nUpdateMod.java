@@ -6,11 +6,15 @@ import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.cfpa.i18nupdatemod.command.NoticeCommand;
 import org.cfpa.i18nupdatemod.download.DownloadManager;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
+import org.cfpa.i18nupdatemod.key.ReportKey;
 
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +47,16 @@ public class I18nUpdateMod {
         if (downloader.getStatus() == DownloadStatus.SUCCESS) {
             setUpResourcesPack();
         }
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        new ReportKey();
+    }
+
+    @Mod.EventHandler
+    public void serverLoad(FMLServerStartingEvent event) {
+        event.registerServerCommand(new NoticeCommand());
     }
 
     public void setUpResourcesPack() {
