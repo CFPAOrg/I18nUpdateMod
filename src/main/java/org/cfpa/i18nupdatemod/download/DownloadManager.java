@@ -23,7 +23,7 @@ public class DownloadManager {
         downloadThread = new Thread(() -> {
             try {
                 downloader.downloadResource();
-            } catch (IOException e) {
+            } catch (Throwable e) {
                 catching(e);
             }
         }, "I18n-Download-Thread");
@@ -32,11 +32,6 @@ public class DownloadManager {
 
     private void catching(Throwable e) {
         I18nUpdateMod.logger.error("下载失败", e);
-        try {
-            downloadThread.join();
-        } catch (InterruptedException e1) {
-            I18nUpdateMod.logger.error("尝试停止下载线程失败", e1);
-        }
         status = DownloadStatus.FAIL;
         downloader.done = true;
     }
@@ -71,7 +66,7 @@ public class DownloadManager {
             this.dirPlace = dirPlace;
         }
 
-        public void downloadResource() throws IOException {
+        public void downloadResource() throws Throwable {
             // 建立链接
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
