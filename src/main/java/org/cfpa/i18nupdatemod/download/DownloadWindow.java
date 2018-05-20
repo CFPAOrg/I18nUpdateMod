@@ -37,6 +37,7 @@ public class DownloadWindow {
                 }
             }
             onDownloadSuccess();
+            frame.setVisible(false);
         }, "I18n-Window-Thread").start();
     }
 
