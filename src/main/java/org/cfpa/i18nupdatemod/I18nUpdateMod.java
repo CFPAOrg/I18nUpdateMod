@@ -65,6 +65,8 @@ public class I18nUpdateMod {
     }
 
     public void setUpResourcesPack() {
+        createOptionFile();
+
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
 
