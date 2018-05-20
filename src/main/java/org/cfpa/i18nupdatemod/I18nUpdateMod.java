@@ -11,15 +11,16 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.command.NoticeCommand;
-import org.cfpa.i18nupdatemod.download.MainDownloader;
+import org.cfpa.i18nupdatemod.download.DownloadManager;
+import org.cfpa.i18nupdatemod.download.DownloadStatus;
+import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.key.ReportKey;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Iterator;
-import java.util.List;
 
 
 @Mod(modid = I18nUpdateMod.MODID, name = I18nUpdateMod.NAME, clientSideOnly = true, acceptedMinecraftVersions = "[1.12]", version = I18nUpdateMod.VERSION)
@@ -34,9 +35,21 @@ public class I18nUpdateMod {
     public static I18nUpdateMod INSTANCE;
 
     @Mod.EventHandler
-    public void construct(FMLConstructionEvent event) {
-        //resourceDownloader();
-        applyOption();
+    public void construct(FMLConstructionEvent event) throws InterruptedException {
+        DownloadManager downloader = new DownloadManager("https://covertdragon.team/i18n/mmlp.zip", "Minecraft-Mod-Language-Modpack.zip", Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
+        DownloadWindow window = new DownloadWindow(downloader);
+        window.showWindow();
+        downloader.start();
+        // 阻塞主线程
+        while (true) {
+            if (downloader.isDone()) {
+                break;
+            }
+            Thread.sleep(50);
+        }
+        if (downloader.getStatus() == DownloadStatus.SUCCESS) {
+            setUpResourcesPack();
+        }
     }
 
     @Mod.EventHandler
@@ -49,29 +62,7 @@ public class I18nUpdateMod {
         event.registerServerCommand(new NoticeCommand());
     }
 
-    public void resourceDownloader() {
-        Minecraft mc = Minecraft.getMinecraft();
-
-        //记录开始时间
-        long startTime = System.currentTimeMillis();
-        try {
-            MainDownloader.downloadResource("http://ys-i.ys168.com/604554341/TKfTkKq2K6K4T5IK1MON/Minecraft-Mod-Language-Modpack.zip", "Minecraft-Mod-Language-Modpack.zip", mc.getResourcePackRepository().getDirResourcepacks().toString());
-            logger.info("下载成功！");
-        } catch (IOException e) {
-            logger.error("下载失败！");
-            e.printStackTrace();
-        }
-
-        //记录结束时间
-        long endTime = System.currentTimeMillis();
-        float excTime = (float) (endTime - startTime) / 1000;
-        logger.info("花费时间：" + excTime + "秒");
-    }
-
-    public void applyOption() {
-        // 应用修改
-        createOptionFile();
-
+    public void setUpResourcesPack() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
 
@@ -82,9 +73,11 @@ public class I18nUpdateMod {
         List<ResourcePackRepository.Entry> repositoryEntries = Lists.newArrayList();
         Iterator<String> it = gameSettings.resourcePacks.iterator();
 
-        // 此时情况是这样的
-        // entry 为修改后的条目
-        // repositoryEntries 为游戏应当加载的条目
+        /*
+         此时情况是这样的
+         entry 为修改后的条目
+         repositoryEntries 为游戏应当加载的条目
+        */
         while (it.hasNext()) {
             String packName = it.next();
             for (ResourcePackRepository.Entry entry : repositoryEntriesAll) {
@@ -101,26 +94,5 @@ public class I18nUpdateMod {
             }
         }
         resourcePackRepository.setRepositories(repositoryEntries);
-    }
-
-    public void createOptionFile() {
-        Minecraft mc = Minecraft.getMinecraft();
-
-        File option = new File(mc.mcDataDir, "options.txt");
-        if (!option.exists()) {
-            try {
-                FileOutputStream optionFos = new FileOutputStream(option);
-                OutputStreamWriter writer = new OutputStreamWriter(optionFos);
-                writer.append("resourcePacks:[\"Minecraft-Mod-Language-Modpack.zip\"]");
-                writer.close();
-                optionFos.close();
-            } catch (IOException e) {
-                logger.error(e.getStackTrace().toString());
-                logger.error("无法创建配置文件");
-            }
-        }
-        if (option.exists() && !mc.gameSettings.resourcePacks.contains("Minecraft-Mod-Language-Modpack.zip")) {
-            mc.gameSettings.resourcePacks.add("Minecraft-Mod-Language-Modpack.zip");
-        }
     }
 }
