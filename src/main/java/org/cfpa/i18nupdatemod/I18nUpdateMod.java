@@ -16,11 +16,8 @@ import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.key.ReportKey;
 
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.util.Iterator;
+import java.util.List;
 
 
 @Mod(modid = I18nUpdateMod.MODID, name = I18nUpdateMod.NAME, clientSideOnly = true, acceptedMinecraftVersions = "[1.12]", version = I18nUpdateMod.VERSION)
@@ -36,19 +33,9 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
-        DownloadManager downloader = new DownloadManager("https://covertdragon.team/i18n/mmlp.zip", "Minecraft-Mod-Language-Modpack.zip", Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
-        DownloadWindow window = new DownloadWindow(downloader);
-        window.showWindow();
-        downloader.start();
-        // 阻塞主线程
-        while (true) {
-            if (downloader.isDone()) {
-                break;
-            }
-            Thread.sleep(50);
-        }
-        if (downloader.getStatus() == DownloadStatus.SUCCESS) {
-            setUpResourcesPack();
+        // 校验判定是否下载
+        if (!hashCheck()) {
+            downloaderStart();
         }
     }
 
@@ -61,6 +48,7 @@ public class I18nUpdateMod {
     public void serverLoad(FMLServerStartingEvent event) {
         event.registerServerCommand(new NoticeCommand());
     }
+
 
     public void setUpResourcesPack() {
         Minecraft mc = Minecraft.getMinecraft();
@@ -94,5 +82,25 @@ public class I18nUpdateMod {
             }
         }
         resourcePackRepository.setRepositories(repositoryEntries);
+    }
+
+    public void downloaderStart() throws InterruptedException {
+        DownloadManager downloader = new DownloadManager("https://covertdragon.team/i18n/mmlp.zip", "Minecraft-Mod-Language-Modpack.zip", Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
+        DownloadWindow window = new DownloadWindow(downloader);
+        window.showWindow();
+        downloader.start();
+        // 阻塞主线程：因为加载问题，我们必须要保证资源包加载在 preInit 阶段前完成
+        while (!downloader.isDone()) {
+            Thread.sleep(50);
+        }
+        if (downloader.getStatus() == DownloadStatus.SUCCESS) {
+            setUpResourcesPack();
+        }
+    }
+
+    // 符合返回 true，不符返回 false
+    public boolean hashCheck() {
+        //TODO，校验文件哈希值
+        return false;
     }
 }
