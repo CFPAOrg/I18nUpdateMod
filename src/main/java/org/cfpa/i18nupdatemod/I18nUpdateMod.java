@@ -16,8 +16,11 @@ import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.key.ReportKey;
 
-import java.util.Iterator;
-import java.util.List;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 
 @Mod(modid = I18nUpdateMod.MODID, name = I18nUpdateMod.NAME, clientSideOnly = true, acceptedMinecraftVersions = "[1.12]", version = I18nUpdateMod.VERSION)
