@@ -16,6 +16,11 @@ import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.key.ReportKey;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -91,5 +96,26 @@ public class I18nUpdateMod {
             }
         }
         resourcePackRepository.setRepositories(repositoryEntries);
+    }
+
+    public void createOptionFile() {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        File option = new File(mc.mcDataDir, "options.txt");
+        if (!option.exists()) {
+            try {
+                FileOutputStream optionFos = new FileOutputStream(option);
+                OutputStreamWriter writer = new OutputStreamWriter(optionFos);
+                writer.append("resourcePacks:[\"Minecraft-Mod-Language-Modpack.zip\"]");
+                writer.close();
+                optionFos.close();
+            } catch (IOException e) {
+                logger.error(Arrays.toString(e.getStackTrace()));
+                logger.error("无法创建配置文件");
+            }
+        }
+        if (option.exists() && !mc.gameSettings.resourcePacks.contains("Minecraft-Mod-Language-Modpack.zip")) {
+            mc.gameSettings.resourcePacks.add("Minecraft-Mod-Language-Modpack.zip");
+        }
     }
 }
