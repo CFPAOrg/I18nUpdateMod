@@ -1,3 +1,4 @@
+import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.download.DownloadManager;
 import org.junit.Test;
 
@@ -15,5 +16,16 @@ public class TestDownloader {
             System.out.println(downloader.getCompletePercentage() * 100 + "% Done");
             Thread.sleep(50);
         }
+    }
+
+    @Test
+    public void testDownloadWindow() {
+        String dir = System.getProperty("user.dir");
+        dir = dir + File.separator + "run" + File.separator + "test";
+        DownloadManager downloader = new DownloadManager("https://covertdragon.team/test/test.zip", "test.zip", dir);
+        downloader.start();
+        DownloadWindow handler = new DownloadWindow(downloader);
+        handler.showWindow();
+        for (;;);
     }
 }
