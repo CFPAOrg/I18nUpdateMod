@@ -9,6 +9,7 @@ import java.net.URL;
 public class DownloadManager {
     private Thread downloadThread;
     private MainDownloader downloader;
+    private DownloadStatus status = DownloadStatus.DOWNLOADING;
 
     public DownloadManager(String urlIn, String fileNameIn, String dirIn) {
         try {
@@ -36,7 +37,15 @@ public class DownloadManager {
         } catch (InterruptedException e1) {
             I18nUpdateMod.logger.error("尝试停止下载线程失败", e1);
         }
+        status = DownloadStatus.FAIL;
         downloader.done = true;
+    }
+
+    public DownloadStatus getStatus() {
+        if (status == DownloadStatus.DOWNLOADING && downloader.done) {
+            status = DownloadStatus.SUCCESS;
+        }
+        return status;
     }
 
     public boolean isDone() {
