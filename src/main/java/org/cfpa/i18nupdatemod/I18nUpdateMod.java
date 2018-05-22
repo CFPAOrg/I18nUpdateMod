@@ -15,7 +15,14 @@ import org.cfpa.i18nupdatemod.download.DownloadManager;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.key.ReportKey;
+import org.apache.commons.io.IOUtils;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +39,17 @@ public class I18nUpdateMod {
     public static I18nUpdateMod INSTANCE;
 
     @Mod.EventHandler
-    public void construct(FMLConstructionEvent event) throws InterruptedException {
+    public void construct(FMLConstructionEvent event) throws InterruptedException, NoSuchAlgorithmException {
+        // 初始化HashChecker
+        HashChecker.init();
+
+        // 如果文件已经可用则直接跳过下载
+        if (hashCheck()) {
+            logger.info("检测到资源包可用，跳过下载阶段");
+            setupResourcesPack();
+            return;
+        }
+
         DownloadManager downloader = new DownloadManager("https://covertdragon.team/i18n/mmlp.zip", "Minecraft-Mod-Language-Modpack.zip", Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
         DownloadWindow window = new DownloadWindow(downloader);
         window.showWindow();
@@ -99,6 +116,24 @@ public class I18nUpdateMod {
             }
         }
         resourcePackRepository.setRepositories(repositoryEntries);
+    }
+
+    private boolean hashCheck() {
+        String hashExpected;
+        try {
+            URL url = new URL("https://covertdragon.team/i18n/hash");
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            hashExpected = IOUtils.readLines(connection.getInputStream(), StandardCharsets.UTF_8).get(0);
+        } catch (Throwable e) {
+            logger.warn("获取Hash信息失败！");
+            return false;
+        }
+        try {
+            return HashChecker.checkMD5(new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), "Minecraft-Mod-Language-Modpack.zip"), hashExpected);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /*
