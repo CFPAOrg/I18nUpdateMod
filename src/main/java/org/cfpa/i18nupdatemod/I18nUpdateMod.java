@@ -16,11 +16,6 @@ import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.key.ReportKey;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,7 +45,7 @@ public class I18nUpdateMod {
             Thread.sleep(50);
         }
         if (downloader.getStatus() == DownloadStatus.SUCCESS) {
-            setUpResourcesPack();
+            setupResourcesPack();
         }
     }
 
@@ -64,11 +59,17 @@ public class I18nUpdateMod {
         event.registerServerCommand(new NoticeCommand());
     }
 
-    public void setUpResourcesPack() {
-        createOptionFile();
+    public void setupResourcesPack() {
+        // 也许我们可以不改变options.txt只添加资源包？
+        //createOptionFile();
 
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
+
+        // 在gameSetting中加载资源包
+        if (!gameSettings.resourcePacks.contains("Minecraft-Mod-Language-Modpack.zip")) {
+            mc.gameSettings.resourcePacks.add("Minecraft-Mod-Language-Modpack.zip");
+        }
 
         // 因为这时候资源包已经加载了，所以需要重新读取，重新加载
         ResourcePackRepository resourcePackRepository = mc.getResourcePackRepository();
@@ -100,6 +101,7 @@ public class I18nUpdateMod {
         resourcePackRepository.setRepositories(repositoryEntries);
     }
 
+    /*
     public void createOptionFile() {
         Minecraft mc = Minecraft.getMinecraft();
 
@@ -120,4 +122,5 @@ public class I18nUpdateMod {
             mc.gameSettings.resourcePacks.add("Minecraft-Mod-Language-Modpack.zip");
         }
     }
+    */
 }
