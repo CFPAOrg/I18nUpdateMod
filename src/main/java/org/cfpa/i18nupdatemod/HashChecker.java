@@ -38,6 +38,7 @@ public class HashChecker {
         }
         fis.close();
         byte[] md5Bytes = md5.digest();
+        md5.reset();
         BigInteger bigInt = new BigInteger(1, md5Bytes);//1代表绝对值
         return bigInt.toString(16);
     }
