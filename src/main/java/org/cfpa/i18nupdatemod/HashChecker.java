@@ -11,8 +11,12 @@ import java.security.NoSuchAlgorithmException;
 public class HashChecker {
     private static MessageDigest md5;
 
-    public static void init() throws NoSuchAlgorithmException {
-        md5 = MessageDigest.getInstance("md5");
+    static {
+        try {
+            md5 = MessageDigest.getInstance("md5");
+        } catch (NoSuchAlgorithmException ignore) {
+
+        }
     }
 
     public static boolean checkMD5(File fileIn, String expected) throws IOException {
@@ -28,7 +32,7 @@ public class HashChecker {
     public static String md5HashCode(File fileIn) throws IOException {
         FileInputStream fis = new FileInputStream(fileIn);
         byte[] buffer = new byte[1024];
-        int length = -1;
+        int length;
         while ((length = fis.read(buffer, 0, 1024)) != -1) {
             md5.update(buffer, 0, length);
         }

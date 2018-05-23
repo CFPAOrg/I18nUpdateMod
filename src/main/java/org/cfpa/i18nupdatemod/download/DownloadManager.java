@@ -2,9 +2,9 @@ package org.cfpa.i18nupdatemod.download;
 
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 
 public class DownloadManager {
     private Thread downloadThread;
@@ -13,7 +13,7 @@ public class DownloadManager {
 
     /**
      * 下载管理器
-     * @param urlIn 下载目标的URL地址，注意：只支持HTTPS协议的URL
+     * @param urlIn 下载目标的URL地址
      * @param fileNameIn 存储文件的名字
      * @param dirIn 存储文件的地址
      */
@@ -92,7 +92,7 @@ public class DownloadManager {
 
         public void downloadResource() throws Throwable {
             // 建立链接
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            URLConnection connection = url.openConnection();
 
             // 超时
             connection.setConnectTimeout(10 * 1000);
