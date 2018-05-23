@@ -12,7 +12,6 @@ public class TestHashChecker {
         String dir = System.getProperty("user.dir");
         dir = dir + File.separator + "run" + File.separator + "test";
         File f = new File(dir, "test.zip");
-        HashChecker.init();
         if (!HashChecker.checkMD5(f, "e581d71b2e4a9fd90764e4cd13fc1b68")) {
             DownloadManager downloader = new DownloadManager("https://covertdragon.team/test/test.zip", "test.zip", dir);
             downloader.start();
