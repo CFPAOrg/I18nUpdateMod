@@ -19,16 +19,24 @@ public class DownloadWindow {
     }
 
     private void init() {
-        // 创建窗口
+        // 初始化窗口
         frame = new JFrame();
-        frame.setBounds(100, 100, 250, 100);
-        frame.setTitle("I18n Update Mod");
+        Integer width = 450;
+        Integer height = 100;
+
+        // 开始修改主界面
+        frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 11, width, height);
+        frame.setTitle("汉化资源包更新进度条");
+
+        // 内容界面？
         JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         frame.setContentPane(contentPane);
         contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        // 创建进度条
+
+        // 绘制进度条
         bar = new JProgressBar();
+        bar.setPreferredSize(new Dimension(width / 5 * 4, height / 4));
         bar.setStringPainted(true);
         contentPane.add(bar);
         // 在下载未完成时禁止玩家关闭窗口
@@ -41,7 +49,7 @@ public class DownloadWindow {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ignore) {
-
+                    ignore.printStackTrace();
                 }
             }
             onDownloadFinish();
@@ -61,6 +69,6 @@ public class DownloadWindow {
     }
 
     private static void onDownloadFinish() {
-        //TODO 其实我也不知道能干啥
+        //TODO，其实我也不知道要做啥
     }
 }
