@@ -2,15 +2,21 @@ package org.cfpa.i18nupdatemod.download;
 
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 
 public class DownloadManager {
     private Thread downloadThread;
     private MainDownloader downloader;
     private DownloadStatus status = DownloadStatus.DOWNLOADING;
 
+    /**
+     * 下载管理器
+     * @param urlIn 下载目标的URL地址
+     * @param fileNameIn 存储文件的名字
+     * @param dirIn 存储文件的地址
+     */
     public DownloadManager(String urlIn, String fileNameIn, String dirIn) {
         try {
             downloader = new MainDownloader(urlIn, fileNameIn, dirIn);
@@ -19,6 +25,9 @@ public class DownloadManager {
         }
     }
 
+    /**
+     * 开始下载
+     */
     public void start() {
         downloadThread = new Thread(() -> {
             try {
@@ -36,6 +45,13 @@ public class DownloadManager {
         downloader.done = true;
     }
 
+    /**
+     * 获得下载的状态
+     * SUCCESS：下载成功
+     * DOWNLOADING：正在下载
+     * FAIL：下载遇到错误
+     * @return 下载状态
+     */
     public DownloadStatus getStatus() {
         if (status == DownloadStatus.DOWNLOADING && downloader.done) {
             status = DownloadStatus.SUCCESS;
@@ -43,10 +59,18 @@ public class DownloadManager {
         return status;
     }
 
+    /**
+     * 下载是否结束
+     * @return 下载是否结束
+     */
     public boolean isDone() {
         return downloader.done;
     }
 
+    /**
+     * 获得下载完成百分比
+     * @return 下载完成的百分比
+     */
     public float getCompletePercentage() {
         return downloader.completePercentage;
     }
@@ -68,7 +92,7 @@ public class DownloadManager {
 
         public void downloadResource() throws Throwable {
             // 建立链接
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            URLConnection connection = url.openConnection();
 
             // 超时
             connection.setConnectTimeout(10 * 1000);

@@ -19,13 +19,13 @@ public class TestDownloader {
     }
 
     @Test
-    public void testDownloadWindow() {
+    public void testDownloadWindow() throws InterruptedException {
         String dir = System.getProperty("user.dir");
         dir = dir + File.separator + "run" + File.separator + "test";
         DownloadManager downloader = new DownloadManager("https://covertdragon.team/test/test.zip", "test.zip", dir);
         downloader.start();
         DownloadWindow handler = new DownloadWindow(downloader);
         handler.showWindow();
-        for (;;);
+        while (!downloader.isDone()) Thread.sleep(50);
     }
 }

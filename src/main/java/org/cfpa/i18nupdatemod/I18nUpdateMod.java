@@ -1,9 +1,6 @@
 package org.cfpa.i18nupdatemod;
 
-import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.ResourcePackRepository;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -16,8 +13,7 @@ import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.key.ReportKey;
 
-import java.util.Iterator;
-import java.util.List;
+import static org.cfpa.i18nupdatemod.I18nUtils.*;
 
 
 @Mod(modid = I18nUpdateMod.MODID, name = I18nUpdateMod.NAME, clientSideOnly = true, acceptedMinecraftVersions = "[1.12]", version = I18nUpdateMod.VERSION)
@@ -33,9 +29,24 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
-        // 校验判定是否下载
-        if (!hashCheck()) {
-            downloaderStart();
+        // 如果文件已经可用则直接跳过下载
+        if (hashCheck()) {
+            logger.info("检测到资源包可用，跳过下载阶段");
+            setupResourcesPack();
+        } else {
+            // 开始下载资源包并弹出进度窗口
+            DownloadManager downloader = new DownloadManager("https://covertdragon.team/i18n/mmlp.zip", "Minecraft-Mod-Language-Modpack.zip", Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
+            DownloadWindow window = new DownloadWindow(downloader);
+            window.showWindow();
+            downloader.start();
+
+            // 阻塞主线程，以保证资源包在preInit阶段被安装
+            while (!downloader.isDone()) Thread.sleep(50);
+
+            // 如果下载成功就安装资源包
+            if (downloader.getStatus() == DownloadStatus.SUCCESS) {
+                setupResourcesPack();
+            }
         }
     }
 
@@ -47,60 +58,5 @@ public class I18nUpdateMod {
     @Mod.EventHandler
     public void serverLoad(FMLServerStartingEvent event) {
         event.registerServerCommand(new NoticeCommand());
-    }
-
-
-    public void setUpResourcesPack() {
-        Minecraft mc = Minecraft.getMinecraft();
-        GameSettings gameSettings = mc.gameSettings;
-
-        // 因为这时候资源包已经加载了，所以需要重新读取，重新加载
-        ResourcePackRepository resourcePackRepository = mc.getResourcePackRepository();
-        resourcePackRepository.updateRepositoryEntriesAll();
-        List<ResourcePackRepository.Entry> repositoryEntriesAll = resourcePackRepository.getRepositoryEntriesAll();
-        List<ResourcePackRepository.Entry> repositoryEntries = Lists.newArrayList();
-        Iterator<String> it = gameSettings.resourcePacks.iterator();
-
-        /*
-         此时情况是这样的
-         entry 为修改后的条目
-         repositoryEntries 为游戏应当加载的条目
-        */
-        while (it.hasNext()) {
-            String packName = it.next();
-            for (ResourcePackRepository.Entry entry : repositoryEntriesAll) {
-                if (entry.getResourcePackName().equals(packName)) {
-                    // packFormat 为 3，或者 incompatibleResourcePacks 条目中有的资源包才会加入
-                    if (entry.getPackFormat() == 3 || gameSettings.incompatibleResourcePacks.contains(entry.getResourcePackName())) {
-                        repositoryEntries.add(entry);
-                        break;
-                    }
-                    // 否则移除
-                    it.remove();
-                    logger.warn("移除资源包 {}，因为它无法兼容当前版本", entry.getResourcePackName());
-                }
-            }
-        }
-        resourcePackRepository.setRepositories(repositoryEntries);
-    }
-
-    public void downloaderStart() throws InterruptedException {
-        DownloadManager downloader = new DownloadManager("https://covertdragon.team/i18n/mmlp.zip", "Minecraft-Mod-Language-Modpack.zip", Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
-        DownloadWindow window = new DownloadWindow(downloader);
-        window.showWindow();
-        downloader.start();
-        // 阻塞主线程：因为加载问题，我们必须要保证资源包加载在 preInit 阶段前完成
-        while (!downloader.isDone()) {
-            Thread.sleep(50);
-        }
-        if (downloader.getStatus() == DownloadStatus.SUCCESS) {
-            setUpResourcesPack();
-        }
-    }
-
-    // 符合返回 true，不符返回 false
-    public boolean hashCheck() {
-        //TODO，校验文件哈希值
-        return false;
     }
 }
