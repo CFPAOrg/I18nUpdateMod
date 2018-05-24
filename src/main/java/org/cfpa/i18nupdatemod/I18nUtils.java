@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
 import org.apache.commons.io.IOUtils;
+import org.cfpa.i18nupdatemod.download.HashChecker;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.File;
@@ -22,11 +23,12 @@ public class I18nUtils {
     public static boolean hashCheck() {
         String hashExpected;
         try {
-            URL url = new URL("https://covertdragon.team/i18n/hash");
+            URL url = new URL("http://p985car2i.bkt.clouddn.com/Minecraft-Mod-Language-Modpack.MD5");
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             hashExpected = IOUtils.readLines(connection.getInputStream(), StandardCharsets.UTF_8).get(0);
         } catch (Throwable e) {
             I18nUpdateMod.logger.warn("获取Hash信息失败！");
+            e.printStackTrace();
             return false;
         }
         try {
