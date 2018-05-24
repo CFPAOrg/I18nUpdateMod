@@ -10,6 +10,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +24,7 @@ public class I18nUtils {
         String hashExpected;
         try {
             URL url = new URL("https://covertdragon.team/i18n/hash");
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            URLConnection connection = url.openConnection();
             hashExpected = IOUtils.readLines(connection.getInputStream(), StandardCharsets.UTF_8).get(0);
         } catch (Throwable e) {
             I18nUpdateMod.logger.warn("获取Hash信息失败！");
