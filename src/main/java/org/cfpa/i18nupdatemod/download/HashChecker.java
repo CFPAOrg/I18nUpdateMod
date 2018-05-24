@@ -1,4 +1,4 @@
-package org.cfpa.i18nupdatemod;
+package org.cfpa.i18nupdatemod.download;
 
 import java.io.File;
 import java.io.FileInputStream;

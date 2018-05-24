@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
 import org.apache.commons.io.IOUtils;
+import org.cfpa.i18nupdatemod.download.HashChecker;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.File;
@@ -28,6 +29,7 @@ public class I18nUtils {
             hashExpected = IOUtils.readLines(connection.getInputStream(), StandardCharsets.UTF_8).get(0);
         } catch (Throwable e) {
             I18nUpdateMod.logger.warn("获取Hash信息失败！");
+            e.printStackTrace();
             return false;
         }
         try {

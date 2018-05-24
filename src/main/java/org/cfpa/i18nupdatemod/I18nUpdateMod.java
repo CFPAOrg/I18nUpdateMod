@@ -11,7 +11,11 @@ import org.cfpa.i18nupdatemod.command.NoticeCommand;
 import org.cfpa.i18nupdatemod.download.DownloadManager;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
+import org.cfpa.i18nupdatemod.download.HashChecker;
 import org.cfpa.i18nupdatemod.key.ReportKey;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.cfpa.i18nupdatemod.I18nUtils.*;
 
@@ -35,7 +39,7 @@ public class I18nUpdateMod {
             setupResourcesPack();
         } else {
             // 开始下载资源包并弹出进度窗口
-            DownloadManager downloader = new DownloadManager("https://covertdragon.team/i18n/mmlp.zip", "Minecraft-Mod-Language-Modpack.zip", Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
+            DownloadManager downloader = new DownloadManager("http://p985car2i.bkt.clouddn.com/Minecraft-Mod-Language-Modpack.zip", "Minecraft-Mod-Language-Modpack.zip", Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
             DownloadWindow window = new DownloadWindow(downloader);
             window.showWindow();
             downloader.start();
@@ -46,6 +50,11 @@ public class I18nUpdateMod {
             // 如果下载成功就安装资源包
             if (downloader.getStatus() == DownloadStatus.SUCCESS) {
                 setupResourcesPack();
+                try {
+                    System.out.println(HashChecker.md5HashCode(new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), "Minecraft-Mod-Language-Modpack.zip")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

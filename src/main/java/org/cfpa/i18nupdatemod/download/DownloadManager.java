@@ -33,7 +33,7 @@ public class DownloadManager {
             try {
                 downloader.downloadResource();
             } catch (Throwable e) {
-                catching(e);
+                e.printStackTrace();
             }
         }, "I18n-Download-Thread");
         downloadThread.start();
