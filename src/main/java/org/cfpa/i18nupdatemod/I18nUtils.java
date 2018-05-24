@@ -7,7 +7,6 @@ import net.minecraft.client.settings.GameSettings;
 import org.apache.commons.io.IOUtils;
 import org.cfpa.i18nupdatemod.download.HashChecker;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
