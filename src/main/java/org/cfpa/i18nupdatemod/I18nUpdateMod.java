@@ -41,7 +41,16 @@ public class I18nUpdateMod {
             downloader.start();
 
             // 阻塞主线程，以保证资源包在preInit阶段被安装
-            while (!downloader.isDone()) Thread.sleep(50);
+            // 超时1分钟
+            int i = 1200;
+            while (!downloader.isDone() && i >= 0) {
+                Thread.sleep(50);
+                if (i == 0) {
+                    // 如果超时就隐藏窗口到后台下载并停止阻塞主线程
+                    window.hide();
+                }
+                i--;
+            }
 
             // 如果下载成功就安装资源包
             if (downloader.getStatus() == DownloadStatus.SUCCESS) {

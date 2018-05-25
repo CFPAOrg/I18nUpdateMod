@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.io.File;
 
 public class TestDownloader {
-
+    /*
     @Test
     public void testDownloader() throws Throwable {
         String dir = System.getProperty("user.dir");
@@ -17,7 +17,8 @@ public class TestDownloader {
             Thread.sleep(50);
         }
     }
-
+    */
+    /*
     @Test
     public void testDownloadWindow() throws InterruptedException {
         String dir = System.getProperty("user.dir");
@@ -28,4 +29,5 @@ public class TestDownloader {
         handler.showWindow();
         while (!downloader.isDone()) Thread.sleep(50);
     }
+    */
 }

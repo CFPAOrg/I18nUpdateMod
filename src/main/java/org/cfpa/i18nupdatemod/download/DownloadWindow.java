@@ -3,6 +3,7 @@ package org.cfpa.i18nupdatemod.download;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class DownloadWindow {
     private DownloadManager manager;
@@ -11,6 +12,7 @@ public class DownloadWindow {
 
     /**
      * 弹出一个窗口，包含一个进度条显示下载的进度
+     *
      * @param manager 对应的DownloadManager对象
      */
     public DownloadWindow(DownloadManager manager) {
@@ -38,6 +40,18 @@ public class DownloadWindow {
         // 在下载未完成时禁止玩家关闭窗口
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
+        // 取消按钮
+        JButton bt = new JButton("取消下载") {
+            @Override
+            protected void fireActionPerformed(ActionEvent event) {
+                super.fireActionPerformed(event);
+                manager.cancel();
+                frame.setVisible(false);
+            }
+        };
+        bt.setLayout(new GridLayout(3, 2, 5, 5));
+        contentPane.add(bt);
+
         // 进度条更新线程
         new Thread(() -> {
             while (!manager.isDone()) {
@@ -45,14 +59,14 @@ public class DownloadWindow {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ignore) {
-                    ignore.printStackTrace();
+
                 }
             }
             onDownloadFinish();
             if (manager.getStatus() == DownloadStatus.FAIL) {
                 bar.setString("下载失败！");
                 // 如果下载失败允许玩家关闭窗口
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             } else {
                 // 如果下载完成自动关闭窗口
                 frame.setVisible(false);
@@ -62,6 +76,10 @@ public class DownloadWindow {
 
     public void showWindow() {
         frame.setVisible(true);
+    }
+
+    public void hide() {
+        frame.setVisible(false);
     }
 
     private static void onDownloadFinish() {

@@ -13,9 +13,10 @@ public class DownloadManager {
 
     /**
      * 下载管理器
-     * @param urlIn 下载目标的URL地址
+     *
+     * @param urlIn      下载目标的URL地址
      * @param fileNameIn 存储文件的名字
-     * @param dirIn 存储文件的地址
+     * @param dirIn      存储文件的地址
      */
     public DownloadManager(String urlIn, String fileNameIn, String dirIn) {
         try {
@@ -39,6 +40,12 @@ public class DownloadManager {
         downloadThread.start();
     }
 
+    public void cancel() {
+        downloader.done = true;
+        status = DownloadStatus.CANCELED;
+        downloadThread.interrupt();
+    }
+
     private void catching(Throwable e) {
         I18nUpdateMod.logger.error("下载失败", e);
         status = DownloadStatus.FAIL;
@@ -50,6 +57,7 @@ public class DownloadManager {
      * SUCCESS：下载成功
      * DOWNLOADING：正在下载
      * FAIL：下载遇到错误
+     * CANCELED：下载被玩家取消
      * @return 下载状态
      */
     public DownloadStatus getStatus() {
@@ -61,6 +69,7 @@ public class DownloadManager {
 
     /**
      * 下载是否结束
+     *
      * @return 下载是否结束
      */
     public boolean isDone() {
@@ -69,6 +78,7 @@ public class DownloadManager {
 
     /**
      * 获得下载完成百分比
+     *
      * @return 下载完成的百分比
      */
     public float getCompletePercentage() {

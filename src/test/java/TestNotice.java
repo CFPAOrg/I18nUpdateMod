@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class TestNotice {
+    /*
     @Test
     public void testNotice() throws Throwable {
         URL url = new URL("http://p985car2i.bkt.clouddn.com/Notice.txt");
@@ -14,4 +15,5 @@ public class TestNotice {
         strings.forEach(v -> sb.append(v).append('\n'));
         System.out.print(sb.toString());
     }
+    */
 }
