@@ -8,10 +8,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.command.NoticeCommand;
-import org.cfpa.i18nupdatemod.download.DownloadManager;
-import org.cfpa.i18nupdatemod.download.DownloadStatus;
-import org.cfpa.i18nupdatemod.download.DownloadWindow;
-import org.cfpa.i18nupdatemod.download.HashChecker;
+import org.cfpa.i18nupdatemod.download.*;
 import org.cfpa.i18nupdatemod.key.ReportKey;
 
 import java.io.File;
@@ -50,11 +47,6 @@ public class I18nUpdateMod {
             // 如果下载成功就安装资源包
             if (downloader.getStatus() == DownloadStatus.SUCCESS) {
                 setupResourcesPack();
-                try {
-                    System.out.println(HashChecker.md5HashCode(new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), "Minecraft-Mod-Language-Modpack.zip")));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
