@@ -2,13 +2,13 @@
 {
   "modid": "i18nmod",
   "name": "I18n Update Mod",
-  "description": "×¨Îª¸üĞÂ±¾µØ»¯µÄÄ£×é",
+  "description": "ä¸“ä¸ºæ›´æ–°æœ¬åœ°åŒ–çš„æ¨¡ç»„",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
   "authorList": ["CFPAOrg"],
-  "credits": "ËùÓĞ²ÎÓë±¾µØ»¯µÄÍæ¼Ò",
+  "credits": "æ‰€æœ‰å‚ä¸æœ¬åœ°åŒ–çš„ç©å®¶ï¼Œè¿˜æœ‰å‚ä¸ä»£ç ç¼–å†™çš„ Jack",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
