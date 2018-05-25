@@ -82,3 +82,9 @@ processResources {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+
+jar {
+    manifest {
+        attributes 'FMLAT': 'i18nmod_at.cfg'
+    }
+}

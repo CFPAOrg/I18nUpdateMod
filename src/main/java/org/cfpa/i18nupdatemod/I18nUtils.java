@@ -4,13 +4,9 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 
@@ -71,6 +67,15 @@ public class I18nUtils {
         if (!gameSettings.resourcePacks.contains("Minecraft-Mod-Language-Modpack.zip")) {
             mc.gameSettings.resourcePacks.add("Minecraft-Mod-Language-Modpack.zip");
             I18nUtils.reloadResources();
+        }
+    }
+
+    public static void setupLang() {
+        Minecraft mc = Minecraft.getMinecraft();
+        GameSettings gameSettings = mc.gameSettings;
+        // 强行修改为简体中文
+        if (gameSettings.language != "zh_cn") {
+            mc.getLanguageManager().currentLanguage = "zh_cn";
         }
     }
 }

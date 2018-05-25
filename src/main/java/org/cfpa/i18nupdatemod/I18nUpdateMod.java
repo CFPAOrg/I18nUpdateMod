@@ -1,14 +1,10 @@
 package org.cfpa.i18nupdatemod;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.command.NoticeCommand;
@@ -17,8 +13,7 @@ import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.key.ReportKey;
 
-import static org.cfpa.i18nupdatemod.I18nUtils.checkLength;
-import static org.cfpa.i18nupdatemod.I18nUtils.setupResourcesPack;
+import static org.cfpa.i18nupdatemod.I18nUtils.*;
 
 
 @Mod(modid = I18nUpdateMod.MODID, name = I18nUpdateMod.NAME, clientSideOnly = true, acceptedMinecraftVersions = "[1.12]", version = I18nUpdateMod.VERSION)
@@ -52,6 +47,9 @@ public class I18nUpdateMod {
             if (downloader.getStatus() == DownloadStatus.SUCCESS) {
                 setupResourcesPack();
             }
+
+            // 变化语言为中文
+            setupLang();
         }
     }
 

@@ -22,7 +22,7 @@ public class NoticeGui extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        this.drawGradientRect((int) (this.width * 0.1), (int) (this.height * 0.1), (int) (this.width * 0.9), (int) (this.height * 0.9), -1072689136, -804253680);
+        this.drawGradientRect((int) (this.width * 0.1), (int) (this.height * 0.1), (int) (this.width * 0.9), (int) (this.height * 0.9), -0x3fefeff0, -0x2fefeff0);
         int h = (int) (this.height * 0.16);
         int w = (int) (this.width * 0.14);
         StringBuilder sb = new StringBuilder();
