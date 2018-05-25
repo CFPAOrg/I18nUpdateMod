@@ -14,8 +14,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
-import org.cfpa.i18nupdatemod.gui.ReportGui;
 import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
+import java.net.URI;
 
 @Mod.EventBusSubscriber(modid = I18nUpdateMod.MODID)
 public class ReportKey {
@@ -35,9 +37,12 @@ public class ReportKey {
             if (slotUnderMouse != null) {
                 ItemStack stack = slotUnderMouse.getStack();
                 if (!stack.isEmpty()) {
-                    System.out.println(stack.getItem().getUnlocalizedName());
-                    System.out.println(stack.getDisplayName());
-                    Minecraft.getMinecraft().displayGuiScreen(new ReportGui());
+                    String url = "https://github.com/CFPAOrg/Minecraft-Mod-Language-Package?unlname=" + stack.getItem().getUnlocalizedName() + "&disname=" + stack.getDisplayName() + "&modid=" + stack.getItem().getCreatorModId(stack);
+                    try {
+                        Desktop.getDesktop().browse(new URI(url));
+                    } catch (Exception urlException) {
+                        urlException.printStackTrace();
+                    }
                 }
             }
         }
