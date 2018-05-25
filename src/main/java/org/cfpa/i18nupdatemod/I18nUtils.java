@@ -9,6 +9,7 @@ import org.cfpa.i18nupdatemod.download.HashChecker;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -37,6 +38,17 @@ public class I18nUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean checkLength() {
+        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), "Minecraft-Mod-Language-Modpack.zip");
+        try {
+            URL url = new URL("http://p985car2i.bkt.clouddn.com/Minecraft-Mod-Language-Modpack.zip");
+            return url.openConnection().getContentLengthLong() == f.length();
+        } catch (Throwable e) {
+            return false;
+        }
+
     }
 
     public static void reloadResources() {
