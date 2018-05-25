@@ -47,10 +47,10 @@ public class I18nUpdateMod {
             if (downloader.getStatus() == DownloadStatus.SUCCESS) {
                 setupResourcesPack();
             }
-
-            // 变化语言为中文
-            setupLang();
         }
+
+        // 变化语言为中文
+        setupLang();
     }
 
     @Mod.EventHandler
