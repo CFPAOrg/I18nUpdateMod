@@ -1,6 +1,10 @@
 package org.cfpa.i18nupdatemod;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -62,10 +66,6 @@ public class I18nUpdateMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         new ReportKey();
-    }
-
-    @Mod.EventHandler
-    public void serverLoad(FMLServerStartingEvent event) {
-        event.registerServerCommand(new NoticeCommand());
+        ClientCommandHandler.instance.registerCommand(new NoticeCommand());
     }
 }
