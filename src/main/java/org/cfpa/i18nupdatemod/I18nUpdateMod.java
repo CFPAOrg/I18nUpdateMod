@@ -31,7 +31,7 @@ public class I18nUpdateMod {
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
         // 如果文件已经可用则直接跳过下载
-        if (hashCheck()) {
+        if (checkLength()) {
             logger.info("检测到资源包可用，跳过下载阶段");
             setupResourcesPack();
         } else {

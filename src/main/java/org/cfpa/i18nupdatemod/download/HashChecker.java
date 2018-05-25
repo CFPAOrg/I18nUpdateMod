@@ -26,7 +26,7 @@ public class HashChecker {
         } catch (FileNotFoundException e) {
             return false;
         }
-        return md5.equals(expected);
+        return new BigInteger(md5).equals(new BigInteger(expected));
     }
 
     public static String md5HashCode(File fileIn) throws IOException {

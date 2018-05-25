@@ -1,6 +1,6 @@
-import org.cfpa.i18nupdatemod.HashChecker;
 import org.cfpa.i18nupdatemod.download.DownloadManager;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
+import org.cfpa.i18nupdatemod.download.HashChecker;
 import org.junit.Assert;
 import org.junit.Test;
 
