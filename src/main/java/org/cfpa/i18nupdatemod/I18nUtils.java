@@ -5,11 +5,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
 import org.apache.commons.io.IOUtils;
-import org.cfpa.i18nupdatemod.download.HashChecker;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -21,31 +19,13 @@ public class I18nUtils {
         throw new UnsupportedOperationException("no instance");
     }
 
-    public static boolean hashCheck() {
-        String hashExpected;
-        try {
-            URL url = new URL("https://covertdragon.team/i18n/hash");
-            URLConnection connection = url.openConnection();
-            hashExpected = IOUtils.readLines(connection.getInputStream(), StandardCharsets.UTF_8).get(0);
-        } catch (Throwable e) {
-            I18nUpdateMod.logger.warn("获取Hash信息失败！");
-            e.printStackTrace();
-            return false;
-        }
-        try {
-            return HashChecker.checkMD5(new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), "Minecraft-Mod-Language-Modpack.zip"), hashExpected);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     public static boolean checkLength() {
         File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), "Minecraft-Mod-Language-Modpack.zip");
         try {
             URL url = new URL("http://p985car2i.bkt.clouddn.com/Minecraft-Mod-Language-Modpack.zip");
             return url.openConnection().getContentLengthLong() == f.length();
         } catch (Throwable e) {
+            e.printStackTrace();
             return false;
         }
 

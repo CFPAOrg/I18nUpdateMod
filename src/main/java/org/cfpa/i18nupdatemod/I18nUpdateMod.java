@@ -8,13 +8,13 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.command.NoticeCommand;
-import org.cfpa.i18nupdatemod.download.*;
+import org.cfpa.i18nupdatemod.download.DownloadManager;
+import org.cfpa.i18nupdatemod.download.DownloadStatus;
+import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.key.ReportKey;
 
-import java.io.File;
-import java.io.IOException;
-
-import static org.cfpa.i18nupdatemod.I18nUtils.*;
+import static org.cfpa.i18nupdatemod.I18nUtils.checkLength;
+import static org.cfpa.i18nupdatemod.I18nUtils.setupResourcesPack;
 
 
 @Mod(modid = I18nUpdateMod.MODID, name = I18nUpdateMod.NAME, clientSideOnly = true, acceptedMinecraftVersions = "[1.12]", version = I18nUpdateMod.VERSION)
