@@ -38,6 +38,7 @@ public class ReportKey {
             if (!Keyboard.isKeyDown(reportKey.getKeyCode())) {
                 showed = false;
             }
+            return;
         }
         if (guiScreen instanceof GuiContainer && Keyboard.getEventKey() == reportKey.getKeyCode()) {
             GuiContainer guiContainer = (GuiContainer) guiScreen;
