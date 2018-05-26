@@ -1,11 +1,11 @@
-package org.cfpa.i18nupdatemod.command;
+package org.cfpa.i18nupdatemod.notice;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import org.cfpa.i18nupdatemod.notice.NoticeShower;
 
-public class NoticeCommand extends CommandBase {
+public class CmdNotice extends CommandBase {
 
     @Override
     public String getName() {

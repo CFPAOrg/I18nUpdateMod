@@ -1,4 +1,4 @@
-package org.cfpa.i18nupdatemod.key;
+package org.cfpa.i18nupdatemod.report;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
+import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -22,15 +23,21 @@ import java.net.URI;
 @Mod.EventBusSubscriber(modid = I18nUpdateMod.MODID)
 public class ReportKey {
     private static KeyBinding reportKey = new KeyBinding("key.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
+    private static boolean showed = false;
 
     public ReportKey() {
         ClientRegistry.registerKeyBinding(reportKey);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
+    @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Pre e) {
         GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
+        if (showed) {
+            if (!Keyboard.isKeyDown(reportKey.getKeyCode())) {
+                showed = false;
+            }
+        }
         if (guiScreen instanceof GuiContainer && Keyboard.getEventKey() == reportKey.getKeyCode()) {
             GuiContainer guiContainer = (GuiContainer) guiScreen;
             Slot slotUnderMouse = guiContainer.getSlotUnderMouse();
@@ -43,6 +50,7 @@ public class ReportKey {
                     } catch (Exception urlException) {
                         urlException.printStackTrace();
                     }
+                    showed = true;
                 }
             }
         }

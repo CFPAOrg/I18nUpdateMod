@@ -1,4 +1,4 @@
-package org.cfpa.i18nupdatemod.gui;
+package org.cfpa.i18nupdatemod.notice;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

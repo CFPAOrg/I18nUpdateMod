@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.io.IOUtils;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
-import org.cfpa.i18nupdatemod.gui.NoticeGui;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
