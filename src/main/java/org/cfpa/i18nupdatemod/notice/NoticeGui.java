@@ -3,9 +3,13 @@ package org.cfpa.i18nupdatemod.notice;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 
 import java.util.List;
 
+@SideOnly(Side.CLIENT)
 public class NoticeGui extends GuiScreen {
     private final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
     private List<String> strings;
@@ -37,5 +41,8 @@ public class NoticeGui extends GuiScreen {
         // 绘制按钮
         NoticeButton noticeButton = new NoticeButton(0, (this.width - 200) / 2, this.height * 8 / 10 + 3, "§l我想要参与模组翻译");
         this.addButton(noticeButton);
+
+        // 修正鼠标显示
+        Mouse.setGrabbed(false);
     }
 }
