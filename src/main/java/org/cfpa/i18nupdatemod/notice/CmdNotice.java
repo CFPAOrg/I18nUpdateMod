@@ -22,7 +22,7 @@ public class CmdNotice extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-        NoticeShower.showNotice();
+        new NoticeShower();
     }
 
     @Override

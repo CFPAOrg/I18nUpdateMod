@@ -2,6 +2,7 @@ package org.cfpa.i18nupdatemod.notice;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.io.IOUtils;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
 
@@ -11,8 +12,9 @@ import java.util.List;
 
 public class NoticeShower {
     private static List<String> strings;
+    private Runnable task;
 
-    public static void showNotice() {
+    public NoticeShower() {
         new Thread(() -> {
             try {
                 URL url = new URL("http://p985car2i.bkt.clouddn.com/Notice.txt");
@@ -24,8 +26,16 @@ public class NoticeShower {
         }, "I18n_NOTICE_PENDING_THREAD").start();
     }
 
-    private static void onDone() {
-        Minecraft.getMinecraft().displayGuiScreen(new NoticeGui(strings));
+    public NoticeShower(Runnable task) {
+        this();
+        this.task = task;
+    }
+
+    private void onDone() {
+        if (task != null) {
+            task.run();
+        }
+        FMLCommonHandler.instance().showGuiScreen(new NoticeGui(strings));
     }
 
     private static void catching(Throwable e) {
