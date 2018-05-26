@@ -7,10 +7,10 @@ import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.cfpa.i18nupdatemod.notice.CmdNotice;
 import org.cfpa.i18nupdatemod.download.DownloadManager;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
+import org.cfpa.i18nupdatemod.notice.CmdNotice;
 import org.cfpa.i18nupdatemod.report.CmdReport;
 import org.cfpa.i18nupdatemod.report.ReportKey;
 
@@ -42,8 +42,8 @@ public class I18nUpdateMod {
             downloader.start();
 
             // 阻塞主线程，以保证资源包在preInit阶段被安装
-            // 超时1分钟
-            int i = 1200;
+            // 超时30秒，1分钟有人反馈太长了
+            int i = 600;
             while (!downloader.isDone() && i >= 0) {
                 Thread.sleep(50);
                 if (i == 0) {
