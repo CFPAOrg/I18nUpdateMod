@@ -21,7 +21,7 @@ import static org.cfpa.i18nupdatemod.I18nUtils.*;
 public class I18nUpdateMod {
     public final static String MODID = "i18nmod";
     public final static String NAME = "I18n Update Mod";
-    public final static String VERSION = "1.0.0";
+    public final static String VERSION = "@VERSION";
 
     public static final Logger logger = LogManager.getLogger(MODID);
 
