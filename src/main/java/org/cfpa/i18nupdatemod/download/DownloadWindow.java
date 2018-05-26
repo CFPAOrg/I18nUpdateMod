@@ -24,8 +24,8 @@ public class DownloadWindow {
         // 初始化窗口
         frame = new JFrame();
         Integer width = 450;
-        Integer height = 100;
-        frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 11, width, height);
+        Integer height = 130;
+        frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 10, width, height);
         frame.setTitle("汉化资源包更新进度条");
         JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

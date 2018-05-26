@@ -3,13 +3,16 @@ package org.cfpa.i18nupdatemod.notice;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import org.cfpa.i18nupdatemod.notice.NoticeShower;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CmdNotice extends CommandBase {
+    public static final List<String> tabChoose = new ArrayList<>();
 
     @Override
     public String getName() {
-        return "lang";
+        return "lang_notice";
     }
 
     @Override
@@ -23,8 +26,7 @@ public class CmdNotice extends CommandBase {
     }
 
     @Override
-    public int getRequiredPermissionLevel()
-    {
+    public int getRequiredPermissionLevel() {
         return 0;
     }
 }
