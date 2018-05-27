@@ -26,11 +26,6 @@ public class NoticeShower {
         }, "I18n_NOTICE_PENDING_THREAD").start();
     }
 
-    public NoticeShower(Runnable task) {
-        this();
-        this.task = task;
-    }
-
     private void onDone() {
         if (task != null) {
             task.run();
