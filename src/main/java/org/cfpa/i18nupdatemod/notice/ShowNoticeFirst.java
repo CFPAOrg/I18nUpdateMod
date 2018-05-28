@@ -9,7 +9,7 @@ import org.cfpa.i18nupdatemod.I18nUpdateMod;
 
 @Mod.EventBusSubscriber(modid = I18nUpdateMod.MODID)
 public class ShowNoticeFirst {
-    public static boolean showed = true;
+    private static boolean showed = true;
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
