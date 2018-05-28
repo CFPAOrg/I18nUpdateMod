@@ -2,6 +2,7 @@ package org.cfpa.i18nupdatemod.notice;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.io.IOUtils;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
@@ -30,7 +31,7 @@ public class NoticeShower {
         if (task != null) {
             task.run();
         }
-        FMLCommonHandler.instance().showGuiScreen(new NoticeGui(strings));
+        Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().displayGuiScreen(new NoticeGui(strings)));
     }
 
     private static void catching(Throwable e) {
