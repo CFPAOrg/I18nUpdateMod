@@ -111,9 +111,9 @@ public class ReportKey {
 
     // 获取物品信息，并打开weblate对应界面
     public static boolean openWeblate(ItemStack stack) {
-        String unlName = stack.getItem().getUnlocalizedName();
+        String displayName = stack.getDisplayName();
         String assetsName = stack.getItem().getRegistryName().getResourceDomain();
-        String url = String.format("https://weblate.sayori.pw/translate/langpack/%s/zh_cn/?q=%s&context=on", assetsName, unlName);
+        String url = String.format("https://weblate.sayori.pw/translate/langpack/%s/zh_cn/?q=%s&search=substring&source=on&target=on", assetsName, displayName);
         try {
             Desktop.getDesktop().browse(new URI(url));
         } catch (Exception urlException) {
