@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
+import org.cfpa.i18nupdatemod.config.MainConfig;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -43,7 +44,7 @@ public class ReportKey {
 
         // 用于取消重复显示
         if (showed) {
-            if (!Keyboard.isKeyDown(reportKey.getKeyCode())) {
+            if (!Keyboard.isKeyDown(reportKey.getKeyCode()) && !Keyboard.isKeyDown(weblateKey.getKeyCode())) {
                 showed = false;
             }
             return;
@@ -99,7 +100,7 @@ public class ReportKey {
     // 获取物品信息，并且打开浏览器
     public static boolean openBrowse(ItemStack stack) {
         String text = String.format("模组ID：%s\n非本地化名称：%s\n显示名称：%s", stack.getItem().getCreatorModId(stack), stack.getItem().getUnlocalizedName(), stack.getDisplayName());
-        String url = "https://wj.qq.com/s/2135580/0e03/";
+        String url = MainConfig.key.reportURL;
         try {
             copyToClipboard(text);
             Desktop.getDesktop().browse(new URI(url));

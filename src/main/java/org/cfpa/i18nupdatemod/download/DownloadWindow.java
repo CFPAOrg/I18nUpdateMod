@@ -1,5 +1,7 @@
 package org.cfpa.i18nupdatemod.download;
 
+import org.cfpa.i18nupdatemod.config.MainConfig;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -26,7 +28,7 @@ public class DownloadWindow {
         Integer width = 450;
         Integer height = 130;
         frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 10, width, height);
-        frame.setTitle("汉化资源包更新进度条");
+        frame.setTitle(MainConfig.download.dlWindowsName);
         JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         frame.setContentPane(contentPane);

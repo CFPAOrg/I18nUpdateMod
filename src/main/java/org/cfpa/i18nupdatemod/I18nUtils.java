@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
+import org.cfpa.i18nupdatemod.config.MainConfig;
 
 import java.io.File;
 import java.net.URL;
@@ -16,9 +17,9 @@ public class I18nUtils {
     }
 
     public static boolean checkLength() {
-        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), "Minecraft-Mod-Language-Modpack.zip");
+        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
         try {
-            URL url = new URL("http://p985car2i.bkt.clouddn.com/Minecraft-Mod-Language-Modpack.zip");
+            URL url = new URL(MainConfig.download.langPackURL);
             return url.openConnection().getContentLengthLong() == f.length();
         } catch (Throwable e) {
             e.printStackTrace();
@@ -64,8 +65,8 @@ public class I18nUtils {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
         // 在gameSetting中加载资源包
-        if (!gameSettings.resourcePacks.contains("Minecraft-Mod-Language-Modpack.zip")) {
-            mc.gameSettings.resourcePacks.add("Minecraft-Mod-Language-Modpack.zip");
+        if (!gameSettings.resourcePacks.contains(MainConfig.download.langPackName)) {
+            mc.gameSettings.resourcePacks.add(MainConfig.download.langPackName);
             I18nUtils.reloadResources();
         }
     }

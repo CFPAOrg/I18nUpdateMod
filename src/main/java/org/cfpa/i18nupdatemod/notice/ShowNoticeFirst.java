@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
+import org.cfpa.i18nupdatemod.config.MainConfig;
 
 @Mod.EventBusSubscriber(modid = I18nUpdateMod.MODID)
 public class ShowNoticeFirst {
@@ -14,7 +15,7 @@ public class ShowNoticeFirst {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onPlayerFirstJoin(RenderGameOverlayEvent.Post event) throws InterruptedException {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET && showed) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET && showed && MainConfig.notice.showNoticeConfig) {
             showed = false;
             new NoticeShower();
         }
