@@ -13,7 +13,7 @@ public class MainConfig {
     public static Notice notice = new Notice();
     @Config.Name("资源包下载配置")
     public static Download download = new Download();
-    @Config.Name("键位配置")
+    @Config.Name("问题反馈配置")
     public static Key key = new Key();
 
     public static class Notice {
