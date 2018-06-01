@@ -16,6 +16,28 @@ public class I18nUtils {
         throw new UnsupportedOperationException("no instance");
     }
 
+    /**
+     * 用来判断下载文件是否超过了时间阈值
+     *
+     * @return 文件是否超过了阈值
+     */
+    public static boolean intervalDaysCheck() {
+        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
+        try {
+            I18nUpdateMod.logger.info(System.currentTimeMillis() - f.lastModified());
+            I18nUpdateMod.logger.info(MainConfig.download.maxDay * 24 * 3600 * 1000);
+            return (System.currentTimeMillis() - f.lastModified()) > (MainConfig.download.maxDay * 24 * 3600 * 1000);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 对比远程文件和本地文件大小，精确到 Byte
+     *
+     * @return 远程文件是否和本地文件大小匹配
+     */
     public static boolean checkLength() {
         File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
         try {
@@ -25,7 +47,6 @@ public class I18nUtils {
             e.printStackTrace();
             return false;
         }
-
     }
 
     public static void reloadResources() {

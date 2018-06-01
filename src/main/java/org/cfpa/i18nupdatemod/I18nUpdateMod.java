@@ -31,8 +31,13 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
+        // 首先检测文件是否超过阈值
+        if (!intervalDaysCheck()) {
+            logger.info("未到下次更新时间，跳过检测和下载阶段");
+            setupResourcesPack();
+        }
         // 如果文件已经可用则直接跳过下载
-        if (checkLength()) {
+        else if (checkLength()) {
             logger.info("检测到资源包可用，跳过下载阶段");
             setupResourcesPack();
         } else {

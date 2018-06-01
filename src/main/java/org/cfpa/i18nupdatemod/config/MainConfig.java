@@ -33,6 +33,12 @@ public class MainConfig {
     }
 
     public static class Download {
+        @Config.Name("更新检测间隔（天）")
+        @Config.RequiresMcRestart
+        @Config.Comment("通过修改此处设定更新检测间隔，单位为天。设置为0表示每次启动游戏都检测")
+        @Config.RangeInt(min = 0, max = 30)
+        public int maxDay = 0;
+
         @Config.Name("资源包链接")
         @Config.Comment("虽然我不清楚修改此处有什么用，但是我加一个吧，万一有人需要呢")
         @Config.RequiresMcRestart
@@ -48,7 +54,7 @@ public class MainConfig {
         @Config.RequiresMcRestart
         public String dlWindowsName = "汉化资源包更新进度条";
 
-        @Config.Name("超时时间")
+        @Config.Name("超时时间（秒）")
         @Config.RequiresMcRestart
         @Config.Comment("超过多少时间，取消主线程阻塞，转为后台下载")
         @Config.RangeInt(min = 1)
