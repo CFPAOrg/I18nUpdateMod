@@ -59,6 +59,11 @@ public class MainConfig {
         @Config.Comment("超过多少时间，取消主线程阻塞，转为后台下载")
         @Config.RangeInt(min = 1)
         public int maxTime = 30;
+
+        @Config.Name("是否开启强制中文功能")
+        @Config.RequiresMcRestart
+        @Config.Comment("默认开启，会在启动时将游戏语言强制设定为中文")
+        public boolean setupChinese = true;
     }
 
     public static class Key {

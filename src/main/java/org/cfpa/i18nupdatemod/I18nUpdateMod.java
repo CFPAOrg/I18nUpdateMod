@@ -65,7 +65,9 @@ public class I18nUpdateMod {
         }
 
         // 变化语言为中文
-        setupLang();
+        if (MainConfig.download.setupChinese) {
+            setupLang();
+        }
     }
 
     @Mod.EventHandler
