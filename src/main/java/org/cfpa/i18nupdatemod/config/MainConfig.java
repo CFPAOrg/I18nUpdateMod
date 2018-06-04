@@ -29,7 +29,7 @@ public class MainConfig {
 
         @Config.Name("公告链接")
         @Config.Comment("专为整合作者设计，你只需要提供一个纯网页版txt文件链接，即可加载此公告，注意是 http 网站")
-        public String noticeURL = "http://p985car2i.bkt.clouddn.com/Notice.txt";
+        public String noticeURL = "http://downloader.meitangdehulu.com/Notice.txt";
     }
 
     public static class Download {
@@ -37,12 +37,12 @@ public class MainConfig {
         @Config.RequiresMcRestart
         @Config.Comment("通过修改此处设定更新检测间隔，单位为天。设置为0表示每次启动游戏都检测")
         @Config.RangeInt(min = 0, max = 30)
-        public int maxDay = 0;
+        public int maxDay = 3;
 
         @Config.Name("资源包链接")
         @Config.Comment("虽然我不清楚修改此处有什么用，但是我加一个吧，万一有人需要呢")
         @Config.RequiresMcRestart
-        public String langPackURL = "http://p985car2i.bkt.clouddn.com/Minecraft-Mod-Language-Modpack.zip";
+        public String langPackURL = "http://downloader.meitangdehulu.com/Minecraft-Mod-Language-Modpack.zip";
 
         @Config.Name("资源包名称")
         @Config.Comment("用来自定义下载得到的资源包名称")

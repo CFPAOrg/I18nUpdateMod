@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.cfpa.i18nupdatemod.config.MainConfig;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -37,7 +38,7 @@ public class CmdReport extends CommandBase {
         ItemStack stack = Minecraft.getMinecraft().player.inventory.getCurrentItem();
         if (!stack.isEmpty()) {
             String text = String.format("模组ID：%s\n非本地化名称：%s\n显示名称：%s", stack.getItem().getCreatorModId(stack), stack.getItem().getUnlocalizedName(), stack.getDisplayName());
-            String url = "https://wj.qq.com/s/2135580/0e03/";
+            String url = MainConfig.key.reportURL;
             try {
                 copyToClipboard(text);
                 Desktop.getDesktop().browse(new URI(url));
