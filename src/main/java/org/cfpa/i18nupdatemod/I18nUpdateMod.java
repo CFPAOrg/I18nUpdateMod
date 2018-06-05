@@ -26,8 +26,8 @@ public class I18nUpdateMod {
 
     public static final Logger logger = LogManager.getLogger(MODID);
 
-    @Mod.Instance
-    public static I18nUpdateMod INSTANCE;
+    // 通知变量
+    public static boolean showNotice = false;
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
@@ -41,6 +41,9 @@ public class I18nUpdateMod {
             logger.info("检测到资源包可用，跳过下载阶段");
             setupResourcesPack();
         } else {
+            // 决定显示通知
+            showNotice = true;
+
             // 开始下载资源包并弹出进度窗口
             DownloadManager downloader = new DownloadManager(MainConfig.download.langPackURL, MainConfig.download.langPackName, Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
             DownloadWindow window = new DownloadWindow(downloader);

@@ -10,13 +10,11 @@ import org.cfpa.i18nupdatemod.config.MainConfig;
 
 @Mod.EventBusSubscriber(modid = I18nUpdateMod.MODID)
 public class ShowNoticeFirst {
-    private static boolean showed = true;
-
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onPlayerFirstJoin(RenderGameOverlayEvent.Post event) throws InterruptedException {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET && showed && MainConfig.notice.showNoticeConfig) {
-            showed = false;
+        if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET && I18nUpdateMod.showNotice && MainConfig.notice.showNoticeConfig) {
+            I18nUpdateMod.showNotice = false;
             new NoticeShower();
         }
     }
