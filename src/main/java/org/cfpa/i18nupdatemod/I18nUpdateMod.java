@@ -1,13 +1,16 @@
 package org.cfpa.i18nupdatemod;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.config.MainConfig;
+import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
 import org.cfpa.i18nupdatemod.download.DownloadManager;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
@@ -31,6 +34,8 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
+        DownloadInfoHelper.init();
+
         // 首先检测文件是否超过阈值
         if (!intervalDaysCheck()) {
             logger.info("未到下次更新时间，跳过检测和下载阶段");
@@ -50,16 +55,8 @@ public class I18nUpdateMod {
             window.showWindow();
             downloader.start();
 
-            // 阻塞主线程，以保证资源包在preInit阶段被安装
-            int i = MainConfig.download.maxTime * 20;
-            while (!downloader.isDone() && i >= 0) {
-                Thread.sleep(50);
-                if (i == 0) {
-                    // 如果超时就隐藏窗口到后台下载并停止阻塞主线程
-                    window.hide();
-                }
-                i--;
-            }
+            // 阻塞主线程
+            while (downloader.getStatus() == DownloadStatus.DOWNLOADING) Thread.sleep(50);
 
             // 如果下载成功就安装资源包
             if (downloader.getStatus() == DownloadStatus.SUCCESS) {

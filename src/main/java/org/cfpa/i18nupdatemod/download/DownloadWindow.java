@@ -43,7 +43,7 @@ public class DownloadWindow {
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         // 取消按钮
-        JButton bt = new JButton("取消下载") {
+        JButton btCancel = new JButton("取消下载") {
             @Override
             protected void fireActionPerformed(ActionEvent event) {
                 super.fireActionPerformed(event);
@@ -51,8 +51,20 @@ public class DownloadWindow {
                 frame.setVisible(false);
             }
         };
-        bt.setLayout(new GridLayout(3, 2, 5, 5));
-        contentPane.add(bt);
+        btCancel.setLayout(new GridLayout(3, 2, 5, 5));
+        contentPane.add(btCancel);
+
+        // 后台下载按钮
+        JButton btBackground = new JButton("后台下载") {
+            @Override
+            protected void fireActionPerformed(ActionEvent event) {
+                super.fireActionPerformed(event);
+                manager.background();
+                frame.setVisible(false);
+            }
+        };
+        btBackground.setLayout(new GridLayout(3, 2, 5, 5));
+        contentPane.add(btBackground);
 
         // 进度条更新线程
         new Thread(() -> {
@@ -74,17 +86,42 @@ public class DownloadWindow {
                 frame.setVisible(false);
             }
         }, "I18n-Window-Thread").start();
+
+        // 超时守护进程
+        new Thread(() -> {
+            try {
+                while (manager.getStatus() == DownloadStatus.IDLE) Thread.sleep(50);
+                int i = MainConfig.download.maxTime;
+                while (!manager.isDone() && i >= 0) {
+                    btBackground.setText("后台下载(" + i + ')');
+                    Thread.sleep(1000);
+                    if (i == 0) {
+                        // 如果超时就隐藏窗口到后台下载并停止阻塞主线程
+                        background();
+                    }
+                    i--;
+                }
+            } catch (Throwable ignore) {
+            }
+        }).start();
     }
 
     public void showWindow() {
         frame.setVisible(true);
     }
 
-    public void hide() {
+    public void background() {
         frame.setVisible(false);
+        manager.background();
     }
 
-    private static void onDownloadFinish() {
-        //TODO，其实我也不知道要做啥
+    private void onDownloadFinish() {
+        if (!frame.isVisible()) {
+            if (manager.getStatus() == DownloadStatus.SUCCESS) {
+                DownloadInfoHelper.info.add("资源包后台下载完成，下次重启游戏将加载资源包");
+            } else {
+                DownloadInfoHelper.info.add("资源包后台下载失败");
+            }
+        }
     }
 }

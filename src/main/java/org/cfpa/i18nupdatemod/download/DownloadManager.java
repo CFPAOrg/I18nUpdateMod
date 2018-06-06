@@ -9,7 +9,7 @@ import java.net.URLConnection;
 public class DownloadManager {
     private Thread downloadThread;
     private MainDownloader downloader;
-    private DownloadStatus status = DownloadStatus.DOWNLOADING;
+    private DownloadStatus status = DownloadStatus.IDLE;
 
     /**
      * 下载管理器
@@ -30,6 +30,7 @@ public class DownloadManager {
      * 开始下载
      */
     public void start() {
+        status = DownloadStatus.DOWNLOADING;
         downloadThread = new Thread(() -> {
             try {
                 downloader.downloadResource();
@@ -46,6 +47,10 @@ public class DownloadManager {
         downloadThread.interrupt();
     }
 
+    public void background() {
+        status = DownloadStatus.BACKGROUND;
+    }
+
     private void catching(Throwable e) {
         I18nUpdateMod.logger.error("下载失败", e);
         status = DownloadStatus.FAIL;
@@ -58,10 +63,11 @@ public class DownloadManager {
      * DOWNLOADING：正在下载
      * FAIL：下载遇到错误
      * CANCELED：下载被玩家取消
+     *
      * @return 下载状态
      */
     public DownloadStatus getStatus() {
-        if (status == DownloadStatus.DOWNLOADING && downloader.done) {
+        if ((status == DownloadStatus.DOWNLOADING || status == DownloadStatus.BACKGROUND) && downloader.done) {
             status = DownloadStatus.SUCCESS;
         }
         return status;
