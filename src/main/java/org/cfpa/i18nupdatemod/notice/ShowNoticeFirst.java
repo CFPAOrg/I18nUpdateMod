@@ -12,7 +12,7 @@ import org.cfpa.i18nupdatemod.config.MainConfig;
 public class ShowNoticeFirst {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public static void onPlayerFirstJoin(RenderGameOverlayEvent.Post event) throws InterruptedException {
+    public static void onPlayerFirstJoin(RenderGameOverlayEvent.Post event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET && I18nUpdateMod.showNotice && MainConfig.notice.showNoticeConfig) {
             I18nUpdateMod.showNotice = false;
             new NoticeShower();
