@@ -28,7 +28,7 @@ public class MainConfig {
         public boolean showWeblateButton = true;
 
         @Config.Name("公告链接")
-        @Config.Comment("专为整合作者设计，你只需要提供一个纯网页版txt文件链接，即可加载此公告，注意是 http 网站")
+        @Config.Comment("专为整合作者设计，你只需要提供一个纯网页版txt文件链接，即可加载此公告")
         public String noticeURL = "http://downloader.meitangdehulu.com/Notice.txt";
     }
 
