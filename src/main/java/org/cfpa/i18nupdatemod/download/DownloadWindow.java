@@ -79,8 +79,11 @@ public class DownloadWindow {
             onDownloadFinish();
             if (manager.getStatus() == DownloadStatus.FAIL) {
                 bar.setString("下载失败！");
-                // 如果下载失败允许玩家关闭窗口
-                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException ignore) {
+                }
+                frame.setVisible(false);
             } else {
                 // 如果下载完成自动关闭窗口
                 frame.setVisible(false);
