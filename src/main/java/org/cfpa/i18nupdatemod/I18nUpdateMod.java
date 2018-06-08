@@ -40,7 +40,7 @@ public class I18nUpdateMod {
             setupResourcesPack();
         }
         // 如果离线且文件可用则跳过下载
-        else if (online() && isResourcepackExist()) {
+        else if ((!online()) && isResourcepackExist()) {
             logger.info("检测到网络不可用，跳过下载阶段");
             setupResourcesPack();
         }
