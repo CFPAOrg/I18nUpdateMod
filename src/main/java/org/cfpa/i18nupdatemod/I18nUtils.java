@@ -7,7 +7,10 @@ import net.minecraft.client.settings.GameSettings;
 import org.cfpa.i18nupdatemod.config.MainConfig;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -98,6 +101,19 @@ public class I18nUtils {
         // 强行修改为简体中文
         if (!gameSettings.language.equals("zh_cn")) {
             mc.getLanguageManager().currentLanguage = "zh_cn";
+        }
+    }
+
+    public static boolean isResourcepackExist() {
+        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
+        return f.exists();
+    }
+
+    public static boolean online() {
+        try {
+            return InetAddress.getByName("www.baidu.com").isReachable(2000);
+        } catch (Throwable e) {
+            return false;
         }
     }
 }
