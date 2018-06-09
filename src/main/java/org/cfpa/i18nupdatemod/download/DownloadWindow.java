@@ -109,10 +109,16 @@ public class DownloadWindow {
         }).start();
     }
 
+    /**
+     * 显示窗口
+     */
     public void showWindow() {
         frame.setVisible(true);
     }
 
+    /**
+     * 后台下载
+     */
     public void background() {
         frame.setVisible(false);
         manager.background();

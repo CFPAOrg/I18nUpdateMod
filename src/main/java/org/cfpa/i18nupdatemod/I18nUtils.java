@@ -50,6 +50,9 @@ public class I18nUtils {
         }
     }
 
+    /**
+     * 重新加载资源包
+     */
     public static void reloadResources() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
@@ -83,6 +86,9 @@ public class I18nUtils {
         resourcePackRepository.setRepositories(repositoryEntries);
     }
 
+    /**
+     * 安装下载好的资源包
+     */
     public static void setupResourcesPack() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
@@ -93,6 +99,9 @@ public class I18nUtils {
         }
     }
 
+    /**
+     * 将语言换成中文
+     */
     public static void setupLang() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
@@ -102,11 +111,19 @@ public class I18nUtils {
         }
     }
 
+    /**
+     * 检测资源包是否存在
+     * @return 资源包是否存在
+     */
     public static boolean isResourcePackExist() {
         File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
         return f.exists();
     }
 
+    /**
+     * 检测是否联网
+     * @return 是否联网
+     */
     public static boolean online() {
         try {
             return InetAddress.getByName("www.baidu.com").isReachable(2000);
