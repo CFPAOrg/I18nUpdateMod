@@ -44,7 +44,7 @@ public class DownloadManager {
     public void cancel() {
         downloader.done = true;
         status = DownloadStatus.CANCELED;
-        downloadThread.interrupt();
+        downloader.alive = false;
     }
 
     public void background() {
@@ -99,6 +99,7 @@ public class DownloadManager {
         private int downloadedSize = 0;
         private boolean done = false;
         public float completePercentage = 0.0F;
+        public boolean alive = true;
 
         public MainDownloader(String urlIn, String fileName, String dirPlace) throws IOException {
             this.url = new URL(urlIn);
@@ -121,16 +122,18 @@ public class DownloadManager {
             byte[] getData = readInputStream(inputStream);
 
             //文件保存位置
-            File saveDir = new File(dirPlace);
-            if (!saveDir.exists()) {
-                saveDir.mkdir();
-            }
-            File file = new File(saveDir + File.separator + fileName);
-            FileOutputStream fos = new FileOutputStream(file);
+            if (getData != null) {
+                File saveDir = new File(dirPlace);
+                if (!saveDir.exists()) {
+                    saveDir.mkdir();
+                }
+                File file = new File(saveDir + File.separator + fileName);
+                FileOutputStream fos = new FileOutputStream(file);
 
-            fos.write(getData);
-            fos.close();
-            inputStream.close();
+                fos.write(getData);
+                fos.close();
+                inputStream.close();
+            }
             done = true;
         }
 
@@ -142,6 +145,9 @@ public class DownloadManager {
                 bos.write(buffer, 0, len);
                 downloadedSize += len;
                 completePercentage = (float) downloadedSize / (float) size;
+                if (!alive) {
+                    return null;
+                }
             }
             bos.close();
             return bos.toByteArray();

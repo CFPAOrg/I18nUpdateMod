@@ -7,10 +7,8 @@ import net.minecraft.client.settings.GameSettings;
 import org.cfpa.i18nupdatemod.config.MainConfig;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -104,7 +102,7 @@ public class I18nUtils {
         }
     }
 
-    public static boolean isResourcepackExist() {
+    public static boolean isResourcePackExist() {
         File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
         return f.exists();
     }
