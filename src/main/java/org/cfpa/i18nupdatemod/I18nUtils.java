@@ -95,8 +95,8 @@ public class I18nUtils {
         // 在gameSetting中加载资源包
         if (!gameSettings.resourcePacks.contains(MainConfig.download.langPackName)) {
             mc.gameSettings.resourcePacks.add(MainConfig.download.langPackName);
-            I18nUtils.reloadResources();
         }
+        I18nUtils.reloadResources();
     }
 
     /**
