@@ -25,8 +25,8 @@ public class DownloadWindow {
     private void init() {
         // 初始化窗口
         frame = new JFrame();
-        int width = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.15);
-        int height = (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.1);
+        int width = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.2);
+        int height = (int) (width * 0.3);
         frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 10, width, height);
         frame.setTitle(MainConfig.download.dlWindowsName);
         JPanel contentPane = new JPanel();
@@ -52,6 +52,7 @@ public class DownloadWindow {
             }
         };
         btCancel.setLayout(new GridLayout(3, 2, 5, 5));
+        btCancel.setSize(width / 5, height / 5);
         contentPane.add(btCancel);
 
         // 后台下载按钮
@@ -64,6 +65,7 @@ public class DownloadWindow {
             }
         };
         btBackground.setLayout(new GridLayout(3, 2, 5, 5));
+        btBackground.setSize(width / 5, height / 5);
         contentPane.add(btBackground);
 
         // 进度条更新线程
