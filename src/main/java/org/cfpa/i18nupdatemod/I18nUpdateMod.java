@@ -36,17 +36,17 @@ public class I18nUpdateMod {
 
         // 首先检测文件是否超过阈值
         if (!intervalDaysCheck()) {
-            logger.info("未到下次更新时间，跳过检测和下载阶段");
+            logger.info(toUTF8("未到下次更新时间，跳过检测和下载阶段"));
             setupResourcesPack();
         }
         // 如果离线且文件可用则跳过下载
         else if ((!online()) && isResourcePackExist()) {
-            logger.info("检测到网络不可用，跳过下载阶段");
+            logger.info(toUTF8("检测到网络不可用，跳过下载阶段"));
             setupResourcesPack();
         }
         // 如果文件已经可用则直接跳过下载
         else if (checkLength()) {
-            logger.info("检测到资源包最新，跳过下载阶段");
+            logger.info(toUTF8("检测到资源包最新，跳过下载阶段"));
             setupResourcesPack();
         } else {
             // 决定显示通知
