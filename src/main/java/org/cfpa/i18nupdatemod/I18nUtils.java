@@ -1,5 +1,6 @@
 package org.cfpa.i18nupdatemod;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
@@ -139,7 +140,8 @@ public class I18nUtils {
      * @return 转换完成的字符串
      */
     public static String toUTF8(String str) {
-        return StringEscapeUtils.escapeJava(str);
+        byte[] bs = str.getBytes(Charsets.UTF_8);
+        return new String(bs, Charsets.UTF_8);
     }
 }
 
