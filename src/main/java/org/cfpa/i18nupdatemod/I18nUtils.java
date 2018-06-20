@@ -121,12 +121,12 @@ public class I18nUtils {
     }
 
     /**
-     * 检测是否联网
-     * @return 是否联网
+     * 检测与待下载主机的连通性
+     * @return 是否能连通到待下载主机
      */
     public static boolean online() {
         try {
-            return InetAddress.getByName("www.baidu.com").isReachable(2000);
+            return InetAddress.getByName(new URL(MainConfig.download.langPackURL).getHost()).isReachable(2000);
         } catch (Throwable e) {
             return false;
         }
