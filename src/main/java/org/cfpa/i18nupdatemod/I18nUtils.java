@@ -1,11 +1,9 @@
 package org.cfpa.i18nupdatemod;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.cfpa.i18nupdatemod.config.MainConfig;
 
 import java.io.File;
@@ -27,8 +25,8 @@ public class I18nUtils {
     public static boolean intervalDaysCheck() {
         File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
         try {
-            // I18nUpdateMod.logger.info(System.currentTimeMillis() - f.lastModified());
-            // I18nUpdateMod.logger.info(MainConfig.download.maxDay * 24 * 3600 * 1000);
+            I18nUpdateMod.logger.info(System.currentTimeMillis() - f.lastModified());
+            I18nUpdateMod.logger.info(MainConfig.download.maxDay * 24 * 3600 * 1000);
             return (System.currentTimeMillis() - f.lastModified()) > (MainConfig.download.maxDay * 24 * 3600 * 1000);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -132,16 +130,6 @@ public class I18nUtils {
         } catch (Throwable e) {
             return false;
         }
-    }
-
-    /**
-     * 将未经编码的字符串转换成Unicode编码格式
-     * @param str 需要转换的字符串
-     * @return 转换完成的字符串
-     */
-    public static String toUTF8(String str) {
-        byte[] bs = str.getBytes(Charsets.UTF_8);
-        return new String(bs, Charsets.UTF_8);
     }
 }
 
