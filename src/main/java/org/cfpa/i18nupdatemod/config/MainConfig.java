@@ -15,6 +15,8 @@ public class MainConfig {
     public static Download download = new Download();
     @Config.Name("问题反馈配置")
     public static Key key = new Key();
+    @Config.Name("启用国际化配置")
+    public static Internationalization internationalization = new Internationalization();
 
     public static class Notice {
         @Config.Name("是否显示通知")
@@ -71,6 +73,13 @@ public class MainConfig {
         @Config.Comment("可能会有人想自定义")
         @Config.RequiresMcRestart
         public String reportURL = "https://wj.qq.com/s/2135580/0e03/";
+    }
+
+    public static class Internationalization {
+        @Config.Name("启用国际化")
+        @Config.Comment("启用后，将依据系统语言来选择开启或关闭资源包下载、公告显示、键位指令注册")
+        @Config.RequiresMcRestart
+        public boolean openI18n = false;
     }
 
     // 用于 GUI 界面配置调节的保存

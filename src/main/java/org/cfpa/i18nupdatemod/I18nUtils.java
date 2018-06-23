@@ -113,6 +113,7 @@ public class I18nUtils {
 
     /**
      * 检测资源包是否存在
+     *
      * @return 资源包是否存在
      */
     public static boolean isResourcePackExist() {
@@ -122,6 +123,7 @@ public class I18nUtils {
 
     /**
      * 检测与待下载主机的连通性
+     *
      * @return 是否能连通到待下载主机
      */
     public static boolean online() {
@@ -130,6 +132,15 @@ public class I18nUtils {
         } catch (Throwable e) {
             return false;
         }
+    }
+
+    /**
+     * 检测 Java 虚拟机实例语言
+     *
+     * @return 是否为简体中文语言
+     */
+    public static boolean isChinese() {
+        return System.getProperty("user.language").equals("zh");
     }
 }
 

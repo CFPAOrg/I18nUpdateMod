@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
+import org.cfpa.i18nupdatemod.I18nUtils;
 import org.cfpa.i18nupdatemod.config.MainConfig;
 import org.lwjgl.input.Keyboard;
 
@@ -40,6 +41,14 @@ public class ReportKey {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Pre e) {
+        // 最开始，是否启用国际化配置
+        if (MainConfig.internationalization.openI18n) {
+            if (!I18nUtils.isChinese()) {
+                return;
+            }
+        }
+
+        // 获取当前屏幕数据
         GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
 
         // 用于取消重复显示
@@ -114,6 +123,7 @@ public class ReportKey {
     public static boolean openWeblate(ItemStack stack) {
         String displayName = stack.getDisplayName();
         String assetsName = stack.getItem().getRegistryName().getResourceDomain();
+        // TODO：特殊字符的 URL 转义
         String url = String.format("https://weblate.sayori.pw/translate/langpack/%s/zh_cn/?q=%s&search=substring&source=on&target=on", assetsName, displayName);
         try {
             Desktop.getDesktop().browse(new URI(url));

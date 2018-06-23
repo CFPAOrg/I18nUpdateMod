@@ -32,6 +32,13 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
+        // 最开始，是否启用国际化配置
+        if (MainConfig.internationalization.openI18n) {
+            if (!I18nUtils.isChinese()) {
+                return;
+            }
+        }
+
         DownloadInfoHelper.init();
 
         // 首先检测文件是否超过阈值
@@ -75,6 +82,11 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        if (MainConfig.internationalization.openI18n) {
+            if (!I18nUtils.isChinese()) {
+                return;
+            }
+        }
         new ReportKey();
         ClientCommandHandler.instance.registerCommand(new CmdNotice());
         ClientCommandHandler.instance.registerCommand(new CmdReport());
