@@ -108,6 +108,7 @@ public class I18nUtils {
         // 强行修改为简体中文
         if (!gameSettings.language.equals("zh_cn")) {
             mc.getLanguageManager().currentLanguage = "zh_cn";
+            gameSettings.language = "zh_cn";
         }
     }
 
