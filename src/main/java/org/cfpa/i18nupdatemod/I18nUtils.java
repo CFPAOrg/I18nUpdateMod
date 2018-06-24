@@ -25,11 +25,11 @@ public class I18nUtils {
     public static boolean intervalDaysCheck() {
         File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
         try {
-            I18nUpdateMod.logger.info(System.currentTimeMillis() - f.lastModified());
-            I18nUpdateMod.logger.info(MainConfig.download.maxDay * 24 * 3600 * 1000);
+            // I18nUpdateMod.logger.info(System.currentTimeMillis() - f.lastModified());
+            // I18nUpdateMod.logger.info(MainConfig.download.maxDay * 24 * 3600 * 1000);
             return (System.currentTimeMillis() - f.lastModified()) > (MainConfig.download.maxDay * 24 * 3600 * 1000);
         } catch (Throwable e) {
-            e.printStackTrace();
+            I18nUpdateMod.logger.error("检查文件日期失败", e);
             return false;
         }
     }
