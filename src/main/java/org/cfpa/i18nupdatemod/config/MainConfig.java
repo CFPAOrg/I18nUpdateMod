@@ -72,7 +72,7 @@ public class MainConfig {
         @Config.Name("自定义反馈按键打开网址")
         @Config.Comment("可能会有人想自定义")
         @Config.RequiresMcRestart
-        public String reportURL = "https://wj.qq.com/s/2135580/0e03/";
+        public String reportURL = "http://issues.cfpa.team";
     }
 
     public static class Internationalization {

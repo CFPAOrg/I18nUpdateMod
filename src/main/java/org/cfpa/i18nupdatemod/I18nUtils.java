@@ -6,6 +6,8 @@ import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
 import org.cfpa.i18nupdatemod.config.MainConfig;
 
+import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
+
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URL;
@@ -25,11 +27,11 @@ public class I18nUtils {
     public static boolean intervalDaysCheck() {
         File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
         try {
-            I18nUpdateMod.logger.info(System.currentTimeMillis() - f.lastModified());
-            I18nUpdateMod.logger.info(MainConfig.download.maxDay * 24 * 3600 * 1000);
+            // I18nUpdateMod.logger.info(System.currentTimeMillis() - f.lastModified());
+            // I18nUpdateMod.logger.info(MainConfig.download.maxDay * 24 * 3600 * 1000);
             return (System.currentTimeMillis() - f.lastModified()) > (MainConfig.download.maxDay * 24 * 3600 * 1000);
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.error("检查文件日期失败", e);
             return false;
         }
     }
@@ -45,13 +47,14 @@ public class I18nUtils {
             URL url = new URL(MainConfig.download.langPackURL);
             return url.openConnection().getContentLengthLong() == f.length();
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.error("检查文件大小失败", e);
             return false;
         }
     }
 
     /**
      * 重新加载资源包
+     * @see ResourcePackRepository
      */
     public static void reloadResources() {
         Minecraft mc = Minecraft.getMinecraft();
@@ -63,11 +66,6 @@ public class I18nUtils {
         List<ResourcePackRepository.Entry> repositoryEntries = Lists.newArrayList();
         Iterator<String> it = gameSettings.resourcePacks.iterator();
 
-        /*
-         此时情况是这样的
-         entry 为修改后的条目
-         repositoryEntries 为游戏应当加载的条目
-        */
         while (it.hasNext()) {
             String packName = it.next();
             for (ResourcePackRepository.Entry entry : repositoryEntriesAll) {
@@ -79,10 +77,11 @@ public class I18nUtils {
                     }
                     // 否则移除
                     it.remove();
-                    I18nUpdateMod.logger.warn("移除资源包 {}，因为它无法兼容当前版本", entry.getResourcePackName());
+                    logger.warn("移除资源包 {}，因为它无法兼容当前版本", entry.getResourcePackName());
                 }
             }
         }
+
         resourcePackRepository.setRepositories(repositoryEntries);
     }
 
@@ -96,7 +95,7 @@ public class I18nUtils {
         if (!gameSettings.resourcePacks.contains(MainConfig.download.langPackName)) {
             mc.gameSettings.resourcePacks.add(MainConfig.download.langPackName);
         }
-        I18nUtils.reloadResources();
+        reloadResources();
     }
 
     /**

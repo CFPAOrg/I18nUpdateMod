@@ -58,7 +58,7 @@ public class NoticeGui extends GuiScreen {
         }
 
         if (button == noticeGithubButton) {
-            String url = "https://github.com/CFPAOrg/Minecraft-Mod-Language-Package#%E4%BB%93%E5%BA%93%E8%AF%B4%E6%98%8E";
+            String url = "https://cfpa.team";
             try {
                 Desktop.getDesktop().browse(new URI(url));
             } catch (Exception e) {

@@ -14,7 +14,7 @@ import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
 import org.cfpa.i18nupdatemod.notice.CmdNotice;
 import org.cfpa.i18nupdatemod.report.CmdReport;
-import org.cfpa.i18nupdatemod.report.ReportKey;
+import org.cfpa.i18nupdatemod.report.HotKeyHandler;
 
 import static org.cfpa.i18nupdatemod.I18nUtils.*;
 
@@ -32,11 +32,9 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
-        // 最开始，是否启用国际化配置
-        if (MainConfig.internationalization.openI18n) {
-            if (!I18nUtils.isChinese()) {
-                return;
-            }
+        // 最开始，检测是否启用国际化配置
+        if (MainConfig.internationalization.openI18n && !isChinese()) {
+            return;
         }
 
         DownloadInfoHelper.init();
@@ -82,12 +80,10 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        if (MainConfig.internationalization.openI18n) {
-            if (!I18nUtils.isChinese()) {
-                return;
-            }
+        if (MainConfig.internationalization.openI18n && !isChinese()) {
+            return;
         }
-        new ReportKey();
+        HotKeyHandler.register();
         ClientCommandHandler.instance.registerCommand(new CmdNotice());
         ClientCommandHandler.instance.registerCommand(new CmdReport());
     }

@@ -1,4 +1,5 @@
 # 英文？英文是不存在的
 key.category.i18nmod=汉化更新模组键位设定
 key.report_key.desc=问题反馈键
-key.weblate_key.desc=打开Weblate对应词条
+key.weblate_key.desc=打开 Weblate 对应词条
+key.mcmod_key.desc=打开 Mcmod 百科对应词条
