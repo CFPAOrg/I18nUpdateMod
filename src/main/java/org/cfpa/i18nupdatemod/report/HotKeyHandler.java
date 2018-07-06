@@ -98,10 +98,6 @@ public class HotKeyHandler {
 
     /**
      * 获取物品信息，并打开浏览器
-<<<<<<< HEAD:src/main/java/org/cfpa/i18nupdatemod/report/HotKeyHandler.java
-     *
-=======
->>>>>>> a033edf... Cleanup round3:src/main/java/org/cfpa/i18nupdatemod/report/HotKeyHandler.java
      * @param stack 物品
      * @return 是否成功
      */
@@ -120,10 +116,6 @@ public class HotKeyHandler {
 
     /**
      * 获取物品信息，并打开 weblate 对应界面
-<<<<<<< HEAD:src/main/java/org/cfpa/i18nupdatemod/report/HotKeyHandler.java
-     *
-=======
->>>>>>> a033edf... Cleanup round3:src/main/java/org/cfpa/i18nupdatemod/report/HotKeyHandler.java
      * @param stack 物品
      * @return 是否成功
      */
@@ -152,10 +144,6 @@ public class HotKeyHandler {
 
     /**
      * 获取物品信息，并打开 mcmod 对应界面
-<<<<<<< HEAD:src/main/java/org/cfpa/i18nupdatemod/report/HotKeyHandler.java
-     *
-=======
->>>>>>> a033edf... Cleanup round3:src/main/java/org/cfpa/i18nupdatemod/report/HotKeyHandler.java
      * @param stack 物品
      * @return 是否成功
      */
