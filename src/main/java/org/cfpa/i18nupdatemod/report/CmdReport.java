@@ -31,7 +31,6 @@ public class CmdReport extends CommandBase {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         ItemStack stack = Minecraft.getMinecraft().player.inventory.getCurrentItem();
         if (!stack.isEmpty()) {
