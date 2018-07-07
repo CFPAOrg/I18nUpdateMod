@@ -25,9 +25,11 @@ public class DownloadWindow {
     private void init() {
         // 初始化窗口
         frame = new JFrame();
-        int width = Toolkit.getDefaultToolkit().getScreenSize().width >= 1600 ? (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.2) : 320;
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int width = gd.getDisplayMode().getWidth() >= 1920 ? (int) (gd.getDisplayMode().getWidth() * 0.2)  : 384;
         int height = (int) (width * 0.3);
-        frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 10, width, height);
+        frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2,
+                (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 10, width, height);
         frame.setTitle(MainConfig.download.dlWindowsName);
         JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -95,7 +97,8 @@ public class DownloadWindow {
         // 超时守护进程
         new Thread(() -> {
             try {
-                while (manager.getStatus() == DownloadStatus.IDLE) Thread.sleep(50);
+                while (manager.getStatus() == DownloadStatus.IDLE)
+                    Thread.sleep(50);
                 int i = MainConfig.download.maxTime;
                 while (!manager.isDone() && i >= 0) {
                     btBackground.setText("后台下载(" + i + ')');
