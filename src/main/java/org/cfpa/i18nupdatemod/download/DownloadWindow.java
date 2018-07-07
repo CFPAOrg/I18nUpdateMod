@@ -25,7 +25,7 @@ public class DownloadWindow {
     private void init() {
         // 初始化窗口
         frame = new JFrame();
-        int width = (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.2);
+        int width = Toolkit.getDefaultToolkit().getScreenSize().width >= 1600 ? (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.2) : 320;
         int height = (int) (width * 0.3);
         frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 10, width, height);
         frame.setTitle(MainConfig.download.dlWindowsName);
