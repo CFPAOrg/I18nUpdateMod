@@ -58,46 +58,24 @@ public class HotKeyHandler {
             return;
         }
 
+        // 原版判定
         if (guiScreen instanceof GuiContainer) {
             GuiContainer guiContainer = (GuiContainer) guiScreen;
             Slot slotUnderMouse = guiContainer.getSlotUnderMouse();
             if (slotUnderMouse != null) {
-                ItemStack stack = slotUnderMouse.getStack();
-                if (!stack.isEmpty()) {
-                    if (Keyboard.getEventKey() == reportKey.getKeyCode()) {
-                        // 问题报告界面的打开
-                        showed = openReport(stack);
-                    } else if (Keyboard.getEventKey() == weblateKey.getKeyCode()) {
-                        // Weblate 翻译界面的打开
-                        showed = openWeblate(stack);
-                    } else if (Keyboard.getEventKey() == mcmodKey.getKeyCode()) {
-                        // mcmod 百科界面的打开
-                        showed = openMcmod(stack);
-                    }
-                    return;
-                }
+                showed = keyHandler(slotUnderMouse.getStack());
+                return;
             }
         }
         // JEI 支持
         if (Loader.isModLoaded("jei")) {
-            ItemStack stack = Internal.getRuntime().getIngredientListOverlay().getStackUnderMouse();
-            if (stack != null) {
-                // 问题报告界面的打开
-                if (Keyboard.getEventKey() == reportKey.getKeyCode()) {
-                    showed = openReport(stack);
-                    // Weblate 翻译界面的打开
-                } else if (Keyboard.getEventKey() == weblateKey.getKeyCode()) {
-                    showed = openWeblate(stack);
-                    // mcmod 百科界面的打开
-                } else if (Keyboard.getEventKey() == mcmodKey.getKeyCode()) {
-                    showed = openMcmod(stack);
-                }
-            }
+            showed = keyHandler(Internal.getRuntime().getIngredientListOverlay().getStackUnderMouse());
         }
     }
 
     /**
      * 获取物品信息，并打开浏览器
+     *
      * @param stack 物品
      * @return 是否成功
      */
@@ -116,6 +94,7 @@ public class HotKeyHandler {
 
     /**
      * 获取物品信息，并打开 weblate 对应界面
+     *
      * @param stack 物品
      * @return 是否成功
      */
@@ -144,6 +123,7 @@ public class HotKeyHandler {
 
     /**
      * 获取物品信息，并打开 mcmod 对应界面
+     *
      * @param stack 物品
      * @return 是否成功
      */
@@ -183,5 +163,27 @@ public class HotKeyHandler {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 获取输入按键，进行不同处理
+     *
+     * @param stack 物品
+     * @return 是否成功
+     */
+    public static boolean keyHandler(ItemStack stack) {
+        if (stack != null) {
+            // 问题报告界面的打开
+            if (Keyboard.getEventKey() == reportKey.getKeyCode()) {
+                return openReport(stack);
+                // Weblate 翻译界面的打开
+            } else if (Keyboard.getEventKey() == weblateKey.getKeyCode()) {
+                return openWeblate(stack);
+                // mcmod 百科界面的打开
+            } else if (Keyboard.getEventKey() == mcmodKey.getKeyCode()) {
+                return openMcmod(stack);
+            }
+        }
+        return false;
     }
 }

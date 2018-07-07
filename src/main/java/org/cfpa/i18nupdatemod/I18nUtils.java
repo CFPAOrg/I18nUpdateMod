@@ -6,13 +6,13 @@ import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
 import org.cfpa.i18nupdatemod.config.MainConfig;
 
-import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
-
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
 
 public class I18nUtils {
     public I18nUtils() {
@@ -135,7 +135,7 @@ public class I18nUtils {
     }
 
     /**
-     * 检测 Java 虚拟机实例语言
+     * 检测系统语言
      *
      * @return 是否为简体中文语言
      */
