@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -27,14 +28,16 @@ import java.nio.charset.StandardCharsets;
 
 @Mod.EventBusSubscriber(modid = I18nUpdateMod.MODID)
 public class HotKeyHandler {
-    public static final KeyBinding reportKey = new KeyBinding("key.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
-    public static final KeyBinding weblateKey = new KeyBinding("key.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
-    public static final KeyBinding mcmodKey = new KeyBinding("key.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
-    public static boolean showed = false;
+    private static final KeyBinding mainKey = new KeyBinding("key.main_key.desc", Keyboard.KEY_LCONTROL, "key.category.i18nmod");
+    private static final KeyBinding reportKey = new KeyBinding("key.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
+    private static final KeyBinding weblateKey = new KeyBinding("key.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
+    private static final KeyBinding mcmodKey = new KeyBinding("key.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
+    private static boolean showed = false;
 
     private HotKeyHandler() {/*NO Instance*/}
 
     public static void register() {
+        ClientRegistry.registerKeyBinding(mainKey);
         ClientRegistry.registerKeyBinding(reportKey);
         ClientRegistry.registerKeyBinding(weblateKey);
         ClientRegistry.registerKeyBinding(mcmodKey);
@@ -172,15 +175,15 @@ public class HotKeyHandler {
      * @return 是否成功
      */
     public static boolean keyHandler(ItemStack stack) {
-        if (stack != null) {
+        if (stack != null && stack != ItemStack.EMPTY && stack.getItem() != Items.AIR) {
             // 问题报告界面的打开
-            if (Keyboard.getEventKey() == reportKey.getKeyCode()) {
+            if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reportKey.getKeyCode()) {
                 return openReport(stack);
                 // Weblate 翻译界面的打开
-            } else if (Keyboard.getEventKey() == weblateKey.getKeyCode()) {
+            } else if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == weblateKey.getKeyCode()) {
                 return openWeblate(stack);
                 // mcmod 百科界面的打开
-            } else if (Keyboard.getEventKey() == mcmodKey.getKeyCode()) {
+            } else if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == mcmodKey.getKeyCode()) {
                 return openMcmod(stack);
             }
         }
