@@ -12,6 +12,8 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
+
 public class I18nUtils {
     public I18nUtils() {
         throw new UnsupportedOperationException("no instance");
@@ -29,7 +31,7 @@ public class I18nUtils {
             // I18nUpdateMod.logger.info(MainConfig.download.maxDay * 24 * 3600 * 1000);
             return (System.currentTimeMillis() - f.lastModified()) > (MainConfig.download.maxDay * 24 * 3600 * 1000);
         } catch (Throwable e) {
-            I18nUpdateMod.logger.error("检查文件日期失败", e);
+            logger.error("检查文件日期失败", e);
             return false;
         }
     }
@@ -45,13 +47,14 @@ public class I18nUtils {
             URL url = new URL(MainConfig.download.langPackURL);
             return url.openConnection().getContentLengthLong() == f.length();
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.error("检查文件大小失败", e);
             return false;
         }
     }
 
     /**
      * 重新加载资源包
+     * @see ResourcePackRepository
      */
     public static void reloadResources() {
         Minecraft mc = Minecraft.getMinecraft();
@@ -63,11 +66,6 @@ public class I18nUtils {
         List<ResourcePackRepository.Entry> repositoryEntries = Lists.newArrayList();
         Iterator<String> it = gameSettings.resourcePacks.iterator();
 
-        /*
-         此时情况是这样的
-         entry 为修改后的条目
-         repositoryEntries 为游戏应当加载的条目
-        */
         while (it.hasNext()) {
             String packName = it.next();
             for (ResourcePackRepository.Entry entry : repositoryEntriesAll) {
@@ -79,10 +77,11 @@ public class I18nUtils {
                     }
                     // 否则移除
                     it.remove();
-                    I18nUpdateMod.logger.warn("移除资源包 {}，因为它无法兼容当前版本", entry.getResourcePackName());
+                    logger.warn("移除资源包 {}，因为它无法兼容当前版本", entry.getResourcePackName());
                 }
             }
         }
+
         resourcePackRepository.setRepositories(repositoryEntries);
     }
 
@@ -96,7 +95,7 @@ public class I18nUtils {
         if (!gameSettings.resourcePacks.contains(MainConfig.download.langPackName)) {
             mc.gameSettings.resourcePacks.add(MainConfig.download.langPackName);
         }
-        I18nUtils.reloadResources();
+        reloadResources();
     }
 
     /**
@@ -136,7 +135,7 @@ public class I18nUtils {
     }
 
     /**
-     * 检测 Java 虚拟机实例语言
+     * 检测系统语言
      *
      * @return 是否为简体中文语言
      */

@@ -19,7 +19,7 @@ repositories {
     }
 }
 
-version = "1.0.0"
+version = modVersion
 group = "org.cfpa.i18nupdatemod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "i18nupdatemod"
 
