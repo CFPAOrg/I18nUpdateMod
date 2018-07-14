@@ -9,8 +9,17 @@ key.i18nmod.mcmod_key.desc=打开 Mcmod 百科对应词条
 
 # 消息提醒（不硬编码，因为这一处原版强制语言文件）
 message.i18nmod.cmd_reload.success=§3[§6调试功能§3] §e重载成功
+
 message.i18nmod.cmd_report.empty=§e请将要反馈的物品拿在手上
+
 message.i18nmod.cmd_get_langpack.empty=§e缺失参数，正确输入应当为 §6/lang_get <模组资源id>
-message.i18nmod.cmd_get_langpack.right_start=§e正在下载 §6%s §e模组的资源包，请稍等……
-message.i18nmod.cmd_get_langpack.right_stop=§e下载完毕，请手动加载资源包
-message.i18nmod.cmd_get_langpack.not_found=§e未找到资源 id 为 §6%s §e的模组，请确认是否输入错误，或者目前没有加入翻译项目
+message.i18nmod.cmd_get_langpack.not_found=§3[§6调试功能§3] §e未找到资源 id 为 §6%s §e的模组，请确认是否输入错误，或者目前没有加入翻译项目
+
+message.i18nmod.cmd_get_langpack.right_start=§3[§6调试功能§3] §e正在下载 §6%s §e模组的资源包，请稍等……
+message.i18nmod.cmd_get_langpack.right_downloading=§3[§6调试功能§3] §e下载中，已耗时 %d §e秒……
+message.i18nmod.cmd_get_langpack.right_stop=§3[§6调试功能§3] §e下载完毕，请手动加载资源包
+
+message.i18nmod.cmd_get_langpack.error_stop=§3[§6调试功能§3] §e下载失败，有可能是网络原因，也可能是远程服务器不存在此项目
+message.i18nmod.cmd_get_langpack.error_timeout=§3[§6调试功能§3] §e下载超时，有可能是网络原因
+message.i18nmod.cmd_get_langpack.error_create_folder=§3[§6调试功能§3] §e创建资源包文件夹失败，有可能是已经存在同名文件
+message.i18nmod.cmd_get_langpack.error_handle=§3[§6调试功能§3] §e处理文件失败

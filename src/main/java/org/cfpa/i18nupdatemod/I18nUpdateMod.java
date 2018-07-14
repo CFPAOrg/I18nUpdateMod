@@ -63,7 +63,7 @@ public class I18nUpdateMod {
             DownloadManager downloader = new DownloadManager(MainConfig.download.langPackURL, MainConfig.download.langPackName, Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
             DownloadWindow window = new DownloadWindow(downloader);
             window.showWindow();
-            downloader.start();
+            downloader.start("I18n-Download-Thread");
 
             // 阻塞主线程
             while (downloader.getStatus() == DownloadStatus.DOWNLOADING) Thread.sleep(50);

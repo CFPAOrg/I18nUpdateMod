@@ -28,8 +28,10 @@ public class DownloadManager {
 
     /**
      * 开始下载
+     *
+     * @param threadName 线程名称
      */
-    public void start() {
+    public void start(String threadName) {
         status = DownloadStatus.DOWNLOADING;
         downloadThread = new Thread(() -> {
             try {
@@ -37,7 +39,7 @@ public class DownloadManager {
             } catch (Throwable e) {
                 catching(e);
             }
-        }, "I18n-Download-Thread");
+        }, threadName);
         downloadThread.start();
     }
 
