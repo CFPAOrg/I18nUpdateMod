@@ -1,4 +1,4 @@
-package org.cfpa.i18nupdatemod.report;
+package org.cfpa.i18nupdatemod.command;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -7,8 +7,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.cfpa.i18nupdatemod.config.MainConfig;
 
 import java.awt.*;
@@ -43,7 +41,7 @@ public class CmdReport extends CommandBase {
                 urlException.printStackTrace();
             }
         } else {
-            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("请将要反馈的物品拿在手上"));
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_report.empty"));
         }
     }
 }

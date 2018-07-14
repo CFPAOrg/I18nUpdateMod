@@ -1,4 +1,4 @@
-package org.cfpa.i18nupdatemod.report;
+package org.cfpa.i18nupdatemod.hotkey;
 
 import mezz.jei.Internal;
 import net.minecraft.client.Minecraft;
@@ -28,10 +28,10 @@ import java.nio.charset.StandardCharsets;
 
 @Mod.EventBusSubscriber(modid = I18nUpdateMod.MODID)
 public class HotKeyHandler {
-    private static final KeyBinding mainKey = new KeyBinding("key.main_key.desc", Keyboard.KEY_LCONTROL, "key.category.i18nmod");
-    private static final KeyBinding reportKey = new KeyBinding("key.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
-    private static final KeyBinding weblateKey = new KeyBinding("key.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
-    private static final KeyBinding mcmodKey = new KeyBinding("key.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
+    private static final KeyBinding mainKey = new KeyBinding("key.i18nmod.main_key.desc", Keyboard.KEY_LCONTROL, "key.category.i18nmod");
+    private static final KeyBinding reportKey = new KeyBinding("key.i18nmod.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
+    private static final KeyBinding weblateKey = new KeyBinding("key.i18nmod.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
+    private static final KeyBinding mcmodKey = new KeyBinding("key.i18nmod.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
     private static boolean showed = false;
 
     private HotKeyHandler() {/*NO Instance*/}

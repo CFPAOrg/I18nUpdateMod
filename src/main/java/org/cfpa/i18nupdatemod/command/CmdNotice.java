@@ -1,8 +1,9 @@
-package org.cfpa.i18nupdatemod.notice;
+package org.cfpa.i18nupdatemod.command;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import org.cfpa.i18nupdatemod.notice.NoticeShower;
 
 import java.util.ArrayList;
 import java.util.List;

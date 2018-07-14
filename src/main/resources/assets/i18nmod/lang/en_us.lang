@@ -1,6 +1,16 @@
 # 英文？英文是不存在的
+
+# 键位部分
 key.category.i18nmod=汉化更新模组键位设定
-key.main_key.desc=组合键主键位
-key.report_key.desc=问题反馈键
-key.weblate_key.desc=打开 Weblate 对应词条
-key.mcmod_key.desc=打开 Mcmod 百科对应词条
+key.i18nmod.main_key.desc=组合键主键位
+key.i18nmod.report_key.desc=问题反馈键
+key.i18nmod.weblate_key.desc=打开 Weblate 对应词条
+key.i18nmod.mcmod_key.desc=打开 Mcmod 百科对应词条
+
+# 消息提醒（不硬编码，因为这一处原版强制语言文件）
+message.i18nmod.cmd_reload.success=§3[§6调试功能§3] §e重载成功
+message.i18nmod.cmd_report.empty=§e请将要反馈的物品拿在手上
+message.i18nmod.cmd_get_langpack.empty=§e缺失参数，正确输入应当为 §6/lang_get <模组资源id>
+message.i18nmod.cmd_get_langpack.right_start=§e正在下载 §6%s §e模组的资源包，请稍等……
+message.i18nmod.cmd_get_langpack.right_stop=§e下载完毕，请手动加载资源包
+message.i18nmod.cmd_get_langpack.not_found=§e未找到资源 id 为 §6%s §e的模组，请确认是否输入错误，或者目前没有加入翻译项目
