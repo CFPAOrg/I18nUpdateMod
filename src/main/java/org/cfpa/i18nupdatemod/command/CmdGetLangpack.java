@@ -38,66 +38,38 @@ public class CmdGetLangpack extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
+        // 参数为空，警告
         if (args.length == 0) {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.empty"));
         }
 
+        // 参数存在，进行下一步判定
         if (Minecraft.getMinecraft().getResourceManager().getResourceDomains().contains(args[0])) {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.right_start", args[0]));
 
+            // 同名资源包存在，直接返回
             if (!cerateTempLangpack(args[0])) {
                 Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_create_folder"));
                 return;
             }
 
-            DownloadManager langpackChinese = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/zh_cn.lang", args[0]), "zh_cn.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", args[0], args[0]));
-            DownloadManager langpackEnglish = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/en_us.lang", args[0]), "en_us.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", args[0], args[0]));
-            langpackChinese.start("I18n-Download-Chinese-Thread");
-            langpackEnglish.start("I18n-Download-English-Thread");
-
-            // 开始下载
-            new Thread(() -> {
-                int timeRecord = 0;
-                while (true) {
-                    try {
-                        Thread.sleep(5000);
-                        if (langpackChinese.getStatus() == DownloadStatus.DOWNLOADING || langpackEnglish.getStatus() == DownloadStatus.DOWNLOADING) {
-                            timeRecord = timeRecord + 5;
-                        } else if (langpackChinese.getStatus() == DownloadStatus.SUCCESS && langpackEnglish.getStatus() == DownloadStatus.SUCCESS) {
-                            if (handleLangpack(args[0])) {
-                                Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.right_stop"));
-                            } else {
-                                Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_handle"));
-                            }
-                            break;
-                        } else {
-                            langpackChinese.cancel();
-                            langpackEnglish.cancel();
-                            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_stop"));
-                            break;
-                        }
-                    } catch (InterruptedException ignore) {
-                    }
-                    Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.right_downloading", timeRecord));
-                    if (timeRecord > 60) {
-                        langpackChinese.cancel();
-                        langpackEnglish.cancel();
-                        Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_timeout"));
-                        return;
-                    }
-                }
-            }, "I18n_LANGPACK_THREAD").start();
-        } else {
+            // 主下载功能
+            langFileDownloader(args[0]);
+        }
+        // 参数不存在，警告
+        else {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.not_found", args[0]));
         }
     }
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        // 如果输入参数为空，返回整个列表
         if (args.length == 0) {
             return new ArrayList<>(Minecraft.getMinecraft().getResourceManager().getResourceDomains());
         }
 
+        // 如果输入不为空，从头字符串检索，进行输出
         List<String> availableArgs = new ArrayList<>();
         for (String modid : Minecraft.getMinecraft().getResourceManager().getResourceDomains()) {
             if (modid.indexOf(args[0]) == 0) {
@@ -107,6 +79,12 @@ public class CmdGetLangpack extends CommandBase {
         return availableArgs;
     }
 
+    /**
+     * 构建资源包文件夹
+     *
+     * @param modid 想要下载的模组资源 id
+     * @return 是否构建成功
+     */
     private boolean cerateTempLangpack(String modid) {
         // 构建文件夹
         File tempDir = new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
@@ -134,21 +112,12 @@ public class CmdGetLangpack extends CommandBase {
         return true;
     }
 
-    // 处理中英文文件，弄成混编，方便玩家翻译
-    private boolean handleLangpack(String modid) {
-        try {
-            List<String> en_us = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "en_us.lang", modid, modid)), StandardCharsets.UTF_8);
-            List<String> zh_cn = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), StandardCharsets.UTF_8);
-
-            FileUtils.writeLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), "UTF-8", handleMap(listToMap(en_us), listToMap(zh_cn)), "\n", false);
-
-            return true;
-        } catch (IOException ioe) {
-            return false;
-        }
-    }
-
-    // 将 list 处理成 hashMap
+    /**
+     * 依据等号切分字符串，将 list 处理成 hashMap
+     *
+     * @param listIn 想要处理的字符串 list
+     * @return 处理好的 HashMap
+     */
     private HashMap<String, String> listToMap(List<String> listIn) {
         HashMap<String, String> mapOut = new HashMap<>();
 
@@ -170,16 +139,138 @@ public class CmdGetLangpack extends CommandBase {
         return mapOut;
     }
 
-    // 将两个 map 混编
-    private List<String> handleMap(HashMap<String, String> enMap, HashMap<String, String> zhMap) {
-        List<String> listOut = new ArrayList<>();
-        for (String key : enMap.keySet()) {
-            if (zhMap.containsKey(key)) {
-                listOut.add(key + '=' + zhMap.get(key));
-            } else {
-                listOut.add(key + '=' + enMap.get(key));
+    /**
+     * 处理中英文文件，弄成混编，方便玩家翻译
+     *
+     * @param modid 想要下载的模组资源 id
+     * @return 是否处理成功
+     */
+    private boolean handleLangpack(String modid) {
+        try {
+            // 临时文件
+            List<String> tmpFile = new ArrayList<>();
+
+            // 读取中英文文件
+            List<String> en_us = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "en_us.lang", modid, modid)), StandardCharsets.UTF_8);
+            List<String> zh_cn = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), StandardCharsets.UTF_8);
+
+            // 处理成 HashMap
+            HashMap<String, String> chineseMap = listToMap(zh_cn);
+            HashMap<String, String> englishMap = listToMap(en_us);
+
+            // 接下来，替换
+            for (String s : en_us) {
+                // 临时变量，记录是否已经存在汉化
+                boolean isExist = false;
+
+                // 遍历查找
+                for (String key : chineseMap.keySet()) {
+                    // 存在！
+                    if (s.indexOf(key) == 0) {
+                        // 替换，写入临时变量
+                        tmpFile.add(s.replaceAll("=(.*)$", "=" + chineseMap.get(key)));
+                        // 别忘记标记存在
+                        isExist = true;
+                        break;
+                    }
+                }
+                // 只有不存在时，才添加源字符串
+                if (!isExist) {
+                    tmpFile.add(s);
+                }
             }
+
+            // 写入文件
+            FileUtils.writeLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), "UTF-8", tmpFile, "\n", false);
+
+            return true;
+        } catch (IOException ioe) {
+            return false;
         }
-        return listOut;
+    }
+
+    /**
+     * 下载主程序
+     *
+     * @param modid 想要下载的模组资源 id
+     */
+    private void langFileDownloader(String modid) {
+        // 构建单独的下载线程，下载中英文
+        DownloadManager langpackChinese = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/zh_cn.lang", modid), "zh_cn.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
+        DownloadManager langpackEnglish = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/en_us.lang", modid), "en_us.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
+
+        // 线程启用
+        langpackChinese.start("I18n-Download-Chinese-Thread");
+        langpackEnglish.start("I18n-Download-English-Thread");
+
+        // 开始下载
+        new Thread(() -> {
+            // 计时器，用来记录超时时间
+            int timeRecord = 0;
+
+            // 主循环，除非出错，否则一直定时检测
+            while (true) {
+                try {
+                    // 检测间隔，5秒
+                    Thread.sleep(5000);
+
+                    // 还在下载？计时器计数，同时提醒游戏内玩家
+                    if (langpackChinese.getStatus() == DownloadStatus.DOWNLOADING || langpackEnglish.getStatus() == DownloadStatus.DOWNLOADING) {
+                        timeRecord = timeRecord + 5;
+                    }
+
+                    // 两者都成功？
+                    else if (langpackChinese.getStatus() == DownloadStatus.SUCCESS && langpackEnglish.getStatus() == DownloadStatus.SUCCESS) {
+                        // 处理语言文件，构建成资源包
+                        if (handleLangpack(modid)) {
+                            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.right_stop"));
+                        }
+                        // 处理失败，告诉玩家
+                        else {
+                            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_handle"));
+                        }
+                        // 失败还是成功过，都跳出循环
+                        break;
+                    }
+                    // 其他情况，取消下载
+                    else {
+                        langpackChinese.cancel();
+                        langpackEnglish.cancel();
+
+                        // 既然取消下载，那么就删除这个没用的资源包吧
+                        try {
+                            FileUtils.deleteDirectory(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包", modid)));
+                        } catch (IOException ioe) {
+                            ioe.printStackTrace();
+                        }
+
+                        // 同时提醒玩家，跳出循环
+                        Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_stop"));
+                        break;
+                    }
+                } catch (InterruptedException ignore) {
+                }
+
+                // 下载中，定时提示
+                Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.right_downloading", timeRecord));
+
+                // 超时取消下载
+                if (timeRecord >= 60) {
+                    langpackChinese.cancel();
+                    langpackEnglish.cancel();
+
+                    // 既然取消下载，那么就删除这个没用的资源包吧
+                    try {
+                        FileUtils.deleteDirectory(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包", modid)));
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
+
+                    // 同时提醒玩家
+                    Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_timeout"));
+                    return;
+                }
+            }
+        }, "I18n_LANGPACK_THREAD").start();
     }
 }
