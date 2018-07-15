@@ -8,11 +8,13 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.apache.commons.io.IOUtils;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
 import org.cfpa.i18nupdatemod.I18nUtils;
@@ -32,6 +34,8 @@ public class HotKeyHandler {
     private static final KeyBinding reportKey = new KeyBinding("key.i18nmod.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
     private static final KeyBinding weblateKey = new KeyBinding("key.i18nmod.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
     private static final KeyBinding mcmodKey = new KeyBinding("key.i18nmod.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
+    private static final KeyBinding reloadKey = new KeyBinding("key.i18nmod.reload_key.desc", Keyboard.KEY_R, "key.category.i18nmod");
+
     private static boolean showed = false;
 
     private HotKeyHandler() {/*NO Instance*/}
@@ -41,8 +45,10 @@ public class HotKeyHandler {
         ClientRegistry.registerKeyBinding(reportKey);
         ClientRegistry.registerKeyBinding(weblateKey);
         ClientRegistry.registerKeyBinding(mcmodKey);
+        ClientRegistry.registerKeyBinding(reloadKey);
     }
 
+    // 在打开 GUI 情况下的按键触发
     @SubscribeEvent
     public static void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Pre e) {
         // 最开始，检测是否启用国际化配置
@@ -55,9 +61,15 @@ public class HotKeyHandler {
 
         // 取消重复显示
         if (showed) {
-            if (!Keyboard.isKeyDown(reportKey.getKeyCode()) && !Keyboard.isKeyDown(weblateKey.getKeyCode()) && !Keyboard.isKeyDown(mcmodKey.getKeyCode())) {
+            if (!Keyboard.isKeyDown(reportKey.getKeyCode()) && !Keyboard.isKeyDown(weblateKey.getKeyCode()) && !Keyboard.isKeyDown(mcmodKey.getKeyCode()) && !Keyboard.isKeyDown(reloadKey.getKeyCode())) {
                 showed = false;
             }
+            return;
+        }
+
+        // 首先，重载汉化
+        if (reloadKeyHandler()) {
+            showed = true;
             return;
         }
 
@@ -76,13 +88,26 @@ public class HotKeyHandler {
         }
     }
 
+    // 非 GUI 情况下的按键触发
+    @SubscribeEvent
+    public static void onKeyPressNoGui(InputEvent.KeyInputEvent e) {
+        // 取消重复显示
+        if (showed) {
+            if (!Keyboard.isKeyDown(reloadKey.getKeyCode())) {
+                showed = false;
+            }
+            return;
+        }
+        showed = reloadKeyHandler();
+    }
+
     /**
      * 获取物品信息，并打开浏览器
      *
      * @param stack 物品
      * @return 是否成功
      */
-    public static boolean openReport(ItemStack stack) {
+    private static boolean openReport(ItemStack stack) {
         String text = String.format("模组ID：%s\n非本地化名称：%s\n显示名称：%s", stack.getItem().getCreatorModId(stack), stack.getItem().getUnlocalizedName(), stack.getDisplayName());
         String url = MainConfig.key.reportURL;
         try {
@@ -101,7 +126,7 @@ public class HotKeyHandler {
      * @param stack 物品
      * @return 是否成功
      */
-    public static boolean openWeblate(ItemStack stack) {
+    private static boolean openWeblate(ItemStack stack) {
         String displayName, assetsName;
 
         // 先进行字符获取与转义
@@ -130,7 +155,7 @@ public class HotKeyHandler {
      * @param stack 物品
      * @return 是否成功
      */
-    public static boolean openMcmod(ItemStack stack) {
+    private static boolean openMcmod(ItemStack stack) {
         String modName, regName, displayName, url;
         int metadata, mcmodApiNum;
 
@@ -174,7 +199,7 @@ public class HotKeyHandler {
      * @param stack 物品
      * @return 是否成功
      */
-    public static boolean keyHandler(ItemStack stack) {
+    private static boolean keyHandler(ItemStack stack) {
         if (stack != null && stack != ItemStack.EMPTY && stack.getItem() != Items.AIR) {
             // 问题报告界面的打开
             if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reportKey.getKeyCode()) {
@@ -186,6 +211,20 @@ public class HotKeyHandler {
             } else if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == mcmodKey.getKeyCode()) {
                 return openMcmod(stack);
             }
+        }
+        return false;
+    }
+
+    /**
+     * 单独功能，快速重载语言文件
+     *
+     * @return 是否成功
+     */
+    private static boolean reloadKeyHandler() {
+        if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reloadKey.getKeyCode()) {
+            Minecraft.getMinecraft().getLanguageManager().onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_reload.success"));
+            return true;
         }
         return false;
     }

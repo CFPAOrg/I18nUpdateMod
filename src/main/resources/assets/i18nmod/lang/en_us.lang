@@ -6,6 +6,7 @@ key.i18nmod.main_key.desc=组合键主键位
 key.i18nmod.report_key.desc=问题反馈键
 key.i18nmod.weblate_key.desc=打开 Weblate 对应词条
 key.i18nmod.mcmod_key.desc=打开 Mcmod 百科对应词条
+key.i18nmod.reload_key.desc=快速重载汉化
 
 # 消息提醒（不硬编码，因为这一处原版强制语言文件）
 message.i18nmod.cmd_reload.success=§3[§6调试功能§3] §e重载成功

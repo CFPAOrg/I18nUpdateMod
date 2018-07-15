@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
 
 public class CmdGetLangpack extends CommandBase {
     @Override
@@ -167,8 +168,8 @@ public class CmdGetLangpack extends CommandBase {
                 for (String key : chineseMap.keySet()) {
                     // 存在！
                     if (s.indexOf(key) == 0) {
-                        // 替换，写入临时变量
-                        tmpFile.add(s.replaceAll("=(.*)$", "=" + chineseMap.get(key)));
+                        // 替换，写入临时变量。记住替换字符串需要转义，防止发生 Illegal group reference 错误
+                        tmpFile.add(s.replaceAll("=.*$", "=" + Matcher.quoteReplacement(chineseMap.get(key))));
                         // 别忘记标记存在
                         isExist = true;
                         break;
