@@ -7,10 +7,7 @@ import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.cfpa.i18nupdatemod.command.CmdGetLangpack;
-import org.cfpa.i18nupdatemod.command.CmdNotice;
-import org.cfpa.i18nupdatemod.command.CmdReload;
-import org.cfpa.i18nupdatemod.command.CmdReport;
+import org.cfpa.i18nupdatemod.command.*;
 import org.cfpa.i18nupdatemod.config.MainConfig;
 import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
 import org.cfpa.i18nupdatemod.download.DownloadManager;
@@ -90,5 +87,6 @@ public class I18nUpdateMod {
         ClientCommandHandler.instance.registerCommand(new CmdReport());
         ClientCommandHandler.instance.registerCommand(new CmdReload());
         ClientCommandHandler.instance.registerCommand(new CmdGetLangpack());
+        ClientCommandHandler.instance.registerCommand(new CmdUpload());
     }
 }
