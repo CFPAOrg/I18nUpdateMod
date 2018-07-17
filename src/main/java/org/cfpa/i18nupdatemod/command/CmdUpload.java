@@ -78,7 +78,7 @@ public class CmdUpload extends CommandBase {
         File resourcepacksDir = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
         if (resourcepacksDir.exists() && resourcepacksDir.isDirectory()) {
             for (File i : resourcepacksDir.listFiles()) {
-                File transFile = new File(i.toString() + File.separator + "assets" + File.separator + i.toString().substring(15, i.toString().length() - 10) + File.separator + "lang" + File.separator + "zh_cn.lang");
+                File transFile = new File(i.toString() + File.separator + "assets" + File.separator + i.toString().substring(15, i.toString().length() - 18) + File.separator + "lang" + File.separator + "zh_cn.lang");
                 System.out.println(transFile.toString());
                 if (transFile.exists() && transFile.isFile()) {
                     outputModid.add(transFile.toString());

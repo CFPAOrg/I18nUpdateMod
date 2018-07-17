@@ -88,13 +88,13 @@ public class CmdGetLangpack extends CommandBase {
      */
     private boolean cerateTempLangpack(String modid) {
         // 构建文件夹
-        File tempDir = new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
+        File tempDir = new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
         if (tempDir.exists() || !tempDir.mkdirs()) {
             return false;
         }
 
         // 构建 pack.mcmeta
-        File tempPackFile = new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "pack.mcmeta", modid));
+        File tempPackFile = new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "pack.mcmeta", modid));
         String metaText = String.format("{\"pack\":{\"pack_format\":3,\"description\":\"临时汉化资源包，仅包含 %s 模组中英文文件\"}}", modid);
 
         // 判定文件是否存在
@@ -152,8 +152,8 @@ public class CmdGetLangpack extends CommandBase {
             List<String> tmpFile = new ArrayList<>();
 
             // 读取中英文文件
-            List<String> en_us = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "en_us.lang", modid, modid)), StandardCharsets.UTF_8);
-            List<String> zh_cn = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), StandardCharsets.UTF_8);
+            List<String> en_us = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "en_us.lang", modid, modid)), StandardCharsets.UTF_8);
+            List<String> zh_cn = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), StandardCharsets.UTF_8);
 
             // 处理成 HashMap
             HashMap<String, String> chineseMap = listToMap(zh_cn);
@@ -182,7 +182,7 @@ public class CmdGetLangpack extends CommandBase {
             }
 
             // 写入文件
-            FileUtils.writeLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), "UTF-8", tmpFile, "\n", false);
+            FileUtils.writeLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), "UTF-8", tmpFile, "\n", false);
 
             return true;
         } catch (IOException ioe) {
@@ -197,8 +197,8 @@ public class CmdGetLangpack extends CommandBase {
      */
     private void langFileDownloader(String modid) {
         // 构建单独的下载线程，下载中英文
-        DownloadManager langpackChinese = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/zh_cn.lang", modid), "zh_cn.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
-        DownloadManager langpackEnglish = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/en_us.lang", modid), "en_us.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
+        DownloadManager langpackChinese = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/zh_cn.lang", modid), "zh_cn.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
+        DownloadManager langpackEnglish = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/en_us.lang", modid), "en_us.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
 
         // 线程启用
         langpackChinese.start("I18n-Download-Chinese-Thread");
@@ -240,7 +240,7 @@ public class CmdGetLangpack extends CommandBase {
 
                         // 既然取消下载，那么就删除这个没用的资源包吧
                         try {
-                            FileUtils.deleteDirectory(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包", modid)));
+                            FileUtils.deleteDirectory(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack", modid)));
                         } catch (IOException ioe) {
                             ioe.printStackTrace();
                         }
@@ -262,7 +262,7 @@ public class CmdGetLangpack extends CommandBase {
 
                     // 既然取消下载，那么就删除这个没用的资源包吧
                     try {
-                        FileUtils.deleteDirectory(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_模组临时汉化资源包", modid)));
+                        FileUtils.deleteDirectory(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack", modid)));
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
                     }
