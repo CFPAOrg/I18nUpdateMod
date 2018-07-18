@@ -64,7 +64,11 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 	deobfCompile "mezz.jei:jei_${minecraft.version}:4.8.5.147"
-	testCompile "junit:junit:4.12"
+
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
+    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.3'
+
+    testCompile "junit:junit:4.12"
 }
 
 processResources {
@@ -93,5 +97,6 @@ tasks.withType(JavaCompile) {
 jar {
     manifest {
         attributes 'FMLAT': 'i18nmod_at.cfg'
+        attributes 'ContainedDeps': "httpmime-4.3.3.jar"
     }
 }

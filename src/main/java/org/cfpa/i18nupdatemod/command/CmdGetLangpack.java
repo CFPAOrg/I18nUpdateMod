@@ -1,7 +1,5 @@
 package org.cfpa.i18nupdatemod.command;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -9,6 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.io.FileUtils;
+import org.cfpa.i18nupdatemod.I18nUtils;
 import org.cfpa.i18nupdatemod.download.DownloadManager;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
 
@@ -42,6 +41,7 @@ public class CmdGetLangpack extends CommandBase {
         // 参数为空，警告
         if (args.length == 0) {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.empty"));
+            return;
         }
 
         // 参数存在，进行下一步判定
@@ -114,33 +114,6 @@ public class CmdGetLangpack extends CommandBase {
     }
 
     /**
-     * 依据等号切分字符串，将 list 处理成 hashMap
-     *
-     * @param listIn 想要处理的字符串 list
-     * @return 处理好的 HashMap
-     */
-    private HashMap<String, String> listToMap(List<String> listIn) {
-        HashMap<String, String> mapOut = new HashMap<>();
-
-        // 抄袭原版加载方式
-        Splitter I18N_SPLITTER = Splitter.on('=').limit(2);
-
-        // 遍历拆分
-        for (String s : listIn) {
-            if (!s.isEmpty() && s.charAt(0) != '#') {
-                String[] splitString = Iterables.toArray(I18N_SPLITTER.split(s), String.class);
-
-                if (splitString != null && splitString.length == 2) {
-                    String s1 = splitString[0];
-                    String s2 = splitString[1];
-                    mapOut.put(s1, s2);
-                }
-            }
-        }
-        return mapOut;
-    }
-
-    /**
      * 处理中英文文件，弄成混编，方便玩家翻译
      *
      * @param modid 想要下载的模组资源 id
@@ -156,8 +129,7 @@ public class CmdGetLangpack extends CommandBase {
             List<String> zh_cn = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), StandardCharsets.UTF_8);
 
             // 处理成 HashMap
-            HashMap<String, String> chineseMap = listToMap(zh_cn);
-            HashMap<String, String> englishMap = listToMap(en_us);
+            HashMap<String, String> chineseMap = I18nUtils.listToMap(zh_cn);
 
             // 接下来，替换
             for (String s : en_us) {

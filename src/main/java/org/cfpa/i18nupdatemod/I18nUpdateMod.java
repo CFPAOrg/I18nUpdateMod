@@ -88,5 +88,6 @@ public class I18nUpdateMod {
         ClientCommandHandler.instance.registerCommand(new CmdReload());
         ClientCommandHandler.instance.registerCommand(new CmdGetLangpack());
         ClientCommandHandler.instance.registerCommand(new CmdUpload());
+        ClientCommandHandler.instance.registerCommand(new CmdToken());
     }
 }
