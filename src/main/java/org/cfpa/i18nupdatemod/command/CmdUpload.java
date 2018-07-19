@@ -104,10 +104,10 @@ public class CmdUpload extends CommandBase {
         File resourcepacksDir = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
         if (resourcepacksDir.exists() && resourcepacksDir.isDirectory()) {
             for (File i : resourcepacksDir.listFiles()) {
-                File transFile = new File(i.toString() + File.separator + "assets" + File.separator + i.toString().substring(15, i.toString().length() - 18) + File.separator + "lang" + File.separator + "zh_cn.lang");
-                if (transFile.exists() && transFile.isFile()) {
-                    Matcher matcher = Pattern.compile("_tmp_resource_pack\\\\assets\\\\(.*?)\\\\lang\\\\zh_cn\\.lang").matcher(transFile.toString());
-                    while (matcher.find()) {
+                Matcher matcher = Pattern.compile("resourcepacks" + Matcher.quoteReplacement(File.separator) + "(.*?)_tmp_resource_pack").matcher(i.toString());
+                while (matcher.find()) {
+                    File transFile = new File(i.toString() + File.separator + "assets" + File.separator + matcher.group(1) + File.separator + "lang" + File.separator + "zh_cn.lang");
+                    if (transFile.exists() && transFile.isFile()) {
                         outputModid.add(matcher.group(1));
                     }
                 }
@@ -158,6 +158,7 @@ public class CmdUpload extends CommandBase {
         // 执行，并在执行完毕后，关闭连接
         CloseableHttpResponse response;
         try {
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_upload.excute_ready"));
             response = closeableHttpClient.execute(httpPost);
             switch (response.getStatusLine().getStatusCode()) {
                 case 200:
@@ -213,9 +214,9 @@ public class CmdUpload extends CommandBase {
      */
     private File handleFile(String modid) throws IOException {
         // 英文，中文，临时文件
-        File rawChineseFile = new File(String.format(Minecraft.getMinecraft().mcDataDir.toString() + "\\resourcepacks\\%s_tmp_resource_pack\\assets\\%s\\lang\\zh_cn.lang", modid, modid));
-        File rawEnglishFile = new File(String.format(Minecraft.getMinecraft().mcDataDir.toString() + "\\resourcepacks\\%s_tmp_resource_pack\\assets\\%s\\lang\\en_us.lang", modid, modid));
-        File handleChineseFile = new File(String.format(Minecraft.getMinecraft().mcDataDir.toString() + "\\resourcepacks\\%s_tmp_resource_pack\\assets\\%s\\lang\\zh_cn_tmp.lang", modid, modid));
+        File rawChineseFile = new File(String.format(Minecraft.getMinecraft().mcDataDir.toString() + File.separator + "resourcepacks" + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid));
+        File rawEnglishFile = new File(String.format(Minecraft.getMinecraft().mcDataDir.toString() + File.separator + "resourcepacks" + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "en_us.lang", modid, modid));
+        File handleChineseFile = new File(String.format(Minecraft.getMinecraft().mcDataDir.toString() + File.separator + "resourcepacks" + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn_tmp.lang", modid, modid));
 
         // 文件存在，才进行处理
         if (rawEnglishFile.exists() && rawChineseFile.exists()) {
@@ -233,6 +234,7 @@ public class CmdUpload extends CommandBase {
 
             // 文件写入
             FileUtils.writeLines(handleChineseFile, "UTF-8", tmpFile, "\n", false);
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_upload.handle_success"));
             return handleChineseFile;
         } else {
             return null; // 不存在返回 null
