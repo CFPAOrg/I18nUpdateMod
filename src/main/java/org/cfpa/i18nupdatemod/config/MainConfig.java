@@ -66,6 +66,11 @@ public class MainConfig {
         @Config.RequiresMcRestart
         @Config.Comment("默认开启，会在启动时将游戏语言强制设定为中文")
         public boolean setupChinese = true;
+
+        @Config.Name("是否开启资源包下载功能")
+        @Config.RequiresMcRestart
+        @Config.Comment("默认开启，关闭后此模组不再尝试检查、下载资源包、以及切换语言")
+        public boolean shouldDownload = true;
     }
 
     public static class Key {

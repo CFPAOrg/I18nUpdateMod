@@ -31,7 +31,12 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
-        // 最开始，检测是否启用国际化配置
+        // 最开始，检查是否开资源包下载配置
+        if (!MainConfig.download.shouldDownload) {
+            return;
+        }
+
+        // 其次，检测是否启用国际化配置
         if (MainConfig.internationalization.openI18n && !isChinese()) {
             return;
         }

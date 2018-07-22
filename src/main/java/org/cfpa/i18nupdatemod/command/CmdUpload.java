@@ -28,6 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CmdUpload extends CommandBase {
+    private boolean haveResponse;
+
     @Override
     public String getName() {
         return "lang_upload";
@@ -158,8 +160,34 @@ public class CmdUpload extends CommandBase {
         // 执行，并在执行完毕后，关闭连接
         CloseableHttpResponse response;
         try {
+            // 先来一句提醒
             Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_upload.excute_ready"));
+
+            // 开始拨动线程检查
+            haveResponse = false;
+            new Thread(() -> {
+                while (!haveResponse) {
+                    // 计数器
+                    int count = 0;
+                    try {
+                        // 阻塞
+                        Thread.sleep(5 * 1000);
+                        // 计数
+                        count = count + 5;
+                        // 二次检查显示信息
+                        if (!haveResponse) {
+                            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_upload.uploading", count));
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, "I18n-Upload-Check-Thread").start();
+
+            // 执行上传！
             response = closeableHttpClient.execute(httpPost);
+
+            // 依据返回结果进行不同显示
             switch (response.getStatusLine().getStatusCode()) {
                 case 200:
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_token.200"));
@@ -177,28 +205,34 @@ public class CmdUpload extends CommandBase {
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
                     }
-                    return;
+                    break;
                 case 400:
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_token.400"));
-                    return;
+                    break;
                 case 401:
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_token.401"));
-                    return;
+                    break;
                 case 403:
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_token.403"));
-                    return;
+                    break;
                 case 404:
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_token.404"));
-                    return;
+                    break;
                 case 429:
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_token.429"));
-                    return;
+                    break;
                 case 524:
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_token.524"));
-                    return;
+                    break;
                 default:
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_token.other", response.getStatusLine().getStatusCode()));
+                    break;
             }
+
+            // 关闭提醒功能
+            haveResponse = true;
+
+            // 关闭网络连接
             closeableHttpClient.close();
         } catch (IOException ioe) {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_upload.upload_error"));

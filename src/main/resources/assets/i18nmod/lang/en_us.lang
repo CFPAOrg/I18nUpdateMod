@@ -48,3 +48,4 @@ message.i18nmod.cmd_upload.result_total=§6§l上传总数：%d
 message.i18nmod.cmd_upload.result_accepted=§6§l接收数量：%d
 message.i18nmod.cmd_upload.result_not_found=§6§lWeblate 不存在数量：%d
 message.i18nmod.cmd_upload.result_skipped=§6§l跳过数量：%d
+message.i18nmod.cmd_upload.uploading=§3[§6调试功能§3] §e上传中，已耗时 %d §e秒……
