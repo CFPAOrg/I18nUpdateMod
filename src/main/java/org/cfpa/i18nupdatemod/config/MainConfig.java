@@ -57,7 +57,7 @@ public class MainConfig {
 
         @Config.Name("是否为第一次使用")
         @Config.RequiresMcRestart
-        @Config.Comment("默认开启，关闭后此模组不再尝试检查、下载资源包、以及切换语言")
+        @Config.Comment("默认开启，启动此模组一次后关闭")
         public boolean isFirst = true;
     }
 
