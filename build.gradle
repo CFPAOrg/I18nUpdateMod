@@ -16,7 +16,10 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
+
     maven {
+        url ="https://mvnrepository.com/artifact/org.apache.ant/ant"
+        url ="https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit"
         name = "jei"
         url = "http://dvs1.progwml6.com/files/maven"
     }
@@ -73,6 +76,8 @@ dependencies {
     deobfCompile "mezz.jei:jei_${minecraft.version}:4.8.5.147"
 
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
+    compile group: 'org.apache.ant', name: 'ant', version: '1.8.2'
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.0.1.201806211838-r'
     shadow 'org.apache.httpcomponents:httpmime:4.3.3'
 
     testCompile "junit:junit:4.12"

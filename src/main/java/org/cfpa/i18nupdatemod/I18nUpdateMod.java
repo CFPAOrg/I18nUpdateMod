@@ -9,11 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.command.*;
 import org.cfpa.i18nupdatemod.config.MainConfig;
-import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
-import org.cfpa.i18nupdatemod.download.DownloadManager;
-import org.cfpa.i18nupdatemod.download.DownloadStatus;
-import org.cfpa.i18nupdatemod.download.DownloadWindow;
+import org.cfpa.i18nupdatemod.git.*;
 import org.cfpa.i18nupdatemod.hotkey.HotKeyHandler;
+
+import java.io.File;
 
 import static org.cfpa.i18nupdatemod.I18nUtils.*;
 
@@ -28,6 +27,7 @@ public class I18nUpdateMod {
 
     // 通知变量
     public static boolean showNotice = false;
+    public String dirResourcepacks = Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString();
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) throws InterruptedException {
@@ -39,51 +39,41 @@ public class I18nUpdateMod {
         // 其次，检测是否启用国际化配置
         if (MainConfig.internationalization.openI18n && !isChinese()) {
             return;
-        }
-
-        DownloadInfoHelper.init();
-
-        // 首先检测文件是否超过阈值
-        if (!intervalDaysCheck()) {
-            logger.info("未到下次更新时间，跳过检测和下载阶段");
-            setupResourcesPack();
-        }
-        // 如果离线且文件可用则跳过下载
-        else if ((!online()) && isResourcePackExist()) {
-            logger.info("检测到网络不可用，跳过下载阶段");
-            setupResourcesPack();
-        }
-        // 如果文件已经可用则直接跳过下载
-        else if (checkLength()) {
-            logger.info("检测到资源包最新，跳过下载阶段");
-            setupResourcesPack();
         } else {
             // 决定显示通知
             showNotice = true;
 
-            // 开始下载资源包并弹出进度窗口
-            DownloadManager downloader = new DownloadManager(MainConfig.download.langPackURL, MainConfig.download.langPackName, Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString());
-            DownloadWindow window = new DownloadWindow(downloader);
-            window.showWindow();
-            downloader.start("I18n-Download-Thread");
+            //检测是否为第一次使用模组
+            if (MainConfig.download.isFirst) {
+                //开始clone
 
-            // 阻塞主线程
-            while (downloader.getStatus() == DownloadStatus.DOWNLOADING) Thread.sleep(50);
-
-            // 如果下载成功就安装资源包
-            if (downloader.getStatus() == DownloadStatus.SUCCESS) {
-                setupResourcesPack();
+                String cfgPath = Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().getParent() + File.separator + "config";
+                Create.createDir(System.getProperty("java.io.tmpdir") + File.separator + "Minecraft-Mod-Language-Package-1.12.2");
+                Clone.cloneRepository(MainConfig.download.repositoryURL, System.getProperty("java.io.tmpdir") + File.separator + "Minecraft-Mod-Language-Package-1.12.2");
+                new Modify(cfgPath, "        B:是否为第一次使用=true", "        B:是否为第一次使用=false");
+            } else {//开始pull
+                try {
+                    System.out.println("Pulling......");
+                    Pull.pull();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
+            String zipFile = Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + MainConfig.download.langPackName;
+            ZipCompressorByAnt zca = new ZipCompressorByAnt(zipFile);
+            zca.compress(System.getProperty("java.io.tmpdir") + File.separator + "Minecraft-Mod-Language-Package-1.12.2" + File.separator + "project");
+            setupResourcesPack();
 
-        // 变化语言为中文
-        if (MainConfig.download.setupChinese) {
-            setupLang();
+
+            // 变化语言为中文
+            if (MainConfig.download.setupChinese) {
+                setupLang();
+            }
+
         }
     }
-
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
+    public void init (FMLInitializationEvent event){
         if (MainConfig.internationalization.openI18n && !isChinese()) {
             return;
         }

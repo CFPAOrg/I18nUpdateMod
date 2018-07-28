@@ -8,8 +8,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.io.FileUtils;
 import org.cfpa.i18nupdatemod.I18nUtils;
-import org.cfpa.i18nupdatemod.download.DownloadManager;
-import org.cfpa.i18nupdatemod.download.DownloadStatus;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -53,9 +51,6 @@ public class CmdGetLangpack extends CommandBase {
                 Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_create_folder"));
                 return;
             }
-
-            // 主下载功能
-            langFileDownloader(args[0]);
         }
         // 参数不存在，警告
         else {
@@ -160,90 +155,5 @@ public class CmdGetLangpack extends CommandBase {
         } catch (IOException ioe) {
             return false;
         }
-    }
-
-    /**
-     * 下载主程序
-     *
-     * @param modid 想要下载的模组资源 id
-     */
-    private void langFileDownloader(String modid) {
-        // 构建单独的下载线程，下载中英文
-        DownloadManager langpackChinese = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/zh_cn.lang", modid), "zh_cn.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
-        DownloadManager langpackEnglish = new DownloadManager(String.format("https://raw.githubusercontent.com/CFPAOrg/Minecraft-Mod-Language-Package/1.12.2/project/assets/%s/lang/en_us.lang", modid), "en_us.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
-
-        // 线程启用
-        langpackChinese.start("I18n-Download-Chinese-Thread");
-        langpackEnglish.start("I18n-Download-English-Thread");
-
-        // 开始下载
-        new Thread(() -> {
-            // 计时器，用来记录超时时间
-            int timeRecord = 0;
-
-            // 主循环，除非出错，否则一直定时检测
-            while (true) {
-                try {
-                    // 检测间隔，5秒
-                    Thread.sleep(5000);
-
-                    // 还在下载？计时器计数，同时提醒游戏内玩家
-                    if (langpackChinese.getStatus() == DownloadStatus.DOWNLOADING || langpackEnglish.getStatus() == DownloadStatus.DOWNLOADING) {
-                        timeRecord = timeRecord + 5;
-                    }
-
-                    // 两者都成功？
-                    else if (langpackChinese.getStatus() == DownloadStatus.SUCCESS && langpackEnglish.getStatus() == DownloadStatus.SUCCESS) {
-                        // 处理语言文件，构建成资源包
-                        if (handleLangpack(modid)) {
-                            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.right_stop"));
-                        }
-                        // 处理失败，告诉玩家
-                        else {
-                            Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_handle"));
-                        }
-                        // 失败还是成功过，都跳出循环
-                        break;
-                    }
-                    // 其他情况，取消下载
-                    else {
-                        langpackChinese.cancel();
-                        langpackEnglish.cancel();
-
-                        // 既然取消下载，那么就删除这个没用的资源包吧
-                        try {
-                            FileUtils.deleteDirectory(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack", modid)));
-                        } catch (IOException ioe) {
-                            ioe.printStackTrace();
-                        }
-
-                        // 同时提醒玩家，跳出循环
-                        Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_stop"));
-                        break;
-                    }
-                } catch (InterruptedException ignore) {
-                }
-
-                // 下载中，定时提示
-                Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.right_downloading", timeRecord));
-
-                // 超时取消下载
-                if (timeRecord >= 60) {
-                    langpackChinese.cancel();
-                    langpackEnglish.cancel();
-
-                    // 既然取消下载，那么就删除这个没用的资源包吧
-                    try {
-                        FileUtils.deleteDirectory(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack", modid)));
-                    } catch (IOException ioe) {
-                        ioe.printStackTrace();
-                    }
-
-                    // 同时提醒玩家
-                    Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_get_langpack.error_timeout"));
-                    return;
-                }
-            }
-        }, "I18n_LANGPACK_THREAD").start();
     }
 }

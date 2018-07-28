@@ -11,8 +11,6 @@ import org.cfpa.i18nupdatemod.config.MainConfig;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,40 +21,6 @@ public class I18nUtils {
     public I18nUtils() {
         throw new UnsupportedOperationException("no instance");
     }
-
-    /**
-     * 用来判断下载文件是否超过了时间阈值
-     *
-     * @return 文件是否超过了阈值
-     */
-    public static boolean intervalDaysCheck() {
-        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
-        try {
-            // I18nUpdateMod.logger.info(System.currentTimeMillis() - f.lastModified());
-            // I18nUpdateMod.logger.info(MainConfig.download.maxDay * 24 * 3600 * 1000);
-            return (System.currentTimeMillis() - f.lastModified()) > (MainConfig.download.maxDay * 24 * 3600 * 1000);
-        } catch (Throwable e) {
-            logger.error("检查文件日期失败", e);
-            return false;
-        }
-    }
-
-    /**
-     * 对比远程文件和本地文件大小，精确到 Byte
-     *
-     * @return 远程文件是否和本地文件大小匹配
-     */
-    public static boolean checkLength() {
-        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
-        try {
-            URL url = new URL(MainConfig.download.langPackURL);
-            return url.openConnection().getContentLengthLong() == f.length();
-        } catch (Throwable e) {
-            logger.error("检查文件大小失败", e);
-            return false;
-        }
-    }
-
     /**
      * 重新加载资源包
      *
@@ -125,19 +89,6 @@ public class I18nUtils {
     public static boolean isResourcePackExist() {
         File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), MainConfig.download.langPackName);
         return f.exists();
-    }
-
-    /**
-     * 检测与待下载主机的连通性
-     *
-     * @return 是否能连通到待下载主机
-     */
-    public static boolean online() {
-        try {
-            return InetAddress.getByName(new URL(MainConfig.download.langPackURL).getHost()).isReachable(2000);
-        } catch (Throwable e) {
-            return false;
-        }
     }
 
     /**
