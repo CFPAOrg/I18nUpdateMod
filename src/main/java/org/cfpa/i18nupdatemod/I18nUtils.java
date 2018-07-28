@@ -20,8 +20,8 @@ import java.util.List;
 import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
 
 public class I18nUtils {
-    public I18nUtils() {
-        throw new UnsupportedOperationException("no instance");
+    private I18nUtils() {
+        // No instantiation for this class is allowed
     }
 
     /**
