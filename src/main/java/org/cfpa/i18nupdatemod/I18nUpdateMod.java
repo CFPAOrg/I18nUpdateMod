@@ -84,15 +84,24 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        // 国际化检查
         if (MainConfig.internationalization.openI18n && !isChinese()) {
             return;
         }
-        HotKeyHandler.register();
+
+        // 命令注册
         ClientCommandHandler.instance.registerCommand(new CmdNotice());
         ClientCommandHandler.instance.registerCommand(new CmdReport());
         ClientCommandHandler.instance.registerCommand(new CmdReload());
         ClientCommandHandler.instance.registerCommand(new CmdGetLangpack());
         ClientCommandHandler.instance.registerCommand(new CmdUpload());
         ClientCommandHandler.instance.registerCommand(new CmdToken());
+
+        // 键位检查
+        if (MainConfig.key.closedKey) {
+            return;
+        }
+
+        HotKeyHandler.register();
     }
 }

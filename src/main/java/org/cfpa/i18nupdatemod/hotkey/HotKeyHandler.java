@@ -51,8 +51,13 @@ public class HotKeyHandler {
     // 在打开 GUI 情况下的按键触发
     @SubscribeEvent
     public static void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Pre e) {
-        // 最开始，检测是否启用国际化配置
-        if (MainConfig.internationalization.openI18n && !I18nUtils.isChinese()) {
+        // 最开始，是否启用国际化配置
+        if ((MainConfig.internationalization.openI18n && !I18nUtils.isChinese())) {
+            return;
+        }
+
+        // 接下来检测是否关闭键位
+        if (MainConfig.key.closedKey) {
             return;
         }
 
@@ -61,7 +66,11 @@ public class HotKeyHandler {
 
         // 取消重复显示
         if (showed) {
-            if (!Keyboard.isKeyDown(reportKey.getKeyCode()) && !Keyboard.isKeyDown(weblateKey.getKeyCode()) && !Keyboard.isKeyDown(mcmodKey.getKeyCode()) && !Keyboard.isKeyDown(reloadKey.getKeyCode())) {
+            try {
+                if (!Keyboard.isKeyDown(reportKey.getKeyCode()) && !Keyboard.isKeyDown(weblateKey.getKeyCode()) && !Keyboard.isKeyDown(mcmodKey.getKeyCode()) && !Keyboard.isKeyDown(reloadKey.getKeyCode())) {
+                    showed = false;
+                }
+            } catch (IndexOutOfBoundsException iobe) {
                 showed = false;
             }
             return;
@@ -91,9 +100,19 @@ public class HotKeyHandler {
     // 非 GUI 情况下的按键触发
     @SubscribeEvent
     public static void onKeyPressNoGui(InputEvent.KeyInputEvent e) {
+        // 最开始，检测是否启用国际化配置
+        if (MainConfig.internationalization.openI18n && !I18nUtils.isChinese()) {
+            return;
+        }
+
+        // 接下来检测是否关闭键位
+        if (MainConfig.key.closedKey) {
+            return;
+        }
+
         // 取消重复显示
         if (showed) {
-            if (!Keyboard.isKeyDown(reloadKey.getKeyCode())) {
+            if (keyCodeCheck(reloadKey.getKeyCode()) && !Keyboard.isKeyDown(reloadKey.getKeyCode())) {
                 showed = false;
             }
             return;
@@ -202,13 +221,15 @@ public class HotKeyHandler {
     private static boolean keyHandler(ItemStack stack) {
         if (stack != null && stack != ItemStack.EMPTY && stack.getItem() != Items.AIR) {
             // 问题报告界面的打开
-            if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reportKey.getKeyCode()) {
+            if (keyCodeCheck(reportKey.getKeyCode()) && Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reportKey.getKeyCode()) {
                 return openReport(stack);
-                // Weblate 翻译界面的打开
-            } else if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == weblateKey.getKeyCode()) {
+            }
+            // Weblate 翻译界面的打开
+            else if (keyCodeCheck(weblateKey.getKeyCode()) && Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == weblateKey.getKeyCode()) {
                 return openWeblate(stack);
-                // mcmod 百科界面的打开
-            } else if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == mcmodKey.getKeyCode()) {
+            }
+            // mcmod 百科界面的打开
+            else if (keyCodeCheck(mcmodKey.getKeyCode()) && Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == mcmodKey.getKeyCode()) {
                 return openMcmod(stack);
             }
         }
@@ -221,11 +242,15 @@ public class HotKeyHandler {
      * @return 是否成功
      */
     private static boolean reloadKeyHandler() {
-        if (Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reloadKey.getKeyCode()) {
+        if (keyCodeCheck(reportKey.getKeyCode()) && Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reloadKey.getKeyCode()) {
             Minecraft.getMinecraft().getLanguageManager().onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
             Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_reload.success"));
             return true;
         }
         return false;
+    }
+
+    private static boolean keyCodeCheck(int keyCode) {
+        return 1 < keyCode && keyCode < 256;
     }
 }

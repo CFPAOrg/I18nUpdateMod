@@ -13,7 +13,7 @@ public class MainConfig {
     public static Notice notice = new Notice();
     @Config.Name("资源包下载配置")
     public static Download download = new Download();
-    @Config.Name("问题反馈配置")
+    @Config.Name("按键配置")
     public static Key key = new Key();
     @Config.Name("启用国际化配置")
     public static Internationalization internationalization = new Internationalization();
@@ -78,6 +78,11 @@ public class MainConfig {
         @Config.Comment("可能会有人想自定义")
         @Config.RequiresMcRestart
         public String reportURL = "http://issues.cfpa.team";
+
+        @Config.Name("是否关闭所有键位")
+        @Config.Comment("为腐竹设计，防止玩家乱改按键导致问题")
+        @Config.RequiresMcRestart
+        public Boolean closedKey = false;
     }
 
     public static class Internationalization {
