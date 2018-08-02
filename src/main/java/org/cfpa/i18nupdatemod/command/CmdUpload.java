@@ -68,6 +68,7 @@ public class CmdUpload extends CommandBase {
                     postFile(args[0], key);
                 } catch (Exception e) {
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_upload.upload_error"));
+                    e.printStackTrace();
                 }
             }, "I18n-Thread-File-Upload").start();
         }
@@ -166,9 +167,9 @@ public class CmdUpload extends CommandBase {
             // 开始拨动线程检查
             haveResponse = false;
             new Thread(() -> {
+                // 计数器
+                int count = 0;
                 while (!haveResponse) {
-                    // 计数器
-                    int count = 0;
                     try {
                         // 阻塞
                         Thread.sleep(5 * 1000);
@@ -261,7 +262,7 @@ public class CmdUpload extends CommandBase {
             // 未翻译处进行剔除
             List<String> tmpFile = new ArrayList<>();
             for (String key : zh_cn.keySet()) {
-                if (!en_us.get(key).equals(zh_cn.get(key))) {
+                if (en_us.get(key) != null && !en_us.get(key).equals(zh_cn.get(key))) {
                     tmpFile.add(key + '=' + zh_cn.get(key));
                 }
             }
