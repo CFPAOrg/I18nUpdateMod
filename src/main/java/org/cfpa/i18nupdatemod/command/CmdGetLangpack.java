@@ -139,7 +139,7 @@ public class CmdGetLangpack extends CommandBase {
                 // 遍历查找
                 for (String key : chineseMap.keySet()) {
                     // 存在！
-                    if (s.indexOf(key) == 0) {
+                    if (s.indexOf(key + '=') == 0) {
                         // 替换，写入临时变量。记住替换字符串需要转义，防止发生 Illegal group reference 错误
                         tmpFile.add(s.replaceAll("=.*$", "=" + Matcher.quoteReplacement(chineseMap.get(key))));
                         // 别忘记标记存在
