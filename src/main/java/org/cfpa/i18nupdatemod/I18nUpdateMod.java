@@ -22,7 +22,7 @@ import static org.cfpa.i18nupdatemod.I18nUtils.*;
 public class I18nUpdateMod {
     public final static String MODID = "i18nmod";
     public final static String NAME = "I18n Update Mod";
-    public final static String VERSION = "@VERSION";
+    public final static String VERSION = "@VERSION@";
 
     public static final Logger logger = LogManager.getLogger(MODID);
 
@@ -98,10 +98,8 @@ public class I18nUpdateMod {
         ClientCommandHandler.instance.registerCommand(new CmdToken());
 
         // 键位检查
-        if (MainConfig.key.closedKey) {
-            return;
+        if (!MainConfig.key.closedKey) {
+            HotKeyHandler.register();
         }
-
-        HotKeyHandler.register();
     }
 }

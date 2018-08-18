@@ -41,11 +41,13 @@ public class HotKeyHandler {
     private HotKeyHandler() {/*NO Instance*/}
 
     public static void register() {
-        ClientRegistry.registerKeyBinding(mainKey);
-        ClientRegistry.registerKeyBinding(reportKey);
-        ClientRegistry.registerKeyBinding(weblateKey);
-        ClientRegistry.registerKeyBinding(mcmodKey);
-        ClientRegistry.registerKeyBinding(reloadKey);
+        if (!MainConfig.key.closedKey) {
+            ClientRegistry.registerKeyBinding(mainKey);
+            ClientRegistry.registerKeyBinding(reportKey);
+            ClientRegistry.registerKeyBinding(weblateKey);
+            ClientRegistry.registerKeyBinding(mcmodKey);
+            ClientRegistry.registerKeyBinding(reloadKey);
+        }
     }
 
     // 在打开 GUI 情况下的按键触发
@@ -92,7 +94,7 @@ public class HotKeyHandler {
             }
         }
         // JEI 支持
-        if (Loader.isModLoaded("jei")) {
+        if (Loader.isModLoaded("jei") && MainConfig.key.jeiKey) {
             showed = keyHandler(Internal.getRuntime().getIngredientListOverlay().getStackUnderMouse());
         }
     }
