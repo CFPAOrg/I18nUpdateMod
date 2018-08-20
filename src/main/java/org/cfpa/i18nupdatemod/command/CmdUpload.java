@@ -247,6 +247,7 @@ public class CmdUpload extends CommandBase {
      * @return 处理后的文件对象
      * @throws IOException 读取文件可能发生的 IO 错误
      */
+    @Nullable
     private File handleFile(String modid) throws IOException {
         // 英文，中文，临时文件
         File rawChineseFile = new File(String.format(Minecraft.getMinecraft().mcDataDir.toString() + File.separator + "resourcepacks" + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid));

@@ -5,6 +5,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import org.cfpa.i18nupdatemod.notice.NoticeShower;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class CmdNotice extends CommandBase {
     }
 
     @Override
+    @Nullable
     public String getUsage(ICommandSender sender) {
         return null;
     }

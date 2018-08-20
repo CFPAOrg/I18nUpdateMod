@@ -9,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.cfpa.i18nupdatemod.config.MainConfig;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.net.URI;
 
@@ -19,6 +20,7 @@ public class CmdReport extends CommandBase {
     }
 
     @Override
+    @Nullable
     public String getUsage(ICommandSender sender) {
         return null;
     }
