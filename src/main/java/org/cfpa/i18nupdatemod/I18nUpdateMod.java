@@ -2,6 +2,7 @@ package org.cfpa.i18nupdatemod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -99,7 +100,9 @@ public class I18nUpdateMod {
 
         // 键位检查
         if (!MainConfig.key.closedKey) {
-            HotKeyHandler.register();
+            HotKeyHandler hotKeyHandler = new HotKeyHandler();
+            hotKeyHandler.register();
+            MinecraftForge.EVENT_BUS.register(new HotKeyHandler());
         }
     }
 }

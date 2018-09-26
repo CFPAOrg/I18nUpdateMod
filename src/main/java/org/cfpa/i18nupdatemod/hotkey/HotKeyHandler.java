@@ -12,7 +12,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.apache.commons.io.IOUtils;
@@ -28,19 +27,18 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-@Mod.EventBusSubscriber(modid = I18nUpdateMod.MODID)
 public class HotKeyHandler {
-    private static final KeyBinding mainKey = new KeyBinding("key.i18nmod.main_key.desc", Keyboard.KEY_LCONTROL, "key.category.i18nmod");
-    private static final KeyBinding reportKey = new KeyBinding("key.i18nmod.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
-    private static final KeyBinding weblateKey = new KeyBinding("key.i18nmod.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
-    private static final KeyBinding mcmodKey = new KeyBinding("key.i18nmod.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
-    private static final KeyBinding reloadKey = new KeyBinding("key.i18nmod.reload_key.desc", Keyboard.KEY_R, "key.category.i18nmod");
+    private final KeyBinding mainKey = new KeyBinding("key.i18nmod.main_key.desc", Keyboard.KEY_LCONTROL, "key.category.i18nmod");
+    private final KeyBinding reportKey = new KeyBinding("key.i18nmod.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
+    private final KeyBinding weblateKey = new KeyBinding("key.i18nmod.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
+    private final KeyBinding mcmodKey = new KeyBinding("key.i18nmod.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
+    private final KeyBinding reloadKey = new KeyBinding("key.i18nmod.reload_key.desc", Keyboard.KEY_R, "key.category.i18nmod");
 
-    private static boolean showed = false;
+    private boolean showed = false;
 
-    private HotKeyHandler() {/*NO Instance*/}
+    public HotKeyHandler() {/*NO Instance*/}
 
-    public static void register() {
+    public void register() {
         if (!MainConfig.key.closedKey) {
             ClientRegistry.registerKeyBinding(mainKey);
             ClientRegistry.registerKeyBinding(reportKey);
@@ -52,7 +50,7 @@ public class HotKeyHandler {
 
     // 在打开 GUI 情况下的按键触发
     @SubscribeEvent
-    public static void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Pre e) {
+    public void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Pre e) {
         // 最开始，是否启用国际化配置
         if ((MainConfig.internationalization.openI18n && !I18nUtils.isChinese())) {
             return;
@@ -101,7 +99,7 @@ public class HotKeyHandler {
 
     // 非 GUI 情况下的按键触发
     @SubscribeEvent
-    public static void onKeyPressNoGui(InputEvent.KeyInputEvent e) {
+    public void onKeyPressNoGui(InputEvent.KeyInputEvent e) {
         // 最开始，检测是否启用国际化配置
         if (MainConfig.internationalization.openI18n && !I18nUtils.isChinese()) {
             return;
@@ -128,7 +126,7 @@ public class HotKeyHandler {
      * @param stack 物品
      * @return 是否成功
      */
-    private static boolean openReport(ItemStack stack) {
+    private boolean openReport(ItemStack stack) {
         String text = String.format("模组ID：%s\n非本地化名称：%s\n显示名称：%s", stack.getItem().getCreatorModId(stack), stack.getItem().getUnlocalizedName(), stack.getDisplayName());
         String url = MainConfig.key.reportURL;
         try {
@@ -147,7 +145,7 @@ public class HotKeyHandler {
      * @param stack 物品
      * @return 是否成功
      */
-    private static boolean openWeblate(ItemStack stack) {
+    private boolean openWeblate(ItemStack stack) {
         String displayName, assetsName;
 
         // 先进行字符获取与转义
@@ -176,7 +174,7 @@ public class HotKeyHandler {
      * @param stack 物品
      * @return 是否成功
      */
-    private static boolean openMcmod(ItemStack stack) {
+    private boolean openMcmod(ItemStack stack) {
         String modName, regName, displayName, url;
         int metadata, mcmodApiNum;
 
@@ -220,7 +218,7 @@ public class HotKeyHandler {
      * @param stack 物品
      * @return 是否成功
      */
-    private static boolean keyHandler(ItemStack stack) {
+    private boolean keyHandler(ItemStack stack) {
         if (stack != null && stack != ItemStack.EMPTY && stack.getItem() != Items.AIR) {
             // 问题报告界面的打开
             if (keyCodeCheck(reportKey.getKeyCode()) && Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reportKey.getKeyCode()) {
@@ -243,7 +241,7 @@ public class HotKeyHandler {
      *
      * @return 是否成功
      */
-    private static boolean reloadKeyHandler() {
+    private boolean reloadKeyHandler() {
         if (keyCodeCheck(reportKey.getKeyCode()) && Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reloadKey.getKeyCode()) {
             Minecraft.getMinecraft().getLanguageManager().onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
             Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_reload.success"));
@@ -252,7 +250,7 @@ public class HotKeyHandler {
         return false;
     }
 
-    private static boolean keyCodeCheck(int keyCode) {
+    private boolean keyCodeCheck(int keyCode) {
         return 1 < keyCode && keyCode < 256;
     }
 }
