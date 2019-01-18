@@ -1,6 +1,6 @@
 package org.cfpa.i18nupdatemod.download;
 
-import org.cfpa.i18nupdatemod.config.MainConfig;
+import org.cfpa.i18nupdatemod.I18nConfig;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -30,7 +30,7 @@ public class DownloadWindow {
         int height = (int) (width * 0.3);
         frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2,
                 (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 10, width, height);
-        frame.setTitle(MainConfig.download.dlWindowsName);
+        frame.setTitle(I18nConfig.download.dlWindowsName);
         JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         frame.setContentPane(contentPane);
@@ -99,7 +99,7 @@ public class DownloadWindow {
             try {
                 while (manager.getStatus() == DownloadStatus.IDLE)
                     Thread.sleep(50);
-                int i = MainConfig.download.maxTime;
+                int i = I18nConfig.download.maxTime;
                 while (!manager.isDone() && i >= 0) {
                     btBackground.setText("后台下载(" + i + ')');
                     Thread.sleep(1000);

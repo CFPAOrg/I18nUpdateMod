@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.io.IOUtils;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
-import org.cfpa.i18nupdatemod.config.MainConfig;
+import org.cfpa.i18nupdatemod.I18nConfig;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -16,7 +16,7 @@ public class NoticeShower {
     public NoticeShower() {
         new Thread(() -> {
             try {
-                URL url = new URL(MainConfig.notice.noticeURL);
+                URL url = new URL(I18nConfig.notice.noticeURL);
                 strings = IOUtils.readLines(url.openStream(), StandardCharsets.UTF_8);
                 Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().displayGuiScreen(new NoticeGui(strings)));
             } catch (Throwable e) {

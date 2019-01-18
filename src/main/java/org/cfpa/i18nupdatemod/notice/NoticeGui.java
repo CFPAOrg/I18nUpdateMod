@@ -4,7 +4,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.cfpa.i18nupdatemod.config.MainConfig;
+import org.cfpa.i18nupdatemod.I18nConfig;
 
 import java.awt.*;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class NoticeGui extends GuiScreen {
     @Override
     public void initGui() {
         // 添加按钮
-        if (MainConfig.notice.showWeblateButton) {
+        if (I18nConfig.notice.showWeblateButton) {
             noticeGithubButton = new GuiButton(0, this.width / 2 - 160, this.height * 75 / 100 + 8, 150, 20, "§l我想要参与模组翻译");
             buttonList.add(noticeGithubButton);
         }

@@ -1,4 +1,4 @@
-package org.cfpa.i18nupdatemod.config;
+package org.cfpa.i18nupdatemod;
 
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
 
 @Config(modid = I18nUpdateMod.MODID, name = "i18n_update_mod", category = "i18n_mod")
-public class MainConfig {
+public class I18nConfig {
     @Config.Name("公告配置")
     public static Notice notice = new Notice();
     @Config.Name("资源包下载配置")
@@ -35,6 +35,12 @@ public class MainConfig {
     }
 
     public static class Download {
+
+        @Config.Name("启用非阻塞安装")
+        @Config.RequiresMcRestart
+        @Config.Comment("实验功能！")
+        public boolean enableUnblockingInstaller = false;
+
         @Config.Name("更新检测间隔（天）")
         @Config.RequiresMcRestart
         @Config.Comment("通过修改此处设定更新检测间隔，单位为天。设置为0表示每次启动游戏都检测")

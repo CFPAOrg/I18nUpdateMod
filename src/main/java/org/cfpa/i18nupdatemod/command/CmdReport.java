@@ -7,7 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
-import org.cfpa.i18nupdatemod.config.MainConfig;
+import org.cfpa.i18nupdatemod.I18nConfig;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -35,7 +35,7 @@ public class CmdReport extends CommandBase {
         ItemStack stack = Minecraft.getMinecraft().player.inventory.getCurrentItem();
         if (!stack.isEmpty()) {
             String text = String.format("模组ID：%s\n非本地化名称：%s\n显示名称：%s", stack.getItem().getCreatorModId(stack), stack.getItem().getUnlocalizedName(), stack.getDisplayName());
-            String url = MainConfig.key.reportURL;
+            String url = I18nConfig.key.reportURL;
             try {
                 GuiScreen.setClipboardString(text);
                 Desktop.getDesktop().browse(new URI(url));

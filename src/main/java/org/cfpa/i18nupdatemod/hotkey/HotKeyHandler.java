@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.apache.commons.io.IOUtils;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
 import org.cfpa.i18nupdatemod.I18nUtils;
-import org.cfpa.i18nupdatemod.config.MainConfig;
+import org.cfpa.i18nupdatemod.I18nConfig;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -39,7 +39,7 @@ public class HotKeyHandler {
     public HotKeyHandler() {/*NO Instance*/}
 
     public void register() {
-        if (!MainConfig.key.closedKey) {
+        if (!I18nConfig.key.closedKey) {
             ClientRegistry.registerKeyBinding(mainKey);
             ClientRegistry.registerKeyBinding(reportKey);
             ClientRegistry.registerKeyBinding(weblateKey);
@@ -52,12 +52,12 @@ public class HotKeyHandler {
     @SubscribeEvent
     public void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Pre e) {
         // 最开始，是否启用国际化配置
-        if ((MainConfig.internationalization.openI18n && !I18nUtils.isChinese())) {
+        if ((I18nConfig.internationalization.openI18n && !I18nUtils.isChinese())) {
             return;
         }
 
         // 接下来检测是否关闭键位
-        if (MainConfig.key.closedKey) {
+        if (I18nConfig.key.closedKey) {
             return;
         }
 
@@ -92,7 +92,7 @@ public class HotKeyHandler {
             }
         }
         // JEI 支持
-        if (Loader.isModLoaded("jei") && MainConfig.key.jeiKey) {
+        if (Loader.isModLoaded("jei") && I18nConfig.key.jeiKey) {
             showed = keyHandler(Internal.getRuntime().getIngredientListOverlay().getStackUnderMouse());
         }
     }
@@ -101,12 +101,12 @@ public class HotKeyHandler {
     @SubscribeEvent
     public void onKeyPressNoGui(InputEvent.KeyInputEvent e) {
         // 最开始，检测是否启用国际化配置
-        if (MainConfig.internationalization.openI18n && !I18nUtils.isChinese()) {
+        if (I18nConfig.internationalization.openI18n && !I18nUtils.isChinese()) {
             return;
         }
 
         // 接下来检测是否关闭键位
-        if (MainConfig.key.closedKey) {
+        if (I18nConfig.key.closedKey) {
             return;
         }
 
@@ -128,7 +128,7 @@ public class HotKeyHandler {
      */
     private boolean openReport(ItemStack stack) {
         String text = String.format("模组ID：%s\n非本地化名称：%s\n显示名称：%s", stack.getItem().getCreatorModId(stack), stack.getItem().getUnlocalizedName(), stack.getDisplayName());
-        String url = MainConfig.key.reportURL;
+        String url = I18nConfig.key.reportURL;
         try {
             GuiScreen.setClipboardString(text);
             Desktop.getDesktop().browse(new URI(url));

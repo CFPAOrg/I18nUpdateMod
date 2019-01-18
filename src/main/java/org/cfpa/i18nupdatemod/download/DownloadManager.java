@@ -26,6 +26,10 @@ public class DownloadManager {
         }
     }
 
+    public void setSuccessTask(Runnable successTask) {
+        this.downloader.successTask = successTask;
+    }
+
     /**
      * 开始下载
      *
@@ -55,6 +59,7 @@ public class DownloadManager {
 
     private void catching(Throwable e) {
         I18nUpdateMod.logger.error("下载失败", e);
+        DownloadInfoHelper.info.add("资源包更新失败。");
         status = DownloadStatus.FAIL;
         downloader.done = true;
     }
@@ -100,16 +105,19 @@ public class DownloadManager {
         private int size = 0;
         private int downloadedSize = 0;
         private boolean done = false;
+
+        Runnable successTask;
+
         public float completePercentage = 0.0F;
         public boolean alive = true;
 
-        public MainDownloader(String urlIn, String fileName, String dirPlace) throws IOException {
+        MainDownloader(String urlIn, String fileName, String dirPlace) throws IOException {
             this.url = new URL(urlIn);
             this.fileName = fileName;
             this.dirPlace = dirPlace;
         }
 
-        public void downloadResource() throws Throwable {
+        void downloadResource() throws Throwable {
             // 建立链接
             URLConnection connection = url.openConnection();
 
@@ -137,6 +145,9 @@ public class DownloadManager {
                 inputStream.close();
             }
             done = true;
+            if (successTask != null) {
+                successTask.run();
+            }
         }
 
         private byte[] readInputStream(InputStream inputStream) throws IOException {

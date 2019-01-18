@@ -16,7 +16,7 @@ public class DownloadInfoHelper {
                 if (Minecraft.getMinecraft().player != null) {
                     while (!info.isEmpty()) {
                         String theInfo = info.remove();
-                        Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation(theInfo)));
+                        Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("[I18nUpdateMod] " + theInfo)));
                     }
                 }
                 try {
