@@ -17,6 +17,10 @@ public class I18nConfig {
     public static Key key = new Key();
     @Config.Name("启用国际化配置")
     public static Internationalization internationalization = new Internationalization();
+    @Config.Name("优先加载资源包")
+    @Config.Comment("是否将资源包设为最高优先级")
+    @Config.RequiresMcRestart
+    public static boolean priority = true;
 
     public static class Notice {
         @Config.Name("是否显示通知")
