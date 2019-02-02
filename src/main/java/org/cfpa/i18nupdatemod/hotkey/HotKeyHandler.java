@@ -1,6 +1,8 @@
 package org.cfpa.i18nupdatemod.hotkey;
 
 import mezz.jei.Internal;
+import mezz.jei.gui.overlay.ItemListOverlay;
+import mezz.jei.runtime.JeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -85,7 +87,8 @@ public final class HotKeyHandler {
         // JEI 支持
         if (Loader.isModLoaded("jei")) {
             try {
-                showed = handleKey(Internal.getRuntime().getItemListOverlay().getStackUnderMouse());
+                ItemListOverlay listOverlay = (ItemListOverlay) JeiRuntime.class.getMethod("getItemListOverlay").invoke(Internal.getRuntime());
+                showed = handleKey(listOverlay.getStackUnderMouse());
             } catch (Throwable ex) {
                 I18nUpdateMod.logger.warn("Unable to get JEI item.", ex);
             }
