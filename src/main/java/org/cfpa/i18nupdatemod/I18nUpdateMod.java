@@ -23,8 +23,7 @@ import static org.cfpa.i18nupdatemod.I18nUtils.setupLang;
         name = I18nUpdateMod.NAME,
         clientSideOnly = true,
         acceptedMinecraftVersions = "[1.12]",
-        version = I18nUpdateMod.VERSION,
-        dependencies = "after:defaultoptions"
+        version = I18nUpdateMod.VERSION
 )
 public class I18nUpdateMod {
     public final static String MODID = "i18nmod";
@@ -37,6 +36,11 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) {
+        // 国际化检查
+        if (I18nConfig.internationalization.openI18n && !isChinese()) {
+            return;
+        }
+
         DownloadInfoHelper.init();
 
         if (I18nConfig.download.setupChinese) {
@@ -62,10 +66,8 @@ public class I18nUpdateMod {
         ClientCommandHandler.instance.registerCommand(new CmdUpload());
         ClientCommandHandler.instance.registerCommand(new CmdToken());
 
-        // 键位检查
+        // 热键注册
         if (!I18nConfig.key.closedKey) {
-            HotKeyHandler hotKeyHandler = new HotKeyHandler();
-            hotKeyHandler.register();
             MinecraftForge.EVENT_BUS.register(new HotKeyHandler());
         }
     }

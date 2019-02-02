@@ -27,41 +27,31 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class HotKeyHandler {
-    private final KeyBinding mainKey = new KeyBinding("key.i18nmod.main_key.desc", Keyboard.KEY_LCONTROL, "key.category.i18nmod");
-    private final KeyBinding reportKey = new KeyBinding("key.i18nmod.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
-    private final KeyBinding weblateKey = new KeyBinding("key.i18nmod.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
-    private final KeyBinding mcmodKey = new KeyBinding("key.i18nmod.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
-    private final KeyBinding reloadKey = new KeyBinding("key.i18nmod.reload_key.desc", Keyboard.KEY_R, "key.category.i18nmod");
+public final class HotKeyHandler {
+    private static final KeyBinding mainKey = new KeyBinding("key.i18nmod.main_key.desc", Keyboard.KEY_LCONTROL, "key.category.i18nmod");
+    private static final KeyBinding reportKey = new KeyBinding("key.i18nmod.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
+    private static final KeyBinding weblateKey = new KeyBinding("key.i18nmod.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
+    private static final KeyBinding mcmodKey = new KeyBinding("key.i18nmod.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
+    private static final KeyBinding reloadKey = new KeyBinding("key.i18nmod.reload_key.desc", Keyboard.KEY_R, "key.category.i18nmod");
 
     private boolean showed = false;
 
-    public HotKeyHandler() {/*NO Instance*/}
-
-    public void register() {
-        if (!I18nConfig.key.closedKey) {
-            ClientRegistry.registerKeyBinding(mainKey);
-            ClientRegistry.registerKeyBinding(reportKey);
-            ClientRegistry.registerKeyBinding(weblateKey);
-            ClientRegistry.registerKeyBinding(mcmodKey);
-            ClientRegistry.registerKeyBinding(reloadKey);
-        }
+    public HotKeyHandler() {
+        ClientRegistry.registerKeyBinding(mainKey);
+        ClientRegistry.registerKeyBinding(reportKey);
+        ClientRegistry.registerKeyBinding(weblateKey);
+        ClientRegistry.registerKeyBinding(mcmodKey);
+        ClientRegistry.registerKeyBinding(reloadKey);
     }
 
     // 在打开 GUI 情况下的按键触发
     @SubscribeEvent
-    public void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Pre e) {
-        // 最开始，是否启用国际化配置
-        if ((I18nConfig.internationalization.openI18n && !I18nUtils.isChinese())) {
+    public void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Pre event) {
+        // 检测配置
+        if (I18nConfig.key.closedKey || (I18nConfig.internationalization.openI18n && !I18nUtils.isChinese())) {
             return;
         }
 
-        // 接下来检测是否关闭键位
-        if (I18nConfig.key.closedKey) {
-            return;
-        }
-
-        // 获取当前屏幕数据
         GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
 
         // 取消重复显示
@@ -70,14 +60,14 @@ public class HotKeyHandler {
                 if (!Keyboard.isKeyDown(reportKey.getKeyCode()) && !Keyboard.isKeyDown(weblateKey.getKeyCode()) && !Keyboard.isKeyDown(mcmodKey.getKeyCode()) && !Keyboard.isKeyDown(reloadKey.getKeyCode())) {
                     showed = false;
                 }
-            } catch (IndexOutOfBoundsException iobe) {
+            } catch (IndexOutOfBoundsException ex) {
                 showed = false;
             }
             return;
         }
 
-        // 首先，重载汉化
-        if (reloadKeyHandler()) {
+        // 重载汉化
+        if (reloadLocalization()) {
             showed = true;
             return;
         }
@@ -87,15 +77,17 @@ public class HotKeyHandler {
             GuiContainer guiContainer = (GuiContainer) guiScreen;
             Slot slotUnderMouse = guiContainer.getSlotUnderMouse();
             if (slotUnderMouse != null) {
-                showed = keyHandler(slotUnderMouse.getStack());
+                showed = handleKey(slotUnderMouse.getStack());
                 return;
             }
         }
+
         // JEI 支持
         if (Loader.isModLoaded("jei")) {
             try {
-                showed = keyHandler(Internal.getRuntime().getItemListOverlay().getStackUnderMouse());
-            } catch (Exception ept) {
+                showed = handleKey(Internal.getRuntime().getItemListOverlay().getStackUnderMouse());
+            } catch (Throwable ex) {
+                I18nUpdateMod.logger.warn("Unable to get JEI item.", ex);
             }
         }
     }
@@ -120,7 +112,7 @@ public class HotKeyHandler {
             }
             return;
         }
-        showed = reloadKeyHandler();
+        showed = reloadLocalization();
     }
 
     /**
@@ -221,7 +213,7 @@ public class HotKeyHandler {
      * @param stack 物品
      * @return 是否成功
      */
-    private boolean keyHandler(ItemStack stack) {
+    private boolean handleKey(ItemStack stack) {
         if (stack != null && stack != ItemStack.EMPTY && stack.getItem() != Items.AIR) {
             // 问题报告界面的打开
             if (keyCodeCheck(reportKey.getKeyCode()) && Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reportKey.getKeyCode()) {
@@ -244,7 +236,7 @@ public class HotKeyHandler {
      *
      * @return 是否成功
      */
-    private boolean reloadKeyHandler() {
+    private boolean reloadLocalization() {
         if (keyCodeCheck(reportKey.getKeyCode()) && Keyboard.isKeyDown(mainKey.getKeyCode()) && Keyboard.getEventKey() == reloadKey.getKeyCode()) {
             Minecraft.getMinecraft().getLanguageManager().onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
             Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("message.i18nmod.cmd_reload.success"));

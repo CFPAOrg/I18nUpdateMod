@@ -7,7 +7,6 @@ import net.minecraft.client.settings.GameSettings;
 import org.cfpa.i18nupdatemod.I18nConfig;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URL;
@@ -101,7 +100,6 @@ public abstract class ResourcePackInstaller {
         return f.exists();
     }
 
-    @OverridingMethodsMustInvokeSuper
     public void install() {
         if (!I18nConfig.download.shouldDownload || I18nConfig.internationalization.openI18n && !isChinese()) {
             return;
