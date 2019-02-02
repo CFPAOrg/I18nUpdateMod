@@ -23,7 +23,8 @@ import static org.cfpa.i18nupdatemod.I18nUtils.setupLang;
         name = I18nUpdateMod.NAME,
         clientSideOnly = true,
         acceptedMinecraftVersions = "[1.12]",
-        version = I18nUpdateMod.VERSION
+        version = I18nUpdateMod.VERSION,
+        dependencies = "after:defaultoptions"
 )
 public class I18nUpdateMod {
     public final static String MODID = "i18nmod";
