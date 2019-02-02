@@ -28,11 +28,11 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 public final class HotKeyHandler {
-    private static final KeyBinding mainKey = new KeyBinding("key.i18nmod.main_key.desc", Keyboard.KEY_LCONTROL, "key.category.i18nmod");
-    private static final KeyBinding reportKey = new KeyBinding("key.i18nmod.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
-    private static final KeyBinding weblateKey = new KeyBinding("key.i18nmod.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
-    private static final KeyBinding mcmodKey = new KeyBinding("key.i18nmod.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
-    private static final KeyBinding reloadKey = new KeyBinding("key.i18nmod.reload_key.desc", Keyboard.KEY_R, "key.category.i18nmod");
+    private final KeyBinding mainKey = new KeyBinding("key.i18nmod.main_key.desc", Keyboard.KEY_LCONTROL, "key.category.i18nmod");
+    private final KeyBinding reportKey = new KeyBinding("key.i18nmod.report_key.desc", Keyboard.KEY_K, "key.category.i18nmod");
+    private final KeyBinding weblateKey = new KeyBinding("key.i18nmod.weblate_key.desc", Keyboard.KEY_L, "key.category.i18nmod");
+    private final KeyBinding mcmodKey = new KeyBinding("key.i18nmod.mcmod_key.desc", Keyboard.KEY_M, "key.category.i18nmod");
+    private final KeyBinding reloadKey = new KeyBinding("key.i18nmod.reload_key.desc", Keyboard.KEY_R, "key.category.i18nmod");
 
     private boolean showed = false;
 
