@@ -14,10 +14,18 @@ import org.cfpa.i18nupdatemod.installer.ResourcePackInstaller;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstallerBlocking;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstallerNonBlocking;
 
-import static org.cfpa.i18nupdatemod.I18nUtils.*;
+import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
+import static org.cfpa.i18nupdatemod.I18nUtils.setupLang;
 
 
-@Mod(modid = I18nUpdateMod.MODID, name = I18nUpdateMod.NAME, clientSideOnly = true, acceptedMinecraftVersions = "[1.12]", version = I18nUpdateMod.VERSION, dependencies = "after:defaultoptions")
+@Mod(
+        modid = I18nUpdateMod.MODID,
+        name = I18nUpdateMod.NAME,
+        clientSideOnly = true,
+        acceptedMinecraftVersions = "[1.12]",
+        version = I18nUpdateMod.VERSION,
+        dependencies = "after:defaultoptions"
+)
 public class I18nUpdateMod {
     public final static String MODID = "i18nmod";
     public final static String NAME = "I18n Update Mod";

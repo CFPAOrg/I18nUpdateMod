@@ -15,9 +15,9 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.apache.commons.io.IOUtils;
+import org.cfpa.i18nupdatemod.I18nConfig;
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
 import org.cfpa.i18nupdatemod.I18nUtils;
-import org.cfpa.i18nupdatemod.I18nConfig;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -92,8 +92,11 @@ public class HotKeyHandler {
             }
         }
         // JEI 支持
-        if (Loader.isModLoaded("jei") && I18nConfig.key.jeiKey) {
-            showed = keyHandler(Internal.getRuntime().getIngredientListOverlay().getStackUnderMouse());
+        if (Loader.isModLoaded("jei")) {
+            try {
+                showed = keyHandler(Internal.getRuntime().getItemListOverlay().getStackUnderMouse());
+            } catch (Exception ept) {
+            }
         }
     }
 
