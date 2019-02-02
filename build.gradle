@@ -70,7 +70,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    deobfCompile "mezz.jei:jei_${minecraft.version}:4.8.5.147"
+    deobfCompile "mezz.jei:jei_${minecraft.version}:4.14.3.243"
 
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
     shadow 'org.apache.httpcomponents:httpmime:4.3.3'

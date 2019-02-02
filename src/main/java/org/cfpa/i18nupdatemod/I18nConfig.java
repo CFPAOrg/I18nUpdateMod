@@ -5,7 +5,6 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.cfpa.i18nupdatemod.I18nUpdateMod;
 
 @Config(modid = I18nUpdateMod.MODID, name = "i18n_update_mod", category = "i18n_mod")
 public class I18nConfig {
@@ -17,6 +16,10 @@ public class I18nConfig {
     public static Key key = new Key();
     @Config.Name("启用国际化配置")
     public static Internationalization internationalization = new Internationalization();
+    @Config.Name("优先加载资源包")
+    @Config.Comment("是否将资源包设为最高优先级")
+    @Config.RequiresMcRestart
+    public static boolean priority = true;
 
     public static class Notice {
         @Config.Name("是否显示通知")
@@ -35,7 +38,6 @@ public class I18nConfig {
     }
 
     public static class Download {
-
         @Config.Name("启用非阻塞安装")
         @Config.RequiresMcRestart
         @Config.Comment("实验功能！")
@@ -89,11 +91,6 @@ public class I18nConfig {
         @Config.Comment("为腐竹设计，防止玩家乱改按键导致问题")
         @Config.RequiresMcRestart
         public Boolean closedKey = false;
-
-        @Config.Name("是否开启 JEI 兼容")
-        @Config.Comment("最近有玩家反馈 JEI 兼容问题，临时关闭")
-        @Config.RequiresMcRestart
-        public Boolean jeiKey = false;
     }
 
     public static class Internationalization {

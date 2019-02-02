@@ -4,19 +4,19 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.GameSettings;
-import org.cfpa.i18nupdatemod.I18nUpdateMod;
 import org.cfpa.i18nupdatemod.I18nConfig;
+import org.cfpa.i18nupdatemod.I18nUpdateMod;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
-import static org.cfpa.i18nupdatemod.I18nUtils.*;
+import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
 
 public abstract class ResourcePackInstaller {
     public boolean updateResourcePack = false;
@@ -44,7 +44,14 @@ public abstract class ResourcePackInstaller {
         GameSettings gameSettings = mc.gameSettings;
         // 在gameSetting中加载资源包
         if (!gameSettings.resourcePacks.contains(I18nConfig.download.langPackName)) {
-            mc.gameSettings.resourcePacks.add(I18nConfig.download.langPackName);
+            if (I18nConfig.priority) {
+                mc.gameSettings.resourcePacks.add(I18nConfig.download.langPackName);
+            } else {
+                List<String> packs = new ArrayList<>(10);
+                packs.add(I18nConfig.download.langPackName); // 资源包的 index 越小优先级越低(在资源包 gui 中置于更低层)
+                packs.addAll(gameSettings.resourcePacks);
+                gameSettings.resourcePacks = packs;
+            }
         }
         reloadResources();
     }
