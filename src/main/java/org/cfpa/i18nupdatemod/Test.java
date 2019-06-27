@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 
 import org.cfpa.i18nupdatemod.resourcepack.AssetMap;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
@@ -18,7 +17,6 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import net.minecraft.client.Minecraft;
-import org.eclipse.jgit.api.PullCommand;
 public class Test {
 
 	public static void main(String[] args) {

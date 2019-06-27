@@ -76,6 +76,7 @@ dependencies {
     shadow 'org.apache.httpcomponents:httpmime:4.3.3'
 
     testCompile "junit:junit:4.12"
+    shadow fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 shadowJar {
