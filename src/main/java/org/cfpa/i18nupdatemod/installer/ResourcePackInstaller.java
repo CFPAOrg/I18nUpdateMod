@@ -17,7 +17,7 @@ import java.util.List;
 import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
 import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
 
-public abstract class ResourcePackInstaller {
+public class ResourcePackInstaller {
     public boolean updateResourcePack = false;
 
     private boolean online() {

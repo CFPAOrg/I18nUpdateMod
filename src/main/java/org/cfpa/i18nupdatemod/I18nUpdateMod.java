@@ -1,5 +1,6 @@
 package org.cfpa.i18nupdatemod;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -13,9 +14,14 @@ import org.cfpa.i18nupdatemod.hotkey.HotKeyHandler;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstaller;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstallerBlocking;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstallerNonBlocking;
+import org.cfpa.i18nupdatemod.resourcepack.AssetMap;
+import org.cfpa.i18nupdatemod.resourcepack.ResoucePackBuilder;
 
 import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
 import static org.cfpa.i18nupdatemod.I18nUtils.setupLang;
+
+import java.io.File;
+import java.util.Set;
 
 
 @Mod(
@@ -37,18 +43,27 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) {
+    	
         // 国际化检查
         if (I18nConfig.internationalization.openI18n && !isChinese()) {
             return;
         }
 
+        // 这个不知道干什么用的 先留着
         DownloadInfoHelper.init();
-
+        
+        // 设置中文
         if (I18nConfig.download.setupChinese) {
             setupLang();
         }
-
-        installer = I18nConfig.download.enableUnblockingInstaller ? new ResourcePackInstallerNonBlocking() : new ResourcePackInstallerBlocking();
+        
+        ResoucePackBuilder builder = new ResoucePackBuilder();
+        boolean needUpdate = builder.initAndCheckUpdate();
+        
+        if(needUpdate) {
+        	//TODO
+        }
+        installer = new ResourcePackInstaller();
         installer.install();
     }
 
