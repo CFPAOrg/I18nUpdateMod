@@ -70,5 +70,9 @@ public class Repository {
 		return assetDomains.stream().map(Repository::getSubPathOfAsset).collect(Collectors.toSet());
 		
 	}
+	
+	public File getLocalPath() {
+		return localPath;
+	}
 
 }

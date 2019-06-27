@@ -67,12 +67,15 @@ public class I18nUpdateMod {
         	// TODO 找个合适的位置存本地仓库
         	String localPath=new File(Minecraft.getMinecraft().mcDataDir, "I18nRepo").getPath();
         	Repository repo=new Repository(remoteUrl, localPath);
-        	// TODO 网络请求
+        	// TODO 网络请求移出主线程
         	repo.init();
         	repo.sparseCheckOut(Repository.getSubPathsOfAssets(builder.getAssetDomains()));
+        	
+        	builder.updateAllFilesFromRepo(repo);
+        	builder.build();
         }
-        //installer = new ResourcePackInstaller();
-        //installer.install();
+        installer=new ResourcePackInstaller();
+        installer.setResourcesRepository();
     }
 
     @Mod.EventHandler

@@ -11,6 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.List;
 
@@ -86,5 +93,50 @@ public class I18nUtils {
         }
         return null;
     }
+    
+    public static void copyDir(Path sourceDir, Path targetDir) {
+        try {
+			Files.walkFileTree(sourceDir, new CopyDir(sourceDir, targetDir));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
 }
 
+class CopyDir extends SimpleFileVisitor<Path> {
+	private Path sourceDir;
+	private Path targetDir;
+	
+	public CopyDir(Path sourceDir, Path targetDir) {
+        this.sourceDir = sourceDir;
+        this.targetDir = targetDir;
+    }
+	
+	@Override
+    public FileVisitResult visitFile(Path file,
+            BasicFileAttributes attributes) {
+        try {
+            Path targetFile = targetDir.resolve(sourceDir.relativize(file));
+            Files.copy(file, targetFile, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+ 
+        return FileVisitResult.CONTINUE;
+    }
+	
+	@Override
+    public FileVisitResult preVisitDirectory(Path dir,
+            BasicFileAttributes attributes) {
+        try {
+            Path newDir = targetDir.resolve(sourceDir.relativize(dir));
+            if(!newDir.toFile().exists())
+            	Files.createDirectory(newDir);
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+ 
+        return FileVisitResult.CONTINUE;
+    }
+}

@@ -38,7 +38,7 @@ public class ResourcePackInstaller {
         }
     }
 
-    void setResourcesRepository() {
+    public void setResourcesRepository() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
         // 在gameSetting中加载资源包

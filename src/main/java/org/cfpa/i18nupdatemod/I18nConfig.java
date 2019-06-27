@@ -57,7 +57,7 @@ public class I18nConfig {
         @Config.Name("资源包名称")
         @Config.Comment("用来自定义下载得到的资源包名称")
         @Config.RequiresMcRestart
-        public String langPackName = "Minecraft-Mod-Language-Modpack.zip";
+        public String langPackName = "Minecraft-Mod-Language-Modpack";
 
         @Config.Name("下载条名称")
         @Config.Comment("用来自定义下载过程中小窗口的名字")
