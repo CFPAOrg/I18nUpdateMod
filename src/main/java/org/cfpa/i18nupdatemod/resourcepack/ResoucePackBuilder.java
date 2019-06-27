@@ -12,6 +12,7 @@ public class ResoucePackBuilder {
 	private File rootPath;
 	private AssetMap assetMap;
 	private Set<String> assetDomains;
+	private Set<String> path;
 	
 	public ResoucePackBuilder() {
 		modidSet = net.minecraftforge.fml.common.Loader.instance().getIndexedModList().keySet();
@@ -21,6 +22,10 @@ public class ResoucePackBuilder {
 	
 	public void setAssetMap(AssetMap assetMap) {
 		this.assetMap=assetMap;
+	}
+	
+	public Set<String> getAssetDomains() {
+		return assetDomains;
 	}
 	
 	public boolean initAndCheckUpdate() {
@@ -44,8 +49,7 @@ public class ResoucePackBuilder {
 	}
 	
 	private File getAssetFolder(String domain) {
-		// TODO Auto-generated method stub
-		return null;
+		return new File(rootPath,"assets/"+domain);
 	}
 
 	private boolean intervalDaysCheck() {
@@ -55,12 +59,14 @@ public class ResoucePackBuilder {
 
 	private void initResourcePack() {
 		rootPath.mkdirs();
-		// TODO Auto-generated method stub
+		new File(rootPath,"assets/").mkdirs();
+		// TODO png
 		
 	}
 
 	public void build() {
         
+		// 写info文件，作为更新时间标记
 	}
 
 }

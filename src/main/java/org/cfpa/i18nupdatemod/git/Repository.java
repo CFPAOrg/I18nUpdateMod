@@ -1,7 +1,10 @@
 package org.cfpa.i18nupdatemod.git;
 
 import java.io.File;
+
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.Git;
@@ -18,10 +21,9 @@ public class Repository {
 		this.remoteUrl=remoteUrl;
 		this.localPath=new File(localPath);
 		this.branch="origin/1.12.2";
-		this.initRepo();
 	}
 	
-	private void initRepo() {
+	public void init() {
 		if(localPath.exists()) {
 			try {
 				gitRepo=Git.open(localPath);
@@ -29,13 +31,13 @@ public class Repository {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(gitRepo==null) {
-				try {
-					gitRepo=Git.cloneRepository().setURI(remoteUrl).setDirectory(localPath).setNoCheckout(true).call();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		}
+		if(gitRepo==null) {
+			try {
+				gitRepo=Git.cloneRepository().setURI(remoteUrl).setDirectory(localPath).setNoCheckout(true).call();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -57,6 +59,15 @@ public class Repository {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public static String getSubPathOfAsset(String domain) {
+		return "project/assets/"+domain;
+	}
+
+	public static Collection<String> getSubPathsOfAssets(Set<String> assetDomains) {
+		return assetDomains.stream().map(Repository::getSubPathOfAsset).collect(Collectors.toSet());
 		
 	}
 

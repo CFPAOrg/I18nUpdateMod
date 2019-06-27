@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.command.*;
 import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
+import org.cfpa.i18nupdatemod.git.Repository;
 import org.cfpa.i18nupdatemod.hotkey.HotKeyHandler;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstaller;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstallerBlocking;
@@ -60,10 +61,18 @@ public class I18nUpdateMod {
         boolean needUpdate = builder.initAndCheckUpdate();
         
         if(needUpdate) {
-        	//TODO
+        	// TODO 把这些地址写进config
+        	// TODO remote repo fallback
+        	String remoteUrl="https://git.coding.net/baka943/Minecraft-Mod-Language-Package.git";
+        	// TODO 找个合适的位置存本地仓库
+        	String localPath=new File(Minecraft.getMinecraft().mcDataDir, "I18nRepo").getPath();
+        	Repository repo=new Repository(remoteUrl, localPath);
+        	// TODO 网络请求
+        	repo.init();
+        	repo.sparseCheckOut(Repository.getSubPathsOfAssets(builder.getAssetDomains()));
         }
-        installer = new ResourcePackInstaller();
-        installer.install();
+        //installer = new ResourcePackInstaller();
+        //installer.install();
     }
 
     @Mod.EventHandler
