@@ -23,7 +23,6 @@ import static org.cfpa.i18nupdatemod.I18nUtils.setupLang;
 import java.io.File;
 import java.util.Set;
 
-
 @Mod(
         modid = I18nUpdateMod.MODID,
         name = I18nUpdateMod.NAME,
