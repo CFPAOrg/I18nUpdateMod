@@ -94,6 +94,14 @@ public class I18nUtils {
         return null;
     }
     
+    public static boolean isReachable(String address) {
+        try {
+            return InetAddress.getByName(new URL(address).getHost()).isReachable(2000);
+        } catch (Throwable e) {
+            return false;
+        }
+    }
+    
     public static void copyDir(Path sourceDir, Path targetDir) {
         try {
 			Files.walkFileTree(sourceDir, new CopyDir(sourceDir, targetDir));

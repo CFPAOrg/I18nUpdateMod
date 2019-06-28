@@ -1,5 +1,8 @@
 package org.cfpa.i18nupdatemod.resourcepack;
 
+import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
+
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -7,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,7 +24,7 @@ import java.text.SimpleDateFormat;
 
 import net.minecraft.client.Minecraft;
 
-public class ResoucePackBuilder {
+public class ResourcePackBuilder {
 	private Set<String> modidSet;
 	private File rootPath;
 	private File assetFolder;
@@ -28,7 +32,7 @@ public class ResoucePackBuilder {
 	private Set<String> assetDomains;
 	private Set<String> path;
 	
-	public ResoucePackBuilder() {
+	public ResourcePackBuilder() {
 		modidSet = net.minecraftforge.fml.common.Loader.instance().getIndexedModList().keySet();
 		rootPath = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), I18nConfig.download.langPackName);
 		assetFolder = new File(rootPath,"assets");
@@ -68,8 +72,13 @@ public class ResoucePackBuilder {
 	}
 
 	private boolean longTimeNoUpdate() {
-		// TODO Auto-generated method stub
-		return true;
+		File f = new File(rootPath, "pack.mcmeta");
+        try {
+            return (System.currentTimeMillis() - f.lastModified()) > (I18nConfig.download.maxDay * 24 * 3600 * 1000);
+        } catch (Throwable e) {
+            logger.error("检查文件日期失败", e);
+            return true;
+        }
 	}
 
 	private void initResourcePack() {
@@ -85,30 +94,34 @@ public class ResoucePackBuilder {
 				e.printStackTrace();
 			}
 		}
+		// pack.mcmeta
+		writePackMeta();
 	}
-
-	public void build() {
-		// 写pack.mcmeta文件，作为更新时间标记
+	
+	private void writePackMeta() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateTime = df.format(new Date());
 		dateTime="# 修改时间："+dateTime;
 		File info=new File(rootPath, "pack.mcmeta");
-		// TODO 中文编码
 		String meta="{\n" + 
 				"  \"pack\": {\n" + 
 				"    \"pack_format\": 3,\n" + 
-				"    \"description\": \"I18n Update Mod\"\n" + 
+				"    \"description\": \"I18n Update Mod 汉化包\"\n" + 
 				"  }\n" + 
 				"}\n";
 		try {
-			FileWriter writer = new FileWriter(info);
+			BufferedWriter writer = new BufferedWriter (new OutputStreamWriter (new FileOutputStream (info,true),"UTF-8"));
 			writer.write(dateTime+"\n"+meta);
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+	}
+
+	public void build() {
+		// 写pack.mcmeta文件，作为更新时间标记
+		writePackMeta();
 	}
 
 	public void updateAllFilesFromRepo(Repository repo) {

@@ -20,24 +20,6 @@ import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
 public class ResourcePackInstaller {
     public boolean updateResourcePack = false;
 
-    private boolean online() {
-        try {
-            return InetAddress.getByName(new URL(I18nConfig.download.langPackURL).getHost()).isReachable(2000);
-        } catch (Throwable e) {
-            return false;
-        }
-    }
-
-    private boolean intervalDaysCheck() {
-        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), I18nConfig.download.langPackName);
-        try {
-            return (System.currentTimeMillis() - f.lastModified()) > (I18nConfig.download.maxDay * 24 * 3600 * 1000);
-        } catch (Throwable e) {
-            logger.error("检查文件日期失败", e);
-            return false;
-        }
-    }
-
     public void setResourcesRepository() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
@@ -53,17 +35,6 @@ public class ResourcePackInstaller {
             }
         }
         reloadResources();
-    }
-
-    private boolean checkLength() {
-        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), I18nConfig.download.langPackName);
-        try {
-            URL url = new URL(I18nConfig.download.langPackURL);
-            return url.openConnection().getContentLengthLong() == f.length();
-        } catch (Throwable e) {
-            logger.error("检查文件大小失败", e);
-            return false;
-        }
     }
 
     private void reloadResources() {
@@ -93,29 +64,5 @@ public class ResourcePackInstaller {
         }
 
         resourcePackRepository.setRepositories(repositoryEntries);
-    }
-
-    private boolean isResourcePackExist() {
-        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), I18nConfig.download.langPackName);
-        return f.exists();
-    }
-
-    public void install() {
-        if (!I18nConfig.download.shouldDownload || I18nConfig.internationalization.openI18n && !isChinese()) {
-            return;
-        }
-
-        if (!intervalDaysCheck()) {
-            I18nUpdateMod.logger.info("未到下次更新时间，跳过检测和下载阶段");
-            setResourcesRepository();
-        } else if ((!online()) && isResourcePackExist()) {
-            I18nUpdateMod.logger.info("检测到网络不可用，跳过下载阶段");
-            setResourcesRepository();
-        } else if (checkLength()) {
-            I18nUpdateMod.logger.info("检测到资源包最新，跳过下载阶段");
-            setResourcesRepository();
-        } else {
-            updateResourcePack = true;
-        }
     }
 }

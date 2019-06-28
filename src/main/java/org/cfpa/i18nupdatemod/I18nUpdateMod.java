@@ -13,16 +13,12 @@ import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
 import org.cfpa.i18nupdatemod.git.Repository;
 import org.cfpa.i18nupdatemod.hotkey.HotKeyHandler;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstaller;
-import org.cfpa.i18nupdatemod.installer.ResourcePackInstallerBlocking;
-import org.cfpa.i18nupdatemod.installer.ResourcePackInstallerNonBlocking;
-import org.cfpa.i18nupdatemod.resourcepack.AssetMap;
-import org.cfpa.i18nupdatemod.resourcepack.ResoucePackBuilder;
+import org.cfpa.i18nupdatemod.resourcepack.ResourcePackBuilder;
 
 import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
 import static org.cfpa.i18nupdatemod.I18nUtils.setupLang;
 
 import java.io.File;
-import java.util.Set;
 
 @Mod(
         modid = I18nUpdateMod.MODID,
@@ -57,8 +53,10 @@ public class I18nUpdateMod {
             setupLang();
         }
         
-        ResoucePackBuilder builder = new ResoucePackBuilder();
+        ResourcePackBuilder builder = new ResourcePackBuilder();
         boolean needUpdate = builder.initAndCheckUpdate();
+        installer=new ResourcePackInstaller();
+        installer.setResourcesRepository();
         
         if(needUpdate) {
         	// TODO 把这些地址写进config
@@ -74,8 +72,7 @@ public class I18nUpdateMod {
         	builder.updateAllFilesFromRepo(repo);
         	builder.build();
         }
-        installer=new ResourcePackInstaller();
-        installer.setResourcesRepository();
+        
     }
 
     @Mod.EventHandler

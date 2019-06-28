@@ -23,7 +23,7 @@ public class AssetMap {
 	Map<String, ArrayList<String>> map;
 	
 	public AssetMap() {
-		// 加载jar包中的json文件，这里不能使用MC原版的资源加载方式，因为这个函数是在MC资源加载之前被调用的。
+		// 加载jar包中的json文件
 		ClassLoader classLoader = this.getClass().getClassLoader();
 		InputStreamReader in = new InputStreamReader(classLoader.getResourceAsStream("assets/i18nmod/asset_map/asset_map.json"));
 		this.map=loadJson(in);
