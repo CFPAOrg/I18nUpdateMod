@@ -54,14 +54,16 @@ public class I18nUpdateMod {
             setupLang();
         }
         
+        if (!I18nConfig.download.shouldDownload) {
+        	return;
+        }
+        
         ResourcePackBuilder builder = new ResourcePackBuilder();
         boolean needUpdate = builder.initAndCheckUpdate();
         ResourcePackInstaller.setResourcesRepository();
         
         if(needUpdate) {
-        	// TODO config
-        	// TODO 找个合适的位置存本地仓库
-        	String localPath=new File(Minecraft.getMinecraft().mcDataDir, "I18nRepo").getPath();
+        	String localPath=new File(I18nUtils.getAppDataFolder(), "I18nRepo").getPath();
         	Repository repo=new Repository(localPath);
         	RepoUpdateManager updateManager = new RepoUpdateManager(repo);
         	updateManager.update();
@@ -70,7 +72,6 @@ public class I18nUpdateMod {
             	builder.build();
         	}
         }
-        
     }
 
     @Mod.EventHandler

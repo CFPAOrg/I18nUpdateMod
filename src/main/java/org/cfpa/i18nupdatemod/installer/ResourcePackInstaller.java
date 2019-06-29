@@ -23,12 +23,12 @@ public class ResourcePackInstaller {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
         // 在gameSetting中加载资源包
-        if (!gameSettings.resourcePacks.contains(I18nConfig.download.langPackName)) {
+        if (!gameSettings.resourcePacks.contains(I18nConfig.download.i18nLangPackName)) {
             if (I18nConfig.priority) {
-                mc.gameSettings.resourcePacks.add(I18nConfig.download.langPackName);
+                mc.gameSettings.resourcePacks.add(I18nConfig.download.i18nLangPackName);
             } else {
                 List<String> packs = new ArrayList<>(10);
-                packs.add(I18nConfig.download.langPackName); // 资源包的 index 越小优先级越低(在资源包 gui 中置于更低层)
+                packs.add(I18nConfig.download.i18nLangPackName); // 资源包的 index 越小优先级越低(在资源包 gui 中置于更低层)
                 packs.addAll(gameSettings.resourcePacks);
                 gameSettings.resourcePacks = packs;
             }

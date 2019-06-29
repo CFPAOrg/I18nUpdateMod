@@ -94,6 +94,36 @@ public class I18nUtils {
         return null;
     }
     
+    public static String getAppDataFolder() {
+    	String OS=System.getProperty("os.name").toLowerCase();
+    	String path = null;
+    	if (I18nConfig.download.localRepoPath.equals("AppData")) {
+    		if (OS.indexOf("mac") >= 0 || OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0) {
+    			String userHome=System.getProperty("user.home");
+    			if(userHome!=null) {
+    				path=new File(userHome, ".I18nUpdateMod").getPath();
+    			}
+        	}
+    		else if (OS.indexOf("win") >= 0) {
+        		String appData=System.getenv("APPDATA");
+        		if(appData!=null) {
+        			path=new File(appData, "I18nUpdateMod").getPath();
+        		}
+        	}
+    	} else {
+    		File f =new File(I18nConfig.download.localRepoPath);
+    		if(f.isAbsolute()) {
+    			path=f.getPath();
+    		} else {
+    			path=new File(Minecraft.getMinecraft().mcDataDir, f.getPath()).getPath();
+    		}
+    	}
+    	if(path==null) {
+    		path=new File(Minecraft.getMinecraft().mcDataDir, "I18nUpdateMod").getPath();
+    	}
+    	return path;
+    }
+    
     public static boolean isReachable(String address) {
         try {
             return InetAddress.getByName(new URL(address).getHost()).isReachable(2000);

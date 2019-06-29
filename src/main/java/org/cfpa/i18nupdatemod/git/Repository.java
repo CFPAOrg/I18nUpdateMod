@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.Logger;
+import org.cfpa.i18nupdatemod.I18nConfig;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -24,17 +25,14 @@ import org.eclipse.jgit.transport.URIish;
 import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
 
 public class Repository {
-	static List<String> remoteURLs;
+	static String[] remoteURLs;
 	private File localPath;
 	public Git gitRepo=null;
 	private String branch;
 	public List<RemoteConfig> remoteList;
 	
 	public Repository(String localPath) {
-		//TODO config
-		remoteURLs = new ArrayList<String>();
-		remoteURLs.add("https://github.com/CFPAOrg/Minecraft-Mod-Language-Package.git");
-		
+		remoteURLs = I18nConfig.download.remoteRepoURL;
 		this.localPath=new File(localPath);
 		this.branch="1.12.2-release";
 		initRepo();
@@ -52,8 +50,8 @@ public class Repository {
 			try {
 				gitRepo=Git.init().setDirectory(localPath).call();
 				this.remoteList=new ArrayList<RemoteConfig> ();
-				for(int i=0; i<remoteURLs.size(); i++) {
-					configRemote("origin"+String.valueOf(i), remoteURLs.get(i), this.branch);
+				for(int i=0; i<remoteURLs.length; i++) {
+					configRemote("origin"+String.valueOf(i), remoteURLs[i], this.branch);
 				}
 				this.remoteList=gitRepo.remoteList().call();
 			} catch (Exception e) {

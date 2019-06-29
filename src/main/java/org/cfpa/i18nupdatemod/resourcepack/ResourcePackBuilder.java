@@ -34,7 +34,7 @@ public class ResourcePackBuilder {
 	
 	public ResourcePackBuilder() {
 		modidSet = net.minecraftforge.fml.common.Loader.instance().getIndexedModList().keySet();
-		rootPath = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), I18nConfig.download.langPackName);
+		rootPath = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), I18nConfig.download.i18nLangPackName);
 		assetFolder = new File(rootPath,"assets");
 		assetMap = new AssetMap();
 	}
