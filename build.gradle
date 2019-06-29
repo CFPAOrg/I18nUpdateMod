@@ -78,7 +78,7 @@ dependencies {
     testCompile "junit:junit:4.12"
     shadow fileTree(dir: 'libs', include: ['*.jar'])
     shadow 'org.slf4j:slf4j-api:1.7.5'
-    // shadow 'org.slf4j:slf4j-simple:1.7.21'
+    shadow 'org.slf4j:slf4j-simple:1.7.21'
 }
 
 shadowJar {

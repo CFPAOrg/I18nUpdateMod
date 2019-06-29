@@ -111,7 +111,7 @@ public class ResourcePackBuilder {
 				"  }\n" + 
 				"}\n";
 		try {
-			BufferedWriter writer = new BufferedWriter (new OutputStreamWriter (new FileOutputStream (info,true),"UTF-8"));
+			BufferedWriter writer = new BufferedWriter (new OutputStreamWriter (new FileOutputStream (info),"UTF-8"));
 			writer.write(dateTime+"\n"+meta);
 			writer.flush();
 			writer.close();
