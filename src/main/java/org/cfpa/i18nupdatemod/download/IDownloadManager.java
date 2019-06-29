@@ -11,7 +11,9 @@ public interface IDownloadManager {
 	DownloadStatus getStatus();
 
 	float getCompletePercentage();
+
+	String getTaskTitle();
 	
-	
+	public void start(String threadName);
 
 }

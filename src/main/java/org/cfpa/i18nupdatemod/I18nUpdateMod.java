@@ -10,6 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.command.*;
 import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
+import org.cfpa.i18nupdatemod.download.DownloadStatus;
+import org.cfpa.i18nupdatemod.download.IDownloadManager;
+import org.cfpa.i18nupdatemod.download.RepoUpdateManager;
 import org.cfpa.i18nupdatemod.git.Repository;
 import org.cfpa.i18nupdatemod.hotkey.HotKeyHandler;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstaller;
@@ -53,20 +56,19 @@ public class I18nUpdateMod {
         
         ResourcePackBuilder builder = new ResourcePackBuilder();
         boolean needUpdate = builder.initAndCheckUpdate();
-        installer=new ResourcePackInstaller();
-        installer.setResourcesRepository();
+        ResourcePackInstaller.setResourcesRepository();
         
         if(needUpdate) {
         	// TODO config
         	// TODO 找个合适的位置存本地仓库
         	String localPath=new File(Minecraft.getMinecraft().mcDataDir, "I18nRepo").getPath();
         	Repository repo=new Repository(localPath);
-        	// TODO 网络请求移出主线程
-        	
-        	repo.pull();
-        	repo.close();
-        	builder.updateAllNeededFilesFromRepo(repo);
-        	builder.build();
+        	RepoUpdateManager updateManager = new RepoUpdateManager(repo);
+        	updateManager.update();
+        	if(updateManager.getStatus() == DownloadStatus.SUCCESS) {
+        		builder.updateAllNeededFilesFromRepo(repo);
+            	builder.build();
+        	}
         }
         
     }

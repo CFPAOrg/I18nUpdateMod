@@ -68,7 +68,7 @@ public class I18nConfig {
         @Config.RequiresMcRestart
         @Config.Comment("超过多少时间，取消主线程阻塞，转为后台下载")
         @Config.RangeInt(min = 1)
-        public int maxTime = 30;
+        public int maxTime = 60;
 
         @Config.Name("是否开启强制中文功能")
         @Config.RequiresMcRestart

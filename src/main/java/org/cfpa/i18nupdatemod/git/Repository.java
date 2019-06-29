@@ -77,12 +77,12 @@ public class Repository {
 		gitRepo.getRepository().close();
 	}
 
-	public void pull() {
+	public void pull(ProgressMonitor monitor) {
 		for(RemoteConfig remoteConfig : remoteList) {
 			// TODO 检查连接情况
 			if(true) {
 				try {
-					gitRepo.pull().setProgressMonitor(new TextProgressMonitor(new PrintWriter(System.out))).setRemote(remoteConfig.getName()).setRemoteBranchName(branch).call();
+					gitRepo.pull().setProgressMonitor(monitor).setRemote(remoteConfig.getName()).setRemoteBranchName(branch).call();
 				} catch (Exception e) {
 					e.printStackTrace();
 					continue;

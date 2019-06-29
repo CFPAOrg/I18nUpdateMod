@@ -50,6 +50,7 @@ public class ResourcePackBuilder {
 	public boolean initAndCheckUpdate() {
 		assetDomains = assetMap.getAssetDomains(modidSet);
 		// 不存在资源包文件夹
+		// TODO 检查资源包是否合法
 		if(!(rootPath.exists() && assetFolder.exists())) {
 			this.initResourcePack();
         	return true;

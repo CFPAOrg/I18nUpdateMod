@@ -19,7 +19,7 @@ import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
 
 public class ResourcePackInstaller {
 
-    public void setResourcesRepository() {
+    public static void setResourcesRepository() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
         // 在gameSetting中加载资源包
@@ -36,7 +36,7 @@ public class ResourcePackInstaller {
         reloadResources();
     }
 
-    private void reloadResources() {
+    private static void reloadResources() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
         // 因为这时候资源包已经加载了，所以需要重新读取，重新加载

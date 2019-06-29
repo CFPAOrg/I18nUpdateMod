@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class FileDownloadManager {
+public class FileDownloadManager implements IDownloadManager {
     private Thread downloadThread;
     private MainDownloader downloader;
     private DownloadStatus status = DownloadStatus.IDLE;
@@ -166,4 +166,9 @@ public class FileDownloadManager {
             return bos.toByteArray();
         }
     }
+
+	@Override
+	public String getTaskTitle() {
+		return "正在下载...";
+	}
 }
