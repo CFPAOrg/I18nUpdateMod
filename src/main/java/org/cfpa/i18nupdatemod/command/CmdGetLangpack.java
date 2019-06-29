@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.io.FileUtils;
 import org.cfpa.i18nupdatemod.I18nUtils;
-import org.cfpa.i18nupdatemod.download.DownloadManager;
+import org.cfpa.i18nupdatemod.download.FileDownloadManager;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
 
 import javax.annotation.Nullable;
@@ -169,8 +169,8 @@ public class CmdGetLangpack extends CommandBase {
      */
     private void langFileDownloader(String modid) {
         // 构建单独的下载线程，下载中英文
-        DownloadManager langpackChinese = new DownloadManager(String.format("https://coding.net/u/baka943/p/Minecraft-Mod-Language-Package/git/raw/1.12.2/project/assets/%s/lang/zh_cn.lang", modid), "zh_cn.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
-        DownloadManager langpackEnglish = new DownloadManager(String.format("https://coding.net/u/baka943/p/Minecraft-Mod-Language-Package/git/raw/1.12.2/project/assets/%s/lang/en_us.lang", modid), "en_us.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
+        FileDownloadManager langpackChinese = new FileDownloadManager(String.format("https://coding.net/u/baka943/p/Minecraft-Mod-Language-Package/git/raw/1.12.2/project/assets/%s/lang/zh_cn.lang", modid), "zh_cn.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
+        FileDownloadManager langpackEnglish = new FileDownloadManager(String.format("https://coding.net/u/baka943/p/Minecraft-Mod-Language-Package/git/raw/1.12.2/project/assets/%s/lang/en_us.lang", modid), "en_us.lang", String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang", modid, modid));
 
         // 线程启用
         langpackChinese.start("I18n-Download-Chinese-Thread");

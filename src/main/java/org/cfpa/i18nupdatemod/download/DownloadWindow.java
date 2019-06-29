@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class DownloadWindow {
-    private DownloadManager manager;
+    private FileDownloadManager manager;
     private JFrame frame;
     private JProgressBar bar;
 
@@ -17,7 +17,7 @@ public class DownloadWindow {
      *
      * @param manager 对应的DownloadManager对象
      */
-    public DownloadWindow(DownloadManager manager) {
+    public DownloadWindow(FileDownloadManager manager) {
         this.manager = manager;
         init();
     }

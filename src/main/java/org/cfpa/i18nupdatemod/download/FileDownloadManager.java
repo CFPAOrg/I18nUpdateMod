@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class DownloadManager {
+public class FileDownloadManager {
     private Thread downloadThread;
     private MainDownloader downloader;
     private DownloadStatus status = DownloadStatus.IDLE;
@@ -18,7 +18,7 @@ public class DownloadManager {
      * @param fileNameIn 存储文件的名字
      * @param dirIn      存储文件的地址
      */
-    public DownloadManager(String urlIn, String fileNameIn, String dirIn) {
+    public FileDownloadManager(String urlIn, String fileNameIn, String dirIn) {
         try {
             downloader = new MainDownloader(urlIn, fileNameIn, dirIn);
         } catch (IOException e) {
