@@ -101,6 +101,7 @@ public class ResourcePackBuilder {
 	private void writePackMeta() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateTime = df.format(new Date());
+		// 这里给pack.mcmeta加了行注释，测试没问题，但理论上如果是json文件不能加注释
 		dateTime="# 修改时间："+dateTime;
 		File info=new File(rootPath, "pack.mcmeta");
 		String meta="{\n" + 
@@ -124,9 +125,8 @@ public class ResourcePackBuilder {
 		writePackMeta();
 	}
 
-	public void updateAllFilesFromRepo(Repository repo) {
-		//TODO 只复制需要更新的文件
-		//TODO 不复制英文语言文件
+	public void updateAllNeededFilesFromRepo(Repository repo) {
+		//TODO 只复制需要更新的文件，可以考虑给copyDir方法加filter
 		for(String domain:this.getAssetDomains()) {
     		copyAssetsFromRepo(domain, repo);
     	}

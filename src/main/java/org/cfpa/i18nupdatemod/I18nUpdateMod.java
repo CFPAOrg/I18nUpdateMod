@@ -39,13 +39,11 @@ public class I18nUpdateMod {
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) {
-    	
         // 国际化检查
         if (I18nConfig.internationalization.openI18n && !isChinese()) {
             return;
         }
 
-        // 这个不知道干什么用的 先留着
         DownloadInfoHelper.init();
         
         // 设置中文
@@ -59,17 +57,15 @@ public class I18nUpdateMod {
         installer.setResourcesRepository();
         
         if(needUpdate) {
-        	// TODO 把这些地址写进config
-        	// TODO remote repo fallback
-        	String remoteUrl="https://git.coding.net/baka943/Minecraft-Mod-Language-Package.git";
+        	// TODO config
         	// TODO 找个合适的位置存本地仓库
         	String localPath=new File(Minecraft.getMinecraft().mcDataDir, "I18nRepo").getPath();
-        	Repository repo=new Repository(remoteUrl, localPath);
+        	Repository repo=new Repository(localPath);
         	// TODO 网络请求移出主线程
-        	repo.init();
-        	repo.sparseCheckOut(Repository.getSubPathsOfAssets(builder.getAssetDomains()));
         	
-        	builder.updateAllFilesFromRepo(repo);
+        	repo.pull();
+        	repo.close();
+        	builder.updateAllNeededFilesFromRepo(repo);
         	builder.build();
         }
         

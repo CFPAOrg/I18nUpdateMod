@@ -18,7 +18,6 @@ import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
 import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
 
 public class ResourcePackInstaller {
-    public boolean updateResourcePack = false;
 
     public void setResourcesRepository() {
         Minecraft mc = Minecraft.getMinecraft();

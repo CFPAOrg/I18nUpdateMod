@@ -23,6 +23,8 @@ public class AssetMap {
 	Map<String, ArrayList<String>> map;
 	
 	public AssetMap() {
+		// TODO AssetMap更新
+		// TODO Asset Map检查（可能没必要做，鸽了
 		// 加载jar包中的json文件
 		ClassLoader classLoader = this.getClass().getClassLoader();
 		InputStreamReader in = new InputStreamReader(classLoader.getResourceAsStream("assets/i18nmod/asset_map/asset_map.json"));

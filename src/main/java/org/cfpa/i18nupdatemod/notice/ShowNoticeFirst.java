@@ -12,7 +12,7 @@ public class ShowNoticeFirst {
 
     @SubscribeEvent
     public static void onPlayerFirstJoin(RenderGameOverlayEvent.Post event) {
-        if (!showedNotice && I18nUpdateMod.installer.updateResourcePack && event.getType() != RenderGameOverlayEvent.ElementType.HELMET && I18nConfig.notice.showNoticeConfig) {
+        if (!showedNotice && event.getType() != RenderGameOverlayEvent.ElementType.HELMET && I18nConfig.notice.showNoticeConfig) {
             showedNotice = true;
             new NoticeShower();
         }
