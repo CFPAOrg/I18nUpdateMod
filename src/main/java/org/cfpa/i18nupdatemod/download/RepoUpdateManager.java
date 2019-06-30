@@ -4,16 +4,16 @@ import org.cfpa.i18nupdatemod.git.Repository;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 public class RepoUpdateManager implements IDownloadManager {
-	private Thread downloadThread;
-	private Repository repo;
-	private DownloadStatus status = DownloadStatus.IDLE;
-	private boolean done = false;
-	private ProgressMonitor monitor;
-	private boolean cancelled = false;
-	private String taskTitle = "等待...";
-	private float completePercentage = 0;
-	
-	public void update() {
+    private Thread downloadThread;
+    private Repository repo;
+    private DownloadStatus status = DownloadStatus.IDLE;
+    private boolean done = false;
+    private ProgressMonitor monitor;
+    private boolean cancelled = false;
+    private String taskTitle = "等待...";
+    private float completePercentage = 0;
+
+    public void update() {
         DownloadWindow window = new DownloadWindow(this);
         window.showWindow();
         this.start("I18n-Download-Thread");
@@ -23,98 +23,98 @@ public class RepoUpdateManager implements IDownloadManager {
             } catch (InterruptedException ignore) {
             }
         }
-	}
+    }
 
-	class simpleProgressMonitor implements ProgressMonitor {
-		int totalTasks=1;
-		int totalWork=1;
-		int curTask=0;
-		int completed=0;
+    class simpleProgressMonitor implements ProgressMonitor {
+        int totalTasks = 1;
+        int totalWork = 1;
+        int curTask = 0;
+        int completed = 0;
 
-		@Override
-		public void beginTask(String title, int totalWork) {
-			// TODO L10n
-			taskTitle=title;
-			completed=0;
-			this.totalWork=totalWork;
-		}
+        @Override
+        public void beginTask(String title, int totalWork) {
+            // TODO L10n
+            taskTitle = title;
+            completed = 0;
+            this.totalWork = totalWork;
+        }
 
-		@Override
-		public void endTask() {
-			curTask+=1;
-		}
+        @Override
+        public void endTask() {
+            curTask += 1;
+        }
 
-		@Override
-		public boolean isCancelled() {
-			return cancelled;
-		}
+        @Override
+        public boolean isCancelled() {
+            return cancelled;
+        }
 
-		@Override
-		public void start(int totalTasks) {
-			this.totalTasks=totalTasks;
-		}
+        @Override
+        public void start(int totalTasks) {
+            this.totalTasks = totalTasks;
+        }
 
-		@Override
-		public void update(int completed) {
-			this.completed += completed;
-			completePercentage= (float) this.completed / (float) totalWork;
-		}
-		
-	}
-	
-	public RepoUpdateManager(Repository repo) {
-		this.repo=repo;
-		monitor=new simpleProgressMonitor();
-	}
+        @Override
+        public void update(int completed) {
+            this.completed += completed;
+            completePercentage = (float) this.completed / (float) totalWork;
+        }
 
-	@Override
-	public void cancel() {
-		status = DownloadStatus.CANCELED;
-		this.cancelled=true;
-	}
+    }
 
-	@Override
-	public void background() {
-		status = DownloadStatus.BACKGROUND;
-		
-	}
+    public RepoUpdateManager(Repository repo) {
+        this.repo = repo;
+        monitor = new simpleProgressMonitor();
+    }
 
-	@Override
-	public boolean isDone() {
-		return this.done;
-	}
+    @Override
+    public void cancel() {
+        status = DownloadStatus.CANCELED;
+        this.cancelled = true;
+    }
 
-	@Override
-	public DownloadStatus getStatus() {
-		if ((status == DownloadStatus.DOWNLOADING || status == DownloadStatus.BACKGROUND) && this.done) {
+    @Override
+    public void background() {
+        status = DownloadStatus.BACKGROUND;
+
+    }
+
+    @Override
+    public boolean isDone() {
+        return this.done;
+    }
+
+    @Override
+    public DownloadStatus getStatus() {
+        if ((status == DownloadStatus.DOWNLOADING || status == DownloadStatus.BACKGROUND) && this.done) {
             status = DownloadStatus.SUCCESS;
         }
-		return status;
-	}
+        return status;
+    }
 
-	@Override
-	public float getCompletePercentage() {
-		return completePercentage;
-	}
+    @Override
+    public float getCompletePercentage() {
+        return completePercentage;
+    }
 
-	@Override
-	public String getTaskTitle() {
-		return taskTitle;
-	}
+    @Override
+    public String getTaskTitle() {
+        return taskTitle;
+    }
 
-	@Override
-	public void start(String threadName) {
-		status = DownloadStatus.DOWNLOADING;
+    @Override
+    public void start(String threadName) {
+        status = DownloadStatus.DOWNLOADING;
         downloadThread = new Thread(() -> {
             try {
                 repo.pull(monitor);
                 repo.close();
-                this.done=true;
+                this.done = true;
             } catch (Throwable e) {
             }
         }, threadName);
         downloadThread.start();
-		
-	}
+
+    }
 
 }

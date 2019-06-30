@@ -65,11 +65,7 @@ public class FileDownloadManager implements IDownloadManager {
     }
 
     /**
-     * 获得下载的状态
-     * SUCCESS：下载成功
-     * DOWNLOADING：正在下载
-     * FAIL：下载遇到错误
-     * CANCELED：下载被玩家取消
+     * 获得下载的状态 SUCCESS：下载成功 DOWNLOADING：正在下载 FAIL：下载遇到错误 CANCELED：下载被玩家取消
      *
      * @return 下载状态
      */
@@ -124,14 +120,14 @@ public class FileDownloadManager implements IDownloadManager {
             // 超时
             connection.setConnectTimeout(10 * 1000);
 
-            //获取文件总大小
+            // 获取文件总大小
             size = connection.getContentLength();
 
             // 开始获取输入流
             InputStream inputStream = connection.getInputStream();
             byte[] getData = readInputStream(inputStream);
 
-            //文件保存位置
+            // 文件保存位置
             if (getData != null) {
                 File saveDir = new File(dirPlace);
                 if (!saveDir.exists()) {
@@ -167,8 +163,8 @@ public class FileDownloadManager implements IDownloadManager {
         }
     }
 
-	@Override
-	public String getTaskTitle() {
-		return "正在下载...";
-	}
+    @Override
+    public String getTaskTitle() {
+        return "正在下载...";
+    }
 }

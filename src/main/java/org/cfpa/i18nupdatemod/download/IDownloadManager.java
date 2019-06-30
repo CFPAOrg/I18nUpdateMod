@@ -2,18 +2,18 @@ package org.cfpa.i18nupdatemod.download;
 
 public interface IDownloadManager {
 
-	void cancel();
+    void cancel();
 
-	void background();
+    void background();
 
-	boolean isDone();
+    boolean isDone();
 
-	DownloadStatus getStatus();
+    DownloadStatus getStatus();
 
-	float getCompletePercentage();
+    float getCompletePercentage();
 
-	String getTaskTitle();
-	
-	public void start(String threadName);
+    String getTaskTitle();
+
+    public void start(String threadName);
 
 }
