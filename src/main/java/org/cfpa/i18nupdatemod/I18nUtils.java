@@ -105,7 +105,7 @@ public class I18nUtils {
         String OS = System.getProperty("os.name").toLowerCase();
         String folder;
         if (path.equals("Auto")) {
-            if (OS.contains("mac") || OS.contains("nix") || OS.contains("nux") || OS.indexOf("aix") > 0) {
+            if (OS.contains("mac") || OS.contains("nix") || OS.contains("nux") || OS.contains("aix")) {
                 String userHome = System.getProperty("user.home");
                 if (userHome != null) {
                     folder = new File(userHome, ".I18nUpdateMod").getPath();
