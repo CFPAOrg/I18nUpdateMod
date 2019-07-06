@@ -5,6 +5,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.command.*;
@@ -35,6 +36,8 @@ public class I18nUpdateMod {
 
     public static final Logger logger = LogManager.getLogger(MODID);
 
+    private boolean shouldDisplayErrorScreen = false;
+
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) {
         // 国际化检查
@@ -58,7 +61,13 @@ public class I18nUpdateMod {
         ResourcePackInstaller.setResourcesRepository();
 
         if (needUpdate) {
-            String localPath = new File(I18nUtils.getAppDataFolder(), "I18nRepo").getPath();
+            String localPath;
+            try {
+                localPath = new File(I18nUtils.getLocalRepositoryFolder(I18nConfig.download.localRepoPath), "I18nRepo").getPath();
+            } catch (IllegalArgumentException e) {
+                shouldDisplayErrorScreen = true;
+                return;
+            }
             Repository repo = new Repository(localPath);
             RepoUpdateManager updateManager = new RepoUpdateManager(repo);
             updateManager.update();
@@ -67,6 +76,13 @@ public class I18nUpdateMod {
                 builder.build();
                 ShowNoticeFirst.shouldShowNotice = true;
             }
+        }
+    }
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        if (shouldDisplayErrorScreen) {
+            throw new I18nUtils.InvalidPathConfigurationException();
         }
     }
 

@@ -12,8 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiErrorScreen;
+import net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException;
+import net.minecraftforge.fml.common.ICrashCallable;
 import org.apache.commons.io.FileUtils;
 
 import com.google.common.base.Splitter;
@@ -96,33 +101,36 @@ public class I18nUtils {
         return null;
     }
 
-    static String getAppDataFolder() {
+    static String getLocalRepositoryFolder(String path) throws IllegalArgumentException {
         String OS = System.getProperty("os.name").toLowerCase();
-        String path = null;
-        if (I18nConfig.download.localRepoPath.equals("AppData")) {
+        String folder;
+        if (path.equals("Auto")) {
             if (OS.contains("mac") || OS.contains("nix") || OS.contains("nux") || OS.indexOf("aix") > 0) {
                 String userHome = System.getProperty("user.home");
                 if (userHome != null) {
-                    path = new File(userHome, ".I18nUpdateMod").getPath();
+                    folder = new File(userHome, ".I18nUpdateMod").getPath();
+                } else {
+                    throw new IllegalArgumentException("User home is null.");
                 }
             } else if (OS.contains("win")) {
                 String appData = System.getenv("APPDATA");
                 if (appData != null) {
-                    path = new File(appData, "I18nUpdateMod").getPath();
+                    folder = new File(appData, "I18nUpdateMod").getPath();
+                } else {
+                    throw new IllegalArgumentException("AppData path is null.");
                 }
+            } else {
+                throw new IllegalArgumentException("Can't find out what path should be used.");
             }
         } else {
-            File f = new File(I18nConfig.download.localRepoPath);
+            File f = new File(path);
             if (f.isAbsolute()) {
-                path = f.getPath();
+                folder = f.getPath();
             } else {
-                path = new File(Minecraft.getMinecraft().mcDataDir, f.getPath()).getPath();
+                folder = new File(Minecraft.getMinecraft().mcDataDir, f.getPath()).getPath();
             }
         }
-        if (path == null) {
-            path = new File(Minecraft.getMinecraft().mcDataDir, "I18nUpdateMod").getPath();
-        }
-        return path;
+        return folder;
     }
 
     public static void copyDir(Path sourceDir, Path targetDir) throws IOException {
@@ -152,6 +160,26 @@ public class I18nUtils {
                 Files.createDirectory(newDir);
             }
             return FileVisitResult.CONTINUE;
+        }
+    }
+
+    static class InvalidPathConfigurationException extends CustomModLoadingErrorDisplayException {
+
+        public InvalidPathConfigurationException() {
+            super("InvalidConfiguration", null);
+        }
+
+        @Override
+        public void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer) {}
+
+        @Override
+        public void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime) {
+            final List<String> text = fontRenderer.listFormattedStringToWidth("本地仓库路径无效，请更改配置文件中的本地资源包仓库地址。", errorScreen.width - 80);
+            int yOffset = 50;
+            for (String sentence : text) {
+                errorScreen.drawCenteredString(fontRenderer, sentence, errorScreen.width / 2, yOffset, 0xFFFFFF);
+                yOffset += 10;
+            }
         }
     }
 }

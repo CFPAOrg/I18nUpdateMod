@@ -44,10 +44,14 @@ public class I18nConfig {
         @Config.RangeInt(min = 0, max = 30)
         public int maxDay = 3;
 
-        @Config.Name("本地资源包仓库地址")
-        @Config.Comment("默认为AppData文件夹")
+        @Config.Name("本地资源包仓库路径")
+        @Config.Comment(
+                "默认 Auto 会根据系统自动选择路径\n" +
+                "Windows 的默认路径为 USER_HOME/AppData/I18nUpdateMod 。\n" +
+                "Linux/macOS 等类 Unix 系统默认路径为 USER_HOME/.I18nUpdateMod 。"
+        )
         @Config.RequiresMcRestart
-        public String localRepoPath = "AppData";
+        public String localRepoPath = "Auto";
 
         @Config.Name("远程资源包仓库地址列表")
         @Config.Comment("按列表中的顺序尝试从远程仓库获取更新")
