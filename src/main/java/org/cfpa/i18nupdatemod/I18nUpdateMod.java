@@ -1,6 +1,5 @@
 package org.cfpa.i18nupdatemod;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -11,17 +10,16 @@ import org.apache.logging.log4j.Logger;
 import org.cfpa.i18nupdatemod.command.*;
 import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
-import org.cfpa.i18nupdatemod.download.IDownloadManager;
 import org.cfpa.i18nupdatemod.download.RepoUpdateManager;
 import org.cfpa.i18nupdatemod.git.Repository;
 import org.cfpa.i18nupdatemod.hotkey.HotKeyHandler;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstaller;
 import org.cfpa.i18nupdatemod.resourcepack.ResourcePackBuilder;
 
+import java.io.File;
+
 import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
 import static org.cfpa.i18nupdatemod.I18nUtils.setupLang;
-
-import java.io.File;
 
 @Mod(modid = I18nUpdateMod.MODID,
         name = I18nUpdateMod.NAME,

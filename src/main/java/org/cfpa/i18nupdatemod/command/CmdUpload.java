@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -257,8 +258,8 @@ public class CmdUpload extends CommandBase {
         // 文件存在，才进行处理
         if (rawEnglishFile.exists() && rawChineseFile.exists()) {
             // 读取处理成 HashMap
-            HashMap<String, String> zh_cn = I18nUtils.listToMap(FileUtils.readLines(rawChineseFile, StandardCharsets.UTF_8));
-            HashMap<String, String> en_us = I18nUtils.listToMap(FileUtils.readLines(rawEnglishFile, StandardCharsets.UTF_8));
+            Map<String, String> zh_cn = I18nUtils.listToMap(FileUtils.readLines(rawChineseFile, StandardCharsets.UTF_8));
+            Map<String, String> en_us = I18nUtils.listToMap(FileUtils.readLines(rawEnglishFile, StandardCharsets.UTF_8));
 
             // 未翻译处进行剔除
             List<String> tmpFile = new ArrayList<>();

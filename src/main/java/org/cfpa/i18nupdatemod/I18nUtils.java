@@ -2,8 +2,6 @@ package org.cfpa.i18nupdatemod;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,6 +10,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -31,7 +30,7 @@ public class I18nUtils {
     /**
      * 将语言换成中文
      */
-    public static void setupLang() {
+    static void setupLang() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
         // 强行修改为简体中文
@@ -51,12 +50,12 @@ public class I18nUtils {
     }
 
     /**
-     * 依据等号切分字符串，将 list 处理成 hashMap
+     * 依据等号切分字符串，将 list 处理成 Map
      *
      * @param listIn 想要处理的字符串 list
-     * @return 处理好的 HashMap
+     * @return 处理好的 Map
      */
-    public static HashMap<String, String> listToMap(List<String> listIn) {
+    public static Map<String, String> listToMap(List<String> listIn) {
         HashMap<String, String> mapOut = new HashMap<>();
 
         // 抄袭原版加载方式
@@ -97,16 +96,16 @@ public class I18nUtils {
         return null;
     }
 
-    public static String getAppDataFolder() {
+    static String getAppDataFolder() {
         String OS = System.getProperty("os.name").toLowerCase();
         String path = null;
         if (I18nConfig.download.localRepoPath.equals("AppData")) {
-            if (OS.indexOf("mac") >= 0 || OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0) {
+            if (OS.contains("mac") || OS.contains("nix") || OS.contains("nux") || OS.indexOf("aix") > 0) {
                 String userHome = System.getProperty("user.home");
                 if (userHome != null) {
                     path = new File(userHome, ".I18nUpdateMod").getPath();
                 }
-            } else if (OS.indexOf("win") >= 0) {
+            } else if (OS.contains("win")) {
                 String appData = System.getenv("APPDATA");
                 if (appData != null) {
                     path = new File(appData, "I18nUpdateMod").getPath();
@@ -126,55 +125,34 @@ public class I18nUtils {
         return path;
     }
 
-    public static boolean isReachable(String address) {
-        try {
-            return InetAddress.getByName(new URL(address).getHost()).isReachable(2000);
-        } catch (Throwable e) {
-            return false;
+    public static void copyDir(Path sourceDir, Path targetDir) throws IOException {
+        Files.walkFileTree(sourceDir, new CopyDir(sourceDir, targetDir));
+    }
+
+    static class CopyDir extends SimpleFileVisitor<Path> {
+        private Path sourceDir;
+        private Path targetDir;
+
+        CopyDir(Path sourceDir, Path targetDir) {
+            this.sourceDir = sourceDir;
+            this.targetDir = targetDir;
         }
-    }
 
-    public static void copyDir(Path sourceDir, Path targetDir) {
-        try {
-            Files.walkFileTree(sourceDir, new CopyDir(sourceDir, targetDir));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-}
-
-class CopyDir extends SimpleFileVisitor<Path> {
-    private Path sourceDir;
-    private Path targetDir;
-
-    public CopyDir(Path sourceDir, Path targetDir) {
-        this.sourceDir = sourceDir;
-        this.targetDir = targetDir;
-    }
-
-    @Override
-    public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
-        try {
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
             Path targetFile = targetDir.resolve(sourceDir.relativize(file));
             Files.copy(file, targetFile, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ex) {
-            System.err.println(ex);
+            return FileVisitResult.CONTINUE;
         }
 
-        return FileVisitResult.CONTINUE;
-    }
-
-    @Override
-    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attributes) {
-        try {
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attributes) throws IOException {
             Path newDir = targetDir.resolve(sourceDir.relativize(dir));
-            if (!newDir.toFile().exists())
+            if (!newDir.toFile().exists()) {
                 Files.createDirectory(newDir);
-        } catch (IOException ex) {
-            System.err.println(ex);
+            }
+            return FileVisitResult.CONTINUE;
         }
-
-        return FileVisitResult.CONTINUE;
     }
 }
+

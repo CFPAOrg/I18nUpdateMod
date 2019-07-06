@@ -8,16 +8,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.io.FileUtils;
 import org.cfpa.i18nupdatemod.I18nUtils;
-import org.cfpa.i18nupdatemod.download.FileDownloadManager;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
+import org.cfpa.i18nupdatemod.download.FileDownloadManager;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 public class CmdGetLangpack extends CommandBase {
@@ -129,7 +129,7 @@ public class CmdGetLangpack extends CommandBase {
             List<String> zh_cn = FileUtils.readLines(new File(String.format(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator + "%s_tmp_resource_pack" + File.separator + "assets" + File.separator + "%s" + File.separator + "lang" + File.separator + "zh_cn.lang", modid, modid)), StandardCharsets.UTF_8);
 
             // 处理成 HashMap
-            HashMap<String, String> chineseMap = I18nUtils.listToMap(zh_cn);
+            Map<String, String> chineseMap = I18nUtils.listToMap(zh_cn);
 
             // 接下来，替换
             for (String s : en_us) {

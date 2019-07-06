@@ -8,10 +8,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Set;
 
 import org.cfpa.i18nupdatemod.I18nConfig;
+import org.cfpa.i18nupdatemod.I18nUpdateMod;
 import org.cfpa.i18nupdatemod.I18nUtils;
 import org.cfpa.i18nupdatemod.git.Repository;
 
@@ -86,10 +88,15 @@ public class ResourcePackBuilder {
         if (!icon.exists()) {
             ClassLoader classLoader = this.getClass().getClassLoader();
             InputStream in = classLoader.getResourceAsStream("assets/i18nmod/icon/pack.png");
+
+            if (in == null) {
+                return;
+            }
+
             try {
                 Files.copy(in, icon.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error while copying icon file:", e);
             }
         }
         // pack.mcmeta
@@ -105,12 +112,12 @@ public class ResourcePackBuilder {
         String meta = "{\n" + "  \"pack\": {\n" + "    \"pack_format\": 3,\n"
                 + "    \"description\": \"I18n Update Mod 汉化包\"\n" + "  }\n" + "}\n";
         try {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(info), "UTF-8"));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(info), StandardCharsets.UTF_8));
             writer.write(dateTime + "\n" + meta);
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error while trying to write pack.mcmeta: ", e);
         }
     }
 
@@ -122,13 +129,19 @@ public class ResourcePackBuilder {
     public void updateAllNeededFilesFromRepo(Repository repo) {
         // TODO 只复制需要更新的文件，可以考虑给copyDir方法加filter
         for (String domain : this.getAssetDomains()) {
-            copyAssetsFromRepo(domain, repo);
+            try {
+                copyAssetsFromRepo(domain, repo);
+            } catch (IOException e) {
+                logger.error("Error while updating language file: ", e);
+            }
         }
     }
 
-    private void copyAssetsFromRepo(String domain, Repository repo) {
-        I18nUtils.copyDir(new File(repo.getLocalPath(), Repository.getSubPathOfAsset(domain)).toPath(),
-                new File(this.assetFolder, domain).toPath());
+    private void copyAssetsFromRepo(String domain, Repository repo) throws IOException {
+        I18nUtils.copyDir(
+                new File(repo.getLocalPath(), Repository.getSubPathOfAsset(domain)).toPath(),
+                new File(this.assetFolder, domain).toPath()
+        );
     }
 
 }
