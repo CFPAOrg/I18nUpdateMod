@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -20,20 +19,19 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.transport.RemoteConfig;
 
-public class Repository {
-    static String[] remoteURLs;
+public class ResourcePackRepository {
+    private static String[] remoteURLs;
     private File localPath;
     public Git gitRepo = null;
     private String branch;
     public List<RemoteConfig> remoteList;
     private Set<String> assetDomains;
 
-    public Repository(String localPath, Set<String> assetDomains) {
+    public ResourcePackRepository(String localPath, Set<String> assetDomains) {
         remoteURLs = I18nConfig.download.remoteRepoURL;
         this.localPath = new File(localPath);
         this.assetDomains = assetDomains;
@@ -48,6 +46,7 @@ public class Repository {
                 this.remoteList = gitRepo.remoteList().call();
                 // TODO 检查/重设remote list
             } catch (Exception e) {
+                logger.error("Exception caught while initializing git repository: ", e);
             }
         }
         if (gitRepo == null) {
@@ -84,9 +83,9 @@ public class Repository {
         try {
             // fetch
             gitRepo.fetch()
-            .setProgressMonitor(monitor)
-            .setRemote(remoteName)
-            .call();
+                    .setProgressMonitor(monitor)
+                    .setRemote(remoteName)
+                    .call();
             return true;
         } catch (Exception e) {
             return false;
@@ -95,7 +94,7 @@ public class Repository {
 
     public void fetch(ProgressMonitor monitor) {
         boolean success = false;
-        List<RemoteConfig> remoteList = new ArrayList<RemoteConfig>();
+        List<RemoteConfig> remoteList = new ArrayList<>();
         try {
             remoteList = gitRepo.remoteList().call();
         } catch (Exception e) {
@@ -104,47 +103,47 @@ public class Repository {
         for (RemoteConfig remoteConfig : remoteList) {
             // TODO 检查连接情况
             success = fetchFromRemote(remoteConfig.getName(), monitor);
-            if(success)
+            if (success) {
                 return;
-        }
-        if(!success) {
-            for (int i = 0; i < remoteURLs.length; i++) {
-                String remoteName = "origin" + String.valueOf(i);
-                String gitURL = remoteURLs[i];
-
-                // 解析 HTML 重定向，HTTP 302 重定向用不了
-                if(remoteURLs[i].endsWith("html") || remoteURLs[i].endsWith("htm")) {
-                    CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-                    HttpGet httpGet = new HttpGet(remoteURLs[i]);
-                    CloseableHttpResponse response = null;
-                    try {
-                        response = closeableHttpClient.execute(httpGet);
-                        if(response.getStatusLine().getStatusCode() == 200) {
-                            String result = EntityUtils.toString(response.getEntity(),"UTF-8");
-                            int index = result.indexOf("meta http-equiv=\"refresh\"");
-                            int startIndex = index+"meta http-equiv=\"refresh\" content=\"0;url=".length();
-                            int endIndex = result.indexOf("\">", startIndex);
-                            gitURL = result.substring(startIndex,endIndex);
-                            closeableHttpClient.close();
-                        } else {
-                            closeableHttpClient.close();
-                            continue;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        continue;
-                    }
-                }
-
-                configRemote(remoteName, gitURL, this.branch);
-                success = fetchFromRemote(remoteName, monitor);
-                if(success)
-                    return;
             }
         }
-        if (!success) {
-            logger.warn("仓库更新失败");
+
+        for (int i = 0; i < remoteURLs.length; i++) {
+            String remoteName = "origin" + String.valueOf(i);
+            String gitURL = remoteURLs[i];
+
+            // 解析 HTML 重定向，HTTP 302 重定向用不了
+            if (remoteURLs[i].endsWith("html") || remoteURLs[i].endsWith("htm")) {
+                CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+                HttpGet httpGet = new HttpGet(remoteURLs[i]);
+                CloseableHttpResponse response = null;
+                try {
+                    response = closeableHttpClient.execute(httpGet);
+                    if (response.getStatusLine().getStatusCode() == 200) {
+                        String result = EntityUtils.toString(response.getEntity(), "UTF-8");
+                        int index = result.indexOf("meta http-equiv=\"refresh\"");
+                        int startIndex = index + "meta http-equiv=\"refresh\" content=\"0;url=".length();
+                        int endIndex = result.indexOf("\">", startIndex);
+                        gitURL = result.substring(startIndex, endIndex);
+                        closeableHttpClient.close();
+                    } else {
+                        closeableHttpClient.close();
+                        continue;
+                    }
+                } catch (Exception e) {
+                    logger.error("Error while fetching resource pack repository: ", e);
+                    continue;
+                }
+            }
+
+            configRemote(remoteName, gitURL, this.branch);
+            success = fetchFromRemote(remoteName, monitor);
+
+            if (success) {
+                return;
+            }
         }
+        logger.warn("仓库更新失败");
     }
 
     public void sparseCheckout(Collection<String> subPathSet, ProgressMonitor monitor) {
@@ -186,7 +185,7 @@ public class Repository {
     }
 
     public Collection<String> getSubPaths() {
-        return assetDomains.stream().map(Repository::getSubPathOfAsset).collect(Collectors.toSet());
+        return assetDomains.stream().map(ResourcePackRepository::getSubPathOfAsset).collect(Collectors.toSet());
     }
 
     public File getLocalPath() {
