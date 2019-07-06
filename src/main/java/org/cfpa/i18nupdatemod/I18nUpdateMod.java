@@ -14,6 +14,7 @@ import org.cfpa.i18nupdatemod.download.RepoUpdateManager;
 import org.cfpa.i18nupdatemod.git.Repository;
 import org.cfpa.i18nupdatemod.hotkey.HotKeyHandler;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstaller;
+import org.cfpa.i18nupdatemod.notice.ShowNoticeFirst;
 import org.cfpa.i18nupdatemod.resourcepack.ResourcePackBuilder;
 
 import java.io.File;
@@ -64,6 +65,7 @@ public class I18nUpdateMod {
             if (updateManager.getStatus() == DownloadStatus.SUCCESS) {
                 builder.updateAllNeededFilesFromRepo(repo);
                 builder.build();
+                ShowNoticeFirst.shouldShowNotice = true;
             }
         }
     }
