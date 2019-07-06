@@ -130,10 +130,12 @@ public class ResourcePackBuilder {
     }
 
     private void copyAssetsFromRepo(String domain, ResourcePackRepository repo) throws IOException {
-        I18nUtils.copyDir(
-                new File(repo.getLocalPath(), ResourcePackRepository.getSubPathOfAsset(domain)).toPath(),
+        File from = new File(repo.getLocalPath(), ResourcePackRepository.getSubPathOfAsset(domain));
+        if(from.exists())
+            I18nUtils.copyDir(
+                from.toPath(),
                 new File(this.assetFolder, domain).toPath()
-        );
+            );
     }
 
 }
