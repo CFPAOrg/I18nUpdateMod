@@ -114,17 +114,19 @@ public class Repository {
                     CloseableHttpResponse response = null;
                     try {
                         response = closeableHttpClient.execute(httpGet);
-                        closeableHttpClient.close();
                         if(response.getStatusLine().getStatusCode() == 200) {
                             String result = EntityUtils.toString(response.getEntity(),"UTF-8");
                             int index = result.indexOf("meta http-equiv=\"refresh\"");
                             int startIndex = index+"meta http-equiv=\"refresh\" content=\"0;url=".length();
                             int endIndex = result.indexOf("\">", startIndex);
                             gitURL = result.substring(startIndex,endIndex);
+                            closeableHttpClient.close();
                         } else {
+                            closeableHttpClient.close();
                             continue;
                         }
                     } catch (Exception e) {
+                        e.printStackTrace();
                         continue;
                     }
                 }
