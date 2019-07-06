@@ -91,7 +91,7 @@ public class ResourcePackRepository {
         try {
             remoteList = gitRepo.remoteList().call();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error while getting remote list: ", e);
         }
         for (RemoteConfig remoteConfig : remoteList) {
             // TODO 检查连接情况
