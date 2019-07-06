@@ -10,17 +10,14 @@
     ],
     "<DEPRECATED>": [
         "elulib",
-        "presets"
+        "presets",
+        "solarfluxreborn",
+	"thaumicreadoption"
     ],
     "<UNKNOWN>": [
         "astikoor",
         "catsdogs",
-        "gregblockutils",
-        "gtconstruct",
-        "jaopcasingularities",
-        "solarfluxreborn",
-        "spacex",
-        "thaumicreadoption"
+        "clockworkphase"
     ],
     "InfernalMobs": [
         "infernalmobs"
@@ -280,6 +277,9 @@
     "bakerscraft": [
         "bakerscraft"
     ],
+    "balancedclaytools": [
+        "balancedclaytools"
+    ],
     "base": [
         "base"
     ],
@@ -501,10 +501,11 @@
         "buildcraftcompat"
     ],
     "buildcraftcompat": [
-        "buildcraftcompat"
+        "buildcraftcompat-buildcraft-compat"
     ],
     "buildcraftcore": [
         "buildcraft",
+        "buildcraft-buildcraft-core",
         "buildcraftcompat"
     ],
     "buildcraftenergy": [
@@ -698,7 +699,8 @@
         "compositegear"
     ],
     "computercraft": [
-        "computercraft"
+        "computercraft",
+        "computercraft-computercraft"
     ],
     "conarm": [
         "conarm"
@@ -936,40 +938,54 @@
         "endercrop"
     ],
     "enderio": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-base"
     ],
     "enderiobase": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-base"
     ],
     "enderioconduits": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-conduits"
     ],
     "enderioconduitsappliedenergistics": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-ae2-conduits"
     ],
     "enderioconduitsopencomputers": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-oc-conduits"
     ],
     "enderioconduitsrefinedstorage": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-rs-conduits"
     ],
     "enderioendergy": [
-        "enderio"
+        "enderio-ender-io-endergy"
     ],
     "enderiointegrationforestry": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-forestry"
     ],
     "enderiointegrationtic": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-tic"
     ],
     "enderiointegrationticlate": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-tic"
     ],
     "enderiomachines": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-machines"
     ],
     "enderiopowertools": [
-        "enderio"
+        "enderio",
+        "enderio-ender-io-conduits"
+    ],
+    "enderiozoo": [
+        "enderio-ender-io-zoo"
     ],
     "endermanevo": [
         "endermanevo"
@@ -1008,7 +1024,8 @@
         "engineersdoors"
     ],
     "engineersworkshop": [
-        "engineersworkshop"
+        "engineersworkshop",
+        "engineersworkshop-engineers-workshop-reborn"
     ],
     "enhancedarmaments": [
         "enhancedarmaments"
@@ -1250,7 +1267,8 @@
         "ftbeggs"
     ],
     "ftbguides": [
-        "ftbguides"
+        "ftbguides",
+        "ftbguides-ftb-guides-2"
     ],
     "ftblib": [
         "ftblib"
@@ -1327,7 +1345,8 @@
         "grapplemod"
     ],
     "gravestone": [
-        "gravestone"
+        "gravestone",
+        "gravestone-gravestone-mod-graves"
     ],
     "gravisuite": [
         "gravisuite"
@@ -1336,7 +1355,7 @@
         "gravitygun"
     ],
     "gregblockutils": [
-        "gregtech"
+        "gregtech-gregblock-utilities"
     ],
     "gregtech": [
         "gregtech"
@@ -1348,7 +1367,7 @@
         "grue"
     ],
     "gtadditions": [
-        "gregtech",
+        "gregtech-gregic-additions",
         "gtadditions"
     ],
     "gtcebees": [
@@ -1358,7 +1377,7 @@
         "ic2"
     ],
     "gtconstruct": [
-        "gregtech"
+        "gregtech-gregs-construct"
     ],
     "guideapi": [
         "guideapi"
@@ -1448,7 +1467,8 @@
         "ic2"
     ],
     "ichunutil": [
-        "ichunutil"
+        "ichunutil",
+        "ichunutil-pigutils"
     ],
     "igwmod": [
         "igwmod"
@@ -1579,10 +1599,10 @@
         "jaopca"
     ],
     "jaopcaadditions": [
-        "jaopca"
+        "jaopca-jaopcaadditions"
     ],
     "jaopcasingularities": [
-        "jaopca"
+        "jaopca-jaopcasingularities"
     ],
     "jarm": [
         "jarm"
@@ -1907,7 +1927,7 @@
         "moreplates"
     ],
     "moreplayermodels": [
-        "moreplayermodels"
+        "moreplayermodels-more-player-models"
     ],
     "morph": [
         "morph"
@@ -2617,7 +2637,7 @@
     ],
     "simpletcon": [
         "simpletcon",
-        "tconstruct"
+        "tconstruct-simple-tcon"
     ],
     "simpleundergroundbiomes": [
         "simpleundergroundbiomes"
@@ -3321,6 +3341,9 @@
     ],
     "xreliquary": [
         "xreliquary"
+    ],
+    "xtones": [
+        "xtones"
     ],
     "yabba": [
         "yabba"
