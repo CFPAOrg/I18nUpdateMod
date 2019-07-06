@@ -28,7 +28,6 @@ public class ResourcePackRepository {
     private File localPath;
     public Git gitRepo = null;
     private String branch;
-    public List<RemoteConfig> remoteList;
     private Set<String> assetDomains;
 
     public ResourcePackRepository(String localPath, Set<String> assetDomains) {
@@ -43,8 +42,6 @@ public class ResourcePackRepository {
         if (localPath.exists()) {
             try {
                 gitRepo = Git.open(localPath);
-                this.remoteList = gitRepo.remoteList().call();
-                // TODO 检查/重设remote list
             } catch (Exception e) {
                 logger.error("Exception caught while initializing git repository: ", e);
             }
@@ -52,11 +49,6 @@ public class ResourcePackRepository {
         if (gitRepo == null) {
             try {
                 gitRepo = Git.init().setDirectory(localPath).call();
-                this.remoteList = new ArrayList<>();
-                for (int i = 0; i < remoteURLs.length; i++) {
-                    configRemote("origin" + i, remoteURLs[i], this.branch);
-                }
-                this.remoteList = gitRepo.remoteList().call();
             } catch (Exception e) {
                 e.printStackTrace();
             }
