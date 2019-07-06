@@ -88,6 +88,7 @@ public class ResourcePackRepository {
                     .call();
             return true;
         } catch (Exception e) {
+            logger.error("Invalid remote repository: ", e);
             return false;
         }
     }
