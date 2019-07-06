@@ -23,15 +23,18 @@ import static org.cfpa.i18nupdatemod.I18nUtils.setupLang;
 
 import java.io.File;
 
-@Mod(modid = I18nUpdateMod.MODID, name = I18nUpdateMod.NAME, clientSideOnly = true, acceptedMinecraftVersions = "[1.12]", version = I18nUpdateMod.VERSION, dependencies = "after:defaultoptions")
+@Mod(modid = I18nUpdateMod.MODID,
+        name = I18nUpdateMod.NAME,
+        clientSideOnly = true,
+        acceptedMinecraftVersions = "[1.12]",
+        version = I18nUpdateMod.VERSION,
+        dependencies = "after:defaultoptions")
 public class I18nUpdateMod {
     public final static String MODID = "i18nmod";
     public final static String NAME = "I18n Update Mod";
     public final static String VERSION = "@VERSION@";
 
     public static final Logger logger = LogManager.getLogger(MODID);
-
-    public static ResourcePackInstaller installer;
 
     @Mod.EventHandler
     public void construct(FMLConstructionEvent event) {

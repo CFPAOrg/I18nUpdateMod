@@ -65,7 +65,11 @@ public class FileDownloadManager implements IDownloadManager {
     }
 
     /**
-     * 获得下载的状态 SUCCESS：下载成功 DOWNLOADING：正在下载 FAIL：下载遇到错误 CANCELED：下载被玩家取消
+     * 获得下载的状态
+     * SUCCESS：下载成功
+     * DOWNLOADING：正在下载
+     * FAIL：下载遇到错误
+     * CANCELED：下载被玩家取消
      *
      * @return 下载状态
      */

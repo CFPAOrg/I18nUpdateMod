@@ -54,7 +54,8 @@ public class I18nConfig {
         @Config.RequiresMcRestart
         public String[] remoteRepoURL = {
                 "https://git.dev.tencent.com/dtid_07bf67d98cf2ab4b/Minecraft-Mod-Language-Package.git",
-                "https://github.com/CFPAOrg/Minecraft-Mod-Language-Package.git" };
+                "https://github.com/CFPAOrg/Minecraft-Mod-Language-Package.git"
+        };
 
         @Config.Name("生成的资源包名称")
         @Config.Comment("用来自定义模组生成的资源包名称")
