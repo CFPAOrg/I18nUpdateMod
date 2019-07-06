@@ -107,7 +107,8 @@ public class RepoUpdateManager implements IDownloadManager {
         status = DownloadStatus.DOWNLOADING;
         downloadThread = new Thread(() -> {
             try {
-                repo.pull(monitor);
+                repo.fetch(monitor);
+                repo.sparseCheckout(repo.getSubPaths(),monitor);
                 repo.close();
                 this.done = true;
             } catch (Throwable e) {

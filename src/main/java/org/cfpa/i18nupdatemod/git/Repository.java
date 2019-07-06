@@ -11,6 +11,10 @@ import java.util.stream.Collectors;
 
 import org.cfpa.i18nupdatemod.I18nConfig;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.CheckoutCommand;
+import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
+import org.eclipse.jgit.api.ResetCommand.ResetType;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -21,10 +25,12 @@ public class Repository {
     public Git gitRepo = null;
     private String branch;
     public List<RemoteConfig> remoteList;
+    private Set<String> assetDomains;
 
-    public Repository(String localPath) {
+    public Repository(String localPath, Set<String> assetDomains) {
         remoteURLs = I18nConfig.download.remoteRepoURL;
         this.localPath = new File(localPath);
+        this.assetDomains = assetDomains;
         this.branch = "1.12.2-release";
         initRepo();
     }
@@ -68,28 +74,68 @@ public class Repository {
         gitRepo.getRepository().close();
     }
 
-    public void pull(ProgressMonitor monitor) {
+    public void fetch(ProgressMonitor monitor) {
+        boolean success = false;
         for (RemoteConfig remoteConfig : remoteList) {
             // TODO 检查连接情况
             if (true) {
                 try {
-                    gitRepo.pull().setProgressMonitor(monitor).setRemote(remoteConfig.getName())
-                            .setRemoteBranchName(branch).call();
+                    // fetch
+                    gitRepo.fetch()
+                    .setProgressMonitor(monitor)
+                    .setRemote(remoteConfig.getName())
+                    .call();
+                    success = true;
+                    break;
                 } catch (Exception e) {
-                    e.printStackTrace();
                     continue;
                 }
-                return;
             }
         }
-        logger.error("仓库更新失败");
+        if(!success) {
+            logger.error("仓库更新失败");
+            return;
+        }
+    }
+    
+    public void sparseCheckout(Collection<String> subPathSet, ProgressMonitor monitor) {
+        try {
+            // create branch and set upstream
+            gitRepo.branchCreate()
+            .setName(branch)
+            .setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+            .setStartPoint("origin/"+branch)
+            .setForce(true)
+            .call();
+            
+            // reset to remote head
+            gitRepo.reset()
+            .setProgressMonitor(monitor)
+            .setMode(ResetType.SOFT)
+            .setRef("refs/remotes/origin/"+branch)
+            .call();
+            
+            // sparse checkout
+            CheckoutCommand checkoutCommand = gitRepo.checkout();
+            checkoutCommand.setProgressMonitor(monitor)
+            .setName(branch)
+            .setStartPoint(branch);
+            for(String subpath: subPathSet) {
+                checkoutCommand.addPath(subpath);
+            }
+            checkoutCommand.call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        
     }
 
     public static String getSubPathOfAsset(String domain) {
         return "assets/" + domain;
     }
 
-    public static Collection<String> getSubPathsOfAssets(Set<String> assetDomains) {
+    public Collection<String> getSubPaths() {
         return assetDomains.stream().map(Repository::getSubPathOfAsset).collect(Collectors.toSet());
 
     }

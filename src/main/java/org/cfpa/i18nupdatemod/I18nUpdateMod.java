@@ -68,7 +68,7 @@ public class I18nUpdateMod {
                 shouldDisplayErrorScreen = true;
                 return;
             }
-            Repository repo = new Repository(localPath);
+            Repository repo = new Repository(localPath, builder.getAssetDomains());
             RepoUpdateManager updateManager = new RepoUpdateManager(repo);
             updateManager.update();
             if (updateManager.getStatus() == DownloadStatus.SUCCESS) {
