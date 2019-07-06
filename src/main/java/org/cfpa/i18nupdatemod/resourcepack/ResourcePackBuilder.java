@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.cfpa.i18nupdatemod.I18nConfig;
 import org.cfpa.i18nupdatemod.I18nUtils;
+import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
 import org.cfpa.i18nupdatemod.git.ResourcePackRepository;
 
 import java.nio.file.Files;
@@ -53,8 +54,9 @@ public class ResourcePackBuilder {
         // 部分asset文件缺失，可能增加了mod
         for (String domain : assetDomains) {
             File assetFolder = getAssetFolder(domain);
-            if (!assetFolder.exists())
+            if (!assetFolder.exists()) {
                 return true;
+            }
         }
         return false;
     }
@@ -80,10 +82,6 @@ public class ResourcePackBuilder {
         if (!icon.exists()) {
             ClassLoader classLoader = this.getClass().getClassLoader();
             InputStream in = classLoader.getResourceAsStream("assets/i18nmod/icon/pack.png");
-
-            if (in == null) {
-                return;
-            }
 
             try {
                 Files.copy(in, icon.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -125,6 +123,7 @@ public class ResourcePackBuilder {
                 copyAssetsFromRepo(domain, repo);
             } catch (IOException e) {
                 logger.error("Error while updating language file: ", e);
+                DownloadInfoHelper.info.add("模组 " + domain + " 的语言文件加载失败，请考虑反馈此问题。");
             }
         }
     }
