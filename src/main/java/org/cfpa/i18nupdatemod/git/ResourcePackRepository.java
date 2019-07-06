@@ -52,9 +52,9 @@ public class ResourcePackRepository {
         if (gitRepo == null) {
             try {
                 gitRepo = Git.init().setDirectory(localPath).call();
-                this.remoteList = new ArrayList<RemoteConfig>();
+                this.remoteList = new ArrayList<>();
                 for (int i = 0; i < remoteURLs.length; i++) {
-                    configRemote("origin" + String.valueOf(i), remoteURLs[i], this.branch);
+                    configRemote("origin" + i, remoteURLs[i], this.branch);
                 }
                 this.remoteList = gitRepo.remoteList().call();
             } catch (Exception e) {
@@ -93,7 +93,7 @@ public class ResourcePackRepository {
     }
 
     public void fetch(ProgressMonitor monitor) {
-        boolean success = false;
+        boolean success;
         List<RemoteConfig> remoteList = new ArrayList<>();
         try {
             remoteList = gitRepo.remoteList().call();
@@ -109,14 +109,14 @@ public class ResourcePackRepository {
         }
 
         for (int i = 0; i < remoteURLs.length; i++) {
-            String remoteName = "origin" + String.valueOf(i);
+            String remoteName = "origin" + i;
             String gitURL = remoteURLs[i];
 
             // 解析 HTML 重定向，HTTP 302 重定向用不了
             if (remoteURLs[i].endsWith("html") || remoteURLs[i].endsWith("htm")) {
                 CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
                 HttpGet httpGet = new HttpGet(remoteURLs[i]);
-                CloseableHttpResponse response = null;
+                CloseableHttpResponse response;
                 try {
                     response = closeableHttpClient.execute(httpGet);
                     if (response.getStatusLine().getStatusCode() == 200) {
