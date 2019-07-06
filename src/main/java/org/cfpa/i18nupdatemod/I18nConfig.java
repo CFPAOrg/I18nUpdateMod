@@ -57,8 +57,10 @@ public class I18nConfig {
         @Config.Comment("按列表中的顺序尝试从远程仓库获取更新")
         @Config.RequiresMcRestart
         public String[] remoteRepoURL = {
-                "https://git.dev.tencent.com/dtid_07bf67d98cf2ab4b/Minecraft-Mod-Language-Package.git",
-                "https://github.com/CFPAOrg/Minecraft-Mod-Language-Package.git"
+                "https://git.dev.tencent.com/baka943/Minecraft-Mod-Language-Package.git",
+                "https://git.cfpa.team/main.html",
+                "https://github.com/CFPAOrg/Minecraft-Mod-Language-Package.git",
+                "https://git.cfpa.team/fallback.html"
         };
 
         @Config.Name("生成的资源包名称")
