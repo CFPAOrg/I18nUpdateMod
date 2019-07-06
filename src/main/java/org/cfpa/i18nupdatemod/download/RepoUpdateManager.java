@@ -1,11 +1,11 @@
 package org.cfpa.i18nupdatemod.download;
 
-import org.cfpa.i18nupdatemod.git.Repository;
+import org.cfpa.i18nupdatemod.I18nUpdateMod;
+import org.cfpa.i18nupdatemod.git.ResourcePackRepository;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 public class RepoUpdateManager implements IDownloadManager {
-    private Thread downloadThread;
-    private Repository repo;
+    private ResourcePackRepository repo;
     private DownloadStatus status = DownloadStatus.IDLE;
     private boolean done = false;
     private ProgressMonitor monitor;
@@ -62,7 +62,7 @@ public class RepoUpdateManager implements IDownloadManager {
 
     }
 
-    public RepoUpdateManager(Repository repo) {
+    public RepoUpdateManager(ResourcePackRepository repo) {
         this.repo = repo;
         monitor = new simpleProgressMonitor();
     }
@@ -105,13 +105,14 @@ public class RepoUpdateManager implements IDownloadManager {
     @Override
     public void start(String threadName) {
         status = DownloadStatus.DOWNLOADING;
-        downloadThread = new Thread(() -> {
+        Thread downloadThread = new Thread(() -> {
             try {
                 repo.fetch(monitor);
-                repo.sparseCheckout(repo.getSubPaths(),monitor);
+                repo.sparseCheckout(repo.getSubPaths(), monitor);
                 repo.close();
                 this.done = true;
             } catch (Throwable e) {
+                I18nUpdateMod.logger.error("Error while downloading: ", e);
             }
         }, threadName);
         downloadThread.start();

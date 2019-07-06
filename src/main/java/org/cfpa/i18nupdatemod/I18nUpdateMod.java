@@ -12,7 +12,7 @@ import org.cfpa.i18nupdatemod.command.*;
 import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
 import org.cfpa.i18nupdatemod.download.DownloadStatus;
 import org.cfpa.i18nupdatemod.download.RepoUpdateManager;
-import org.cfpa.i18nupdatemod.git.Repository;
+import org.cfpa.i18nupdatemod.git.ResourcePackRepository;
 import org.cfpa.i18nupdatemod.hotkey.HotKeyHandler;
 import org.cfpa.i18nupdatemod.installer.ResourcePackInstaller;
 import org.cfpa.i18nupdatemod.notice.ShowNoticeFirst;
@@ -57,7 +57,7 @@ public class I18nUpdateMod {
         }
 
         ResourcePackBuilder builder = new ResourcePackBuilder();
-        boolean needUpdate = builder.initAndCheckUpdate();
+        boolean needUpdate = builder.checkUpdate();
         ResourcePackInstaller.setResourcesRepository();
 
         if (needUpdate) {
@@ -68,12 +68,12 @@ public class I18nUpdateMod {
                 shouldDisplayErrorScreen = true;
                 return;
             }
-            Repository repo = new Repository(localPath, builder.getAssetDomains());
+            ResourcePackRepository repo = new ResourcePackRepository(localPath, builder.getAssetDomains());
             RepoUpdateManager updateManager = new RepoUpdateManager(repo);
             updateManager.update();
             if (updateManager.getStatus() == DownloadStatus.SUCCESS) {
                 builder.updateAllNeededFilesFromRepo(repo);
-                builder.build();
+                builder.touch();
                 ShowNoticeFirst.shouldShowNotice = true;
             }
         }

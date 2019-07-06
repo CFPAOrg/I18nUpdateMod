@@ -13,9 +13,8 @@ import java.util.Date;
 import java.util.Set;
 
 import org.cfpa.i18nupdatemod.I18nConfig;
-import org.cfpa.i18nupdatemod.I18nUpdateMod;
 import org.cfpa.i18nupdatemod.I18nUtils;
-import org.cfpa.i18nupdatemod.git.Repository;
+import org.cfpa.i18nupdatemod.git.ResourcePackRepository;
 
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -24,34 +23,27 @@ import java.text.SimpleDateFormat;
 import net.minecraft.client.Minecraft;
 
 public class ResourcePackBuilder {
-    private Set<String> modidSet;
     private File rootPath;
     private File assetFolder;
-    private AssetMap assetMap;
     private Set<String> assetDomains;
 
     public ResourcePackBuilder() {
-        modidSet = net.minecraftforge.fml.common.Loader.instance().getIndexedModList().keySet();
+        Set<String> modidSet = net.minecraftforge.fml.common.Loader.instance().getIndexedModList().keySet();
         rootPath = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(),
                 I18nConfig.download.i18nLangPackName);
         assetFolder = new File(rootPath, "assets");
-        assetMap = new AssetMap();
+        assetDomains = AssetMap.instance().getAssetDomains(modidSet);
     }
 
-    public void setAssetMap(AssetMap assetMap) {
-        this.assetMap = assetMap;
-    }
 
     public Set<String> getAssetDomains() {
         return assetDomains;
     }
 
-    public boolean initAndCheckUpdate() {
-        assetDomains = assetMap.getAssetDomains(modidSet);
-        // 不存在资源包文件夹
+    public boolean checkUpdate() {
         // TODO 检查资源包是否合法
-        if (!(rootPath.exists() && assetFolder.exists())) {
-            this.initResourcePack();
+        if (!(rootPath.exists() || assetFolder.exists())) {
+            this.copyResourcePack();
             return true;
         }
         // 超过更新检查时间间隔
@@ -81,7 +73,7 @@ public class ResourcePackBuilder {
         }
     }
 
-    private void initResourcePack() {
+    private void copyResourcePack() {
         assetFolder.mkdirs();
         // PNG 图标
         File icon = new File(rootPath, "pack.png");
@@ -121,12 +113,12 @@ public class ResourcePackBuilder {
         }
     }
 
-    public void build() {
+    public void touch() {
         // 写pack.mcmeta文件，作为更新时间标记
         writePackMeta();
     }
 
-    public void updateAllNeededFilesFromRepo(Repository repo) {
+    public void updateAllNeededFilesFromRepo(ResourcePackRepository repo) {
         // TODO 只复制需要更新的文件，可以考虑给copyDir方法加filter
         for (String domain : this.getAssetDomains()) {
             try {
@@ -137,9 +129,9 @@ public class ResourcePackBuilder {
         }
     }
 
-    private void copyAssetsFromRepo(String domain, Repository repo) throws IOException {
+    private void copyAssetsFromRepo(String domain, ResourcePackRepository repo) throws IOException {
         I18nUtils.copyDir(
-                new File(repo.getLocalPath(), Repository.getSubPathOfAsset(domain)).toPath(),
+                new File(repo.getLocalPath(), ResourcePackRepository.getSubPathOfAsset(domain)).toPath(),
                 new File(this.assetFolder, domain).toPath()
         );
     }
