@@ -3,9 +3,14 @@ package org.cfpa.i18nupdatemod.resourcepack;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.*;
+
+import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
 
 public class AssetMap {
     private Map<String, ArrayList<String>> map;
@@ -20,8 +25,7 @@ public class AssetMap {
     }
 
     private AssetMap() {
-        // TODO AssetMap更新
-        // TODO Asset Map检查（可能没必要做，鸽了
+        // TODO 读取资源包里的json文件
         // 加载jar包中的json文件
         ClassLoader classLoader = this.getClass().getClassLoader();
         InputStreamReader in = new InputStreamReader(classLoader.getResourceAsStream("assets/i18nmod/asset_map/asset_map.json"));
@@ -33,6 +37,16 @@ public class AssetMap {
         return gson.fromJson(in, Map.class);
     }
 
+    private Map<String, ArrayList<String>> loadJson(File f) {
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+        } catch (Exception e) {
+            logger.error("error loading json", e);
+        }
+        return loadJson(in);
+    }
+    
     public Set<String> getAssetDomains(Set<String> modidSet) {
         Set<String> assetDomains = new HashSet<>();
         modidSet.stream().map(this::get).forEach(assetDomains::addAll);
@@ -46,6 +60,10 @@ public class AssetMap {
         Collection<String> ret = this.map.get(modid);
 
         return ret == null ? new HashSet<>() : ret;
+    }
+
+    public void update(File assetMap) {
+        this.map=loadJson(assetMap);
     }
 
 }

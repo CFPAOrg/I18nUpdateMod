@@ -26,19 +26,19 @@ import net.minecraft.client.Minecraft;
 public class ResourcePackBuilder {
     private File rootPath;
     private File assetFolder;
-    private Set<String> assetDomains;
+    private Set<String> modidSet;
 
     public ResourcePackBuilder() {
         Set<String> modidSet = net.minecraftforge.fml.common.Loader.instance().getIndexedModList().keySet();
         rootPath = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(),
                 I18nConfig.download.i18nLangPackName);
         assetFolder = new File(rootPath, "assets");
-        assetDomains = AssetMap.instance().getAssetDomains(modidSet);
+        this.modidSet = modidSet;
     }
 
 
     public Set<String> getAssetDomains() {
-        return assetDomains;
+        return AssetMap.instance().getAssetDomains(modidSet);
     }
 
     public boolean checkUpdate() {
@@ -52,7 +52,7 @@ public class ResourcePackBuilder {
             return true;
         }
         // 部分asset文件缺失，可能增加了mod
-        for (String domain : assetDomains) {
+        for (String domain : getAssetDomains()) {
             File assetFolder = getAssetFolder(domain);
             if (!assetFolder.exists()) {
                 return true;
@@ -117,6 +117,9 @@ public class ResourcePackBuilder {
     }
 
     public void updateAllNeededFilesFromRepo(ResourcePackRepository repo) {
+        File assetMap = new File(repo.getLocalPath(), "assets/i18nmod/asset_map/asset_map.json");
+        if(assetMap.exists())
+            AssetMap.instance().update(assetMap);
         // TODO 只复制需要更新的文件，可以考虑给copyDir方法加filter
         for (String domain : this.getAssetDomains()) {
             try {
