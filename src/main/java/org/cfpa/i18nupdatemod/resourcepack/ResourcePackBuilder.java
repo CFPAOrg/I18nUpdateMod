@@ -118,7 +118,7 @@ public class ResourcePackBuilder {
 
     public void updateAllNeededFilesFromRepo(ResourcePackRepository repo) {
         File assetMap = new File(repo.getLocalPath(), "assets/i18nmod/asset_map/asset_map.json");
-        if(assetMap.exists())
+        if (assetMap.exists())
             AssetMap.instance().update(assetMap);
         // TODO 只复制需要更新的文件，可以考虑给copyDir方法加filter
         for (String domain : this.getAssetDomains()) {
@@ -134,10 +134,11 @@ public class ResourcePackBuilder {
     private void copyAssetsFromRepo(String domain, ResourcePackRepository repo) throws IOException {
         File from = new File(repo.getLocalPath(), ResourcePackRepository.getSubPathOfAsset(domain));
         File to = new File(this.assetFolder, domain);
-        if(from.exists())
+        if (from.exists()) {
             I18nUtils.copyDir(from.toPath(), to.toPath());
-        else
+        } else {
             to.mkdirs();
+        }
     }
 
 }

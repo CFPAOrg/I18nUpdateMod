@@ -32,6 +32,7 @@ public class AssetMap {
         this.map = loadJson(in);
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, ArrayList<String>> loadJson(Reader in) {
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         return gson.fromJson(in, Map.class);
