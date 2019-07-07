@@ -2,12 +2,10 @@ package org.cfpa.i18nupdatemod.resourcepack;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.minecraft.client.Minecraft;
+import org.cfpa.i18nupdatemod.I18nConfig;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.*;
 
 import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
@@ -25,7 +23,17 @@ public class AssetMap {
     }
 
     private AssetMap() {
-        // TODO 读取资源包里的json文件
+        try {
+            File f = new File(
+                    Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator +
+                            I18nConfig.download.i18nLangPackName + File.separator +
+                            "assets" + File.separator + "i18nmod" + File.separator + "asset_map" + File.separator + "asset_map.json"
+            );
+            InputStreamReader in = new InputStreamReader(new FileInputStream(f));
+            this.map = loadJson(in);
+            return;
+        } catch (Exception ignore) {
+        }
         // 加载jar包中的json文件
         ClassLoader classLoader = this.getClass().getClassLoader();
         InputStreamReader in = new InputStreamReader(classLoader.getResourceAsStream("assets/i18nmod/asset_map/asset_map.json"));
@@ -47,7 +55,7 @@ public class AssetMap {
         }
         return loadJson(in);
     }
-    
+
     public Set<String> getAssetDomains(Set<String> modidSet) {
         Set<String> assetDomains = new HashSet<>();
         modidSet.stream().map(this::get).forEach(assetDomains::addAll);
@@ -64,7 +72,7 @@ public class AssetMap {
     }
 
     public void update(File assetMap) {
-        this.map=loadJson(assetMap);
+        this.map = loadJson(assetMap);
     }
 
 }
