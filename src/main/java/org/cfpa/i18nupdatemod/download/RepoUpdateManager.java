@@ -1,7 +1,10 @@
 package org.cfpa.i18nupdatemod.download;
 
+import java.io.File;
+
 import org.cfpa.i18nupdatemod.I18nUpdateMod;
 import org.cfpa.i18nupdatemod.git.ResourcePackRepository;
+import org.cfpa.i18nupdatemod.resourcepack.AssetMap;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 public class RepoUpdateManager implements IDownloadManager {
@@ -108,6 +111,11 @@ public class RepoUpdateManager implements IDownloadManager {
         Thread downloadThread = new Thread(() -> {
             try {
                 repo.fetch(monitor);
+                repo.reset(monitor);
+                repo.sparseCheckout(ResourcePackRepository.getSubPathOfAsset("i18nmod"), monitor);
+                File assetMap = new File(repo.getLocalPath(), "assets/i18nmod/asset_map/asset_map.json");
+                if (assetMap.exists())
+                    AssetMap.instance().update(assetMap);
                 repo.sparseCheckout(repo.getSubPaths(), monitor);
                 repo.close();
                 this.done = true;

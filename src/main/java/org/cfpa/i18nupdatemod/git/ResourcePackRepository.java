@@ -138,8 +138,8 @@ public class ResourcePackRepository {
         }
         logger.warn("仓库更新失败");
     }
-
-    public void sparseCheckout(Collection<String> subPathSet, ProgressMonitor monitor) {
+    
+    public void reset(ProgressMonitor monitor) {
         try {
             // create branch and set upstream
             gitRepo.branchCreate()
@@ -148,14 +148,20 @@ public class ResourcePackRepository {
                     .setStartPoint("origin/" + branch)
                     .setForce(true)
                     .call();
-
+            
             // reset to remote head
             gitRepo.reset()
                     .setProgressMonitor(monitor)
                     .setMode(ResetType.SOFT)
                     .setRef("refs/remotes/origin/" + branch)
                     .call();
+        } catch (Exception e) {
+            logger.error("Exception caught while reseting to remote head: ", e);
+        }
+    }
 
+    public void sparseCheckout(Collection<String> subPathSet, ProgressMonitor monitor) {
+        try {
             // sparse checkout
             CheckoutCommand checkoutCommand = gitRepo.checkout();
 
@@ -164,13 +170,24 @@ public class ResourcePackRepository {
                     .setStartPoint(branch);
 
             subPathSet.forEach(checkoutCommand::addPath);
-
             checkoutCommand.call();
         } catch (Exception e) {
             logger.error("Exception caught while checking out: ", e);
         }
-
-
+    }
+    
+    public void sparseCheckout(String subPath, ProgressMonitor monitor) {
+        try {
+            // sparse checkout
+            gitRepo.checkout()
+                    .setProgressMonitor(monitor)
+                    .setName(branch)
+                    .setStartPoint(branch)
+                    .addPath(subPath)
+                    .call();
+        } catch (Exception e) {
+            logger.error("Exception caught while checking out: ", e);
+        }
     }
 
     public static String getSubPathOfAsset(String domain) {
