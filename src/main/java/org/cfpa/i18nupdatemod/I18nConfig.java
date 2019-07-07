@@ -38,26 +38,35 @@ public class I18nConfig {
     }
 
     public static class Download {
-        @Config.Name("启用非阻塞安装")
-        @Config.RequiresMcRestart
-        @Config.Comment("实验功能！")
-        public boolean enableUnblockingInstaller = false;
-
         @Config.Name("更新检测间隔（天）")
         @Config.RequiresMcRestart
         @Config.Comment("通过修改此处设定更新检测间隔，单位为天。设置为0表示每次启动游戏都检测")
         @Config.RangeInt(min = 0, max = 30)
         public int maxDay = 3;
 
-        @Config.Name("资源包链接")
-        @Config.Comment("虽然我不清楚修改此处有什么用，但是我加一个吧，万一有人需要呢")
+        @Config.Name("本地资源包仓库路径")
+        @Config.Comment(
+                "默认 Auto 会根据系统自动选择路径\n" +
+                "Windows 的默认路径为 USER_HOME/AppData/I18nUpdateMod 。\n" +
+                "Linux/macOS 等类 Unix 系统默认路径为 USER_HOME/.I18nUpdateMod 。"
+        )
         @Config.RequiresMcRestart
-        public String langPackURL = "http://downloader.meitangdehulu.com/Minecraft-Mod-Language-Modpack.zip";
+        public String localRepoPath = "Auto";
 
-        @Config.Name("资源包名称")
-        @Config.Comment("用来自定义下载得到的资源包名称")
+        @Config.Name("远程资源包仓库地址列表")
+        @Config.Comment("按列表中的顺序尝试从远程仓库获取更新")
         @Config.RequiresMcRestart
-        public String langPackName = "Minecraft-Mod-Language-Modpack.zip";
+        public String[] remoteRepoURL = {
+                "https://git.dev.tencent.com/baka943/Minecraft-Mod-Language-Package.git",
+                "https://git.cfpa.team/main.html",
+                "https://github.com/CFPAOrg/Minecraft-Mod-Language-Package.git",
+                "https://git.cfpa.team/fallback.html"
+        };
+
+        @Config.Name("生成的资源包名称")
+        @Config.Comment("用来自定义模组生成的资源包名称")
+        @Config.RequiresMcRestart
+        public String i18nLangPackName = "I18n-Mod-Language-Pack";
 
         @Config.Name("下载条名称")
         @Config.Comment("用来自定义下载过程中小窗口的名字")
@@ -68,7 +77,7 @@ public class I18nConfig {
         @Config.RequiresMcRestart
         @Config.Comment("超过多少时间，取消主线程阻塞，转为后台下载")
         @Config.RangeInt(min = 1)
-        public int maxTime = 30;
+        public int maxTime = 60;
 
         @Config.Name("是否开启强制中文功能")
         @Config.RequiresMcRestart
@@ -77,7 +86,7 @@ public class I18nConfig {
 
         @Config.Name("是否开启资源包下载功能")
         @Config.RequiresMcRestart
-        @Config.Comment("默认开启，关闭后此模组不再尝试检查、下载资源包、以及切换语言")
+        @Config.Comment("默认开启，关闭后此模组不再尝试更新本地仓库和安装资源包")
         public boolean shouldDownload = true;
     }
 

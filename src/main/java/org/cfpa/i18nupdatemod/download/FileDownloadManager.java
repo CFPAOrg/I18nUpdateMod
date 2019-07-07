@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class DownloadManager {
+public class FileDownloadManager implements IDownloadManager {
     private Thread downloadThread;
     private MainDownloader downloader;
     private DownloadStatus status = DownloadStatus.IDLE;
@@ -18,7 +18,7 @@ public class DownloadManager {
      * @param fileNameIn 存储文件的名字
      * @param dirIn      存储文件的地址
      */
-    public DownloadManager(String urlIn, String fileNameIn, String dirIn) {
+    public FileDownloadManager(String urlIn, String fileNameIn, String dirIn) {
         try {
             downloader = new MainDownloader(urlIn, fileNameIn, dirIn);
         } catch (IOException e) {
@@ -124,14 +124,14 @@ public class DownloadManager {
             // 超时
             connection.setConnectTimeout(10 * 1000);
 
-            //获取文件总大小
+            // 获取文件总大小
             size = connection.getContentLength();
 
             // 开始获取输入流
             InputStream inputStream = connection.getInputStream();
             byte[] getData = readInputStream(inputStream);
 
-            //文件保存位置
+            // 文件保存位置
             if (getData != null) {
                 File saveDir = new File(dirPlace);
                 if (!saveDir.exists()) {
@@ -165,5 +165,10 @@ public class DownloadManager {
             bos.close();
             return bos.toByteArray();
         }
+    }
+
+    @Override
+    public String getTaskTitle() {
+        return "正在下载...";
     }
 }

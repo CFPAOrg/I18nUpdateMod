@@ -4,11 +4,13 @@ import org.cfpa.i18nupdatemod.I18nConfig;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class DownloadWindow {
-    private DownloadManager manager;
+    private IDownloadManager manager;
     private JFrame frame;
     private JProgressBar bar;
 
@@ -17,7 +19,7 @@ public class DownloadWindow {
      *
      * @param manager 对应的DownloadManager对象
      */
-    public DownloadWindow(DownloadManager manager) {
+    public DownloadWindow(IDownloadManager manager) {
         this.manager = manager;
         init();
     }
@@ -27,7 +29,7 @@ public class DownloadWindow {
         frame = new JFrame();
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int width = gd.getDisplayMode().getWidth() >= 1920 ? (int) (gd.getDisplayMode().getWidth() * 0.2)  : 384;
-        int height = (int) (width * 0.3);
+        int height = (int) (width * 0.4);
         frame.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2,
                 (Toolkit.getDefaultToolkit().getScreenSize().height - height) / 25 * 10, width, height);
         frame.setTitle(I18nConfig.download.dlWindowsName);
@@ -36,9 +38,11 @@ public class DownloadWindow {
         frame.setContentPane(contentPane);
         contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
+        JLabel label = new JLabel("");
+        contentPane.add(label);
         // 绘制进度条
         bar = new JProgressBar();
-        bar.setPreferredSize(new Dimension(width / 5 * 4, height / 4));
+        bar.setPreferredSize(new Dimension(width / 5 * 4, height / 5));
         bar.setStringPainted(true);
         contentPane.add(bar);
         // 在下载未完成时禁止玩家关闭窗口
@@ -74,8 +78,9 @@ public class DownloadWindow {
         new Thread(() -> {
             while (!manager.isDone()) {
                 bar.setValue((int) (manager.getCompletePercentage() * 100));
+                label.setText(manager.getTaskTitle());
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(20);
                 } catch (InterruptedException ignore) {
 
                 }

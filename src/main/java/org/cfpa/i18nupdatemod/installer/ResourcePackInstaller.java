@@ -17,37 +17,18 @@ import java.util.List;
 import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
 import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
 
-public abstract class ResourcePackInstaller {
-    public boolean updateResourcePack = false;
+public class ResourcePackInstaller {
 
-    private boolean online() {
-        try {
-            return InetAddress.getByName(new URL(I18nConfig.download.langPackURL).getHost()).isReachable(2000);
-        } catch (Throwable e) {
-            return false;
-        }
-    }
-
-    private boolean intervalDaysCheck() {
-        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), I18nConfig.download.langPackName);
-        try {
-            return (System.currentTimeMillis() - f.lastModified()) > (I18nConfig.download.maxDay * 24 * 3600 * 1000);
-        } catch (Throwable e) {
-            logger.error("检查文件日期失败", e);
-            return false;
-        }
-    }
-
-    void setResourcesRepository() {
+    public static void setResourcesRepository() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
         // 在gameSetting中加载资源包
-        if (!gameSettings.resourcePacks.contains(I18nConfig.download.langPackName)) {
+        if (!gameSettings.resourcePacks.contains(I18nConfig.download.i18nLangPackName)) {
             if (I18nConfig.priority) {
-                mc.gameSettings.resourcePacks.add(I18nConfig.download.langPackName);
+                mc.gameSettings.resourcePacks.add(I18nConfig.download.i18nLangPackName);
             } else {
                 List<String> packs = new ArrayList<>(10);
-                packs.add(I18nConfig.download.langPackName); // 资源包的 index 越小优先级越低(在资源包 gui 中置于更低层)
+                packs.add(I18nConfig.download.i18nLangPackName); // 资源包的 index 越小优先级越低(在资源包 gui 中置于更低层)
                 packs.addAll(gameSettings.resourcePacks);
                 gameSettings.resourcePacks = packs;
             }
@@ -55,18 +36,7 @@ public abstract class ResourcePackInstaller {
         reloadResources();
     }
 
-    private boolean checkLength() {
-        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), I18nConfig.download.langPackName);
-        try {
-            URL url = new URL(I18nConfig.download.langPackURL);
-            return url.openConnection().getContentLengthLong() == f.length();
-        } catch (Throwable e) {
-            logger.error("检查文件大小失败", e);
-            return false;
-        }
-    }
-
-    private void reloadResources() {
+    private static void reloadResources() {
         Minecraft mc = Minecraft.getMinecraft();
         GameSettings gameSettings = mc.gameSettings;
         // 因为这时候资源包已经加载了，所以需要重新读取，重新加载
@@ -93,29 +63,5 @@ public abstract class ResourcePackInstaller {
         }
 
         resourcePackRepository.setRepositories(repositoryEntries);
-    }
-
-    private boolean isResourcePackExist() {
-        File f = new File(Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString(), I18nConfig.download.langPackName);
-        return f.exists();
-    }
-
-    public void install() {
-        if (!I18nConfig.download.shouldDownload || I18nConfig.internationalization.openI18n && !isChinese()) {
-            return;
-        }
-
-        if (!intervalDaysCheck()) {
-            I18nUpdateMod.logger.info("未到下次更新时间，跳过检测和下载阶段");
-            setResourcesRepository();
-        } else if ((!online()) && isResourcePackExist()) {
-            I18nUpdateMod.logger.info("检测到网络不可用，跳过下载阶段");
-            setResourcesRepository();
-        } else if (checkLength()) {
-            I18nUpdateMod.logger.info("检测到资源包最新，跳过下载阶段");
-            setResourcesRepository();
-        } else {
-            updateResourcePack = true;
-        }
     }
 }

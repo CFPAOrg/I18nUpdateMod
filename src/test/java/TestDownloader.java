@@ -1,5 +1,5 @@
 import org.cfpa.i18nupdatemod.download.DownloadWindow;
-import org.cfpa.i18nupdatemod.download.DownloadManager;
+import org.cfpa.i18nupdatemod.download.FileDownloadManager;
 import org.junit.Test;
 
 import java.io.File;
