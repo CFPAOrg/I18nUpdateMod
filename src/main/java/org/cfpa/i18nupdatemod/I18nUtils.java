@@ -170,7 +170,8 @@ public class I18nUtils {
         }
 
         @Override
-        public void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer) {}
+        public void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer) {
+        }
 
         @Override
         public void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime) {
@@ -183,4 +184,3 @@ public class I18nUtils {
         }
     }
 }
-

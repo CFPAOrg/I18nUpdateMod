@@ -11,7 +11,7 @@ import java.util.*;
 import static org.cfpa.i18nupdatemod.I18nUpdateMod.logger;
 
 public class AssetMap {
-    private Map<String, ArrayList<String>> map;
+    private Map<String, List<String>> map;
 
     private static AssetMap INSTANCE;
 
@@ -23,6 +23,7 @@ public class AssetMap {
     }
 
     private AssetMap() {
+        // 优先从资源包中读取 json 文件
         try {
             File f = new File(
                     Minecraft.getMinecraft().getResourcePackRepository().getDirResourcepacks().toString() + File.separator +
@@ -34,19 +35,20 @@ public class AssetMap {
             return;
         } catch (Exception ignore) {
         }
-        // 加载jar包中的json文件
+
+        // 加载 jar 包中的 json 文件
         ClassLoader classLoader = this.getClass().getClassLoader();
-        InputStreamReader in = new InputStreamReader(classLoader.getResourceAsStream("assets/i18nmod/asset_map/asset_map.json"));
+        InputStreamReader in = new InputStreamReader(Objects.requireNonNull(classLoader.getResourceAsStream("assets/i18nmod/asset_map/asset_map.json")));
         this.map = loadJson(in);
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, ArrayList<String>> loadJson(Reader in) {
+    private Map<String, List<String>> loadJson(Reader in) {
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         return gson.fromJson(in, Map.class);
     }
 
-    private Map<String, ArrayList<String>> loadJson(File f) {
+    private Map<String, List<String>> loadJson(File f) {
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(new FileInputStream(f)));

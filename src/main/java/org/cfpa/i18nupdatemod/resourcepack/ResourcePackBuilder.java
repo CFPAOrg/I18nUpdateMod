@@ -36,7 +36,6 @@ public class ResourcePackBuilder {
         this.modidSet = modidSet;
     }
 
-
     public Set<String> getAssetDomains() {
         return AssetMap.instance().getAssetDomains(modidSet);
     }

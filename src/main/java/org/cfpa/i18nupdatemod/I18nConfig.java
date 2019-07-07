@@ -47,8 +47,8 @@ public class I18nConfig {
         @Config.Name("本地资源包仓库路径")
         @Config.Comment(
                 "默认 Auto 会根据系统自动选择路径\n" +
-                "Windows 的默认路径为 USER_HOME/AppData/I18nUpdateMod 。\n" +
-                "Linux/macOS 等类 Unix 系统默认路径为 USER_HOME/.I18nUpdateMod 。"
+                        "Windows 的默认路径为 USER_HOME/AppData/I18nUpdateMod 。\n" +
+                        "Linux/macOS 等类 Unix 系统默认路径为 USER_HOME/.I18nUpdateMod 。"
         )
         @Config.RequiresMcRestart
         public String localRepoPath = "Auto";
