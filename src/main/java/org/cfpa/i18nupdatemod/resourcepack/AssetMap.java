@@ -30,9 +30,9 @@ public class AssetMap {
                             I18nConfig.download.i18nLangPackName + File.separator +
                             "assets" + File.separator + "i18nmod" + File.separator + "asset_map" + File.separator + "asset_map.json"
             );
-            InputStreamReader in = new InputStreamReader(new FileInputStream(f));
-            this.map = loadJson(in);
-            return;
+            this.map = loadJson(f);
+            if(this.map != null)
+                return;
         } catch (Exception ignore) {
         }
 
@@ -50,12 +50,15 @@ public class AssetMap {
 
     private Map<String, List<String>> loadJson(File f) {
         BufferedReader in = null;
+        Map<String, List<String>> jsonMap = null;
         try {
             in = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+            jsonMap = loadJson(in);
+            in.close();
         } catch (Exception e) {
             logger.error("error loading json", e);
         }
-        return loadJson(in);
+        return jsonMap;
     }
 
     public Set<String> getAssetDomains(Set<String> modidSet) {
@@ -74,7 +77,9 @@ public class AssetMap {
     }
 
     public void update(File assetMap) {
-        this.map = loadJson(assetMap);
+        Map<String, List<String>> jsonMap = loadJson(assetMap);
+        if(jsonMap != null)
+            this.map = loadJson(assetMap);
     }
 
 }
