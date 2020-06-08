@@ -73,7 +73,7 @@ dependencies {
     deobfCompile "mezz.jei:jei_${minecraft.version}:4.14.3.243"
 
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
-    shadow 'org.apache.httpcomponents:httpmime:4.3.3'
+    shadow 'org.apache.httpcomponents:httpmime:4.5.12'
 
     testCompile "junit:junit:4.12"
     shadow fileTree(dir: 'libs', include: ['*.jar'])
