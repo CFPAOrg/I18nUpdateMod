@@ -75,7 +75,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
     shadow 'org.apache.httpcomponents:httpmime:4.3.3'
 
-    testCompile "junit:junit:4.12"
+    testCompile "junit:junit:4.13"
     shadow fileTree(dir: 'libs', include: ['*.jar'])
     shadow 'org.slf4j:slf4j-api:1.7.5'
     shadow 'org.slf4j:slf4j-simple:1.7.21'
