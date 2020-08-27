@@ -23,15 +23,14 @@ public class I18nUpdateMod {
     public I18nUpdateMod() {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             Minecraft.getInstance().getResourcePackList().addPackFinder(I18nUpdateModPackFinder.RESOUCE);
-            if (isChinese())
+//            if (isChinese())
                 Minecraft.getInstance().gameSettings.language = "zh_cn";
         }
     }
 
     @SubscribeEvent
     public static void onClientStarting(FMLClientSetupEvent event) {
-        if (isChinese())
-
+//        if (isChinese())
             Minecraft.getInstance().getLanguageManager().setCurrentLanguage(new Language("zh_cn", "CN", "简体中文", false));
         String path = System.getProperty("user.home") + "/.i18n/1.16";
         File filename = new File(path + "/update.txt");
