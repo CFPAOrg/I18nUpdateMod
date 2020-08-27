@@ -22,7 +22,7 @@ public class I18nUpdateMod {
 
     public I18nUpdateMod() {
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            Minecraft.getInstance().getResourcePackList().addPackFinder(I18nUpdateModPackFinder.RESOUCE);
+            Minecraft.getInstance().getResourcePackList().addPackFinder(I18nUpdateModPackFinder116.RESOUCE);
 //            if (isChinese())
                 Minecraft.getInstance().gameSettings.language = "zh_cn";
         }

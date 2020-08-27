@@ -7,13 +7,13 @@ import java.io.File;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public final class I18nUpdateModPackFinder implements IPackFinder {
+public final class I18nUpdateModPackFinder116 implements IPackFinder {
 
-    public static final I18nUpdateModPackFinder RESOUCE = new I18nUpdateModPackFinder("Resource Pack", new File(System.getProperty("user.home") + "/.i18n/1.16/i18n.zip"));
+    public static final I18nUpdateModPackFinder116 RESOUCE = new I18nUpdateModPackFinder116("Resource Pack", new File(System.getProperty("user.home") + "/.i18n/1.16/i18n.zip"));
 
     private final File loaderDirectory;
 
-    private I18nUpdateModPackFinder(String type, File loaderDirectory) {
+    private I18nUpdateModPackFinder116(String type, File loaderDirectory) {
 
         this.loaderDirectory = loaderDirectory;
     }
