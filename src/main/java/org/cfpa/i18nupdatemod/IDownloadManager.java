@@ -1,4 +1,4 @@
-package org.cfpa.i18nupdatemod.download;
+package org.cfpa.i18nupdatemod;
 
 public interface IDownloadManager {
 

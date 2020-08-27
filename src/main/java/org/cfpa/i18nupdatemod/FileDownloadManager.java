@@ -1,6 +1,4 @@
-package org.cfpa.i18nupdatemod.download;
-
-import org.cfpa.i18nupdatemod.I18nUpdateMod;
+package org.cfpa.i18nupdatemod;
 
 import java.io.*;
 import java.net.URL;
@@ -58,8 +56,8 @@ public class FileDownloadManager implements IDownloadManager {
     }
 
     private void catching(Throwable e) {
-        I18nUpdateMod.logger.error("下载失败", e);
         DownloadInfoHelper.info.add("资源包更新失败。");
+        I18nUpdateMod.LOGGER.warn("download" + downloader.url + " fail");
         status = DownloadStatus.FAIL;
         downloader.done = true;
     }
@@ -98,18 +96,21 @@ public class FileDownloadManager implements IDownloadManager {
         return downloader.completePercentage;
     }
 
+    @Override
+    public String getTaskTitle() {
+        return "正在下载...";
+    }
+
     private static class MainDownloader {
+        public float completePercentage = 0.0F;
+        public boolean alive = true;
+        Runnable successTask;
         private URL url;
         private String fileName;
         private String dirPlace;
         private int size = 0;
         private int downloadedSize = 0;
         private boolean done = false;
-
-        Runnable successTask;
-
-        public float completePercentage = 0.0F;
-        public boolean alive = true;
 
         MainDownloader(String urlIn, String fileName, String dirPlace) throws IOException {
             this.url = new URL(urlIn);
@@ -135,7 +136,7 @@ public class FileDownloadManager implements IDownloadManager {
             if (getData != null) {
                 File saveDir = new File(dirPlace);
                 if (!saveDir.exists()) {
-                    saveDir.mkdir();
+                    saveDir.mkdirs();
                 }
                 File file = new File(saveDir + File.separator + fileName);
                 FileOutputStream fos = new FileOutputStream(file);
@@ -165,10 +166,5 @@ public class FileDownloadManager implements IDownloadManager {
             bos.close();
             return bos.toByteArray();
         }
-    }
-
-    @Override
-    public String getTaskTitle() {
-        return "正在下载...";
     }
 }

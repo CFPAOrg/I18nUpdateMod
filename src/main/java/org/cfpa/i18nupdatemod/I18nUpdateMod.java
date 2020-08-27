@@ -1,109 +1,74 @@
 package org.cfpa.i18nupdatemod;
 
-import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.Language;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLConstructionEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.cfpa.i18nupdatemod.command.*;
-import org.cfpa.i18nupdatemod.download.DownloadInfoHelper;
-import org.cfpa.i18nupdatemod.download.DownloadStatus;
-import org.cfpa.i18nupdatemod.download.RepoUpdateManager;
-import org.cfpa.i18nupdatemod.git.ResourcePackRepository;
-import org.cfpa.i18nupdatemod.hotkey.HotKeyHandler;
-import org.cfpa.i18nupdatemod.installer.ResourcePackInstaller;
-import org.cfpa.i18nupdatemod.notice.ShowNoticeFirst;
-import org.cfpa.i18nupdatemod.resourcepack.ResourcePackBuilder;
 
-import java.io.File;
+import java.io.*;
+import java.util.Date;
+import java.util.Locale;
 
-import static org.cfpa.i18nupdatemod.I18nUtils.isChinese;
-import static org.cfpa.i18nupdatemod.I18nUtils.setupLang;
-
-@Mod(modid = I18nUpdateMod.MODID,
-        name = I18nUpdateMod.NAME,
-        clientSideOnly = true,
-        acceptedMinecraftVersions = "[1.12]",
-        version = I18nUpdateMod.VERSION,
-        dependencies = "after:defaultoptions")
+@Mod("i18nupdate")
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class I18nUpdateMod {
-    public final static String MODID = "i18nmod";
-    public final static String NAME = "I18n Update Mod";
-    public final static String VERSION = "@VERSION@";
 
-    public static final Logger logger = LogManager.getLogger(MODID);
+    public static final Logger LOGGER = LogManager.getLogger();
 
-    private boolean shouldDisplayErrorScreen = false;
-
-    @Mod.EventHandler
-    public void construct(FMLConstructionEvent event) {
-        // 国际化检查
-        if (I18nConfig.internationalization.openI18n && !isChinese()) {
-            return;
-        }
-
-        DownloadInfoHelper.init();
-
-        // 设置中文
-        if (I18nConfig.download.setupChinese) {
-            setupLang();
-        }
-
-        if (!I18nConfig.download.shouldDownload) {
-            return;
-        }
-
-        ResourcePackBuilder builder = new ResourcePackBuilder();
-        boolean needUpdate = builder.checkUpdate();
-        ResourcePackInstaller.setResourcesRepository();
-
-        if (needUpdate) {
-            String localPath;
-            try {
-                localPath = new File(I18nUtils.getLocalRepositoryFolder(I18nConfig.download.localRepoPath), "I18nRepo").getPath();
-            } catch (IllegalArgumentException e) {
-                shouldDisplayErrorScreen = true;
-                return;
-            }
-            ResourcePackRepository repo = new ResourcePackRepository(localPath, builder.getAssetDomains());
-            RepoUpdateManager updateManager = new RepoUpdateManager(repo);
-            updateManager.update();
-            if (updateManager.getStatus() == DownloadStatus.SUCCESS) {
-                builder.updateAllNeededFilesFromRepo(repo);
-                builder.touch();
-                ShowNoticeFirst.shouldShowNotice = true;
-            }
+    public I18nUpdateMod() {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            Minecraft.getInstance().getResourcePackList().addPackFinder(I18nUpdateModPackFinder.RESOUCE);
+            if (isChinese())
+                Minecraft.getInstance().gameSettings.language = "zh_cn";
         }
     }
 
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        if (shouldDisplayErrorScreen) {
-            throw new I18nUtils.InvalidPathConfigurationException();
+    @SubscribeEvent
+    public static void onClientStarting(FMLClientSetupEvent event) {
+        if (isChinese())
+
+            Minecraft.getInstance().getLanguageManager().setCurrentLanguage(new Language("zh_cn", "CN", "简体中文", false));
+        String path = System.getProperty("user.home") + "/.i18n/1.16";
+        File filename = new File(path + "/update.txt");
+        try {
+            if (filename.exists()) {
+                InputStreamReader reader = new InputStreamReader(new FileInputStream(filename));
+                BufferedReader br = new BufferedReader(reader);
+                String line = "";
+                line = br.readLine();
+                br.close();
+                if (line == null || new Date().getTime() - Long.parseLong(line) < 7 * 24 * 60 * 60) {
+                    return;
+                }
+            }
+            FileDownloadManager t = new FileDownloadManager("https://ae01.alicdn.com/kf/H571a877f36ce405eb8d6dacc0a54e243P.jpg", "i18n.zip", path);
+            t.setSuccessTask(() -> {
+                try {
+                    File writename = new File(path + "/update.txt");
+                    if (!writename.exists())
+                        writename.createNewFile();
+                    BufferedWriter out = new BufferedWriter(new FileWriter(writename));
+                    out.write(String.valueOf(new Date().getTime()));
+                    out.flush();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            t.start("dl i18n");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-        // 国际化检查
-        if (I18nConfig.internationalization.openI18n && !isChinese()) {
-            return;
-        }
-
-        // 命令注册
-        ClientCommandHandler.instance.registerCommand(new CmdNotice());
-        ClientCommandHandler.instance.registerCommand(new CmdReport());
-        ClientCommandHandler.instance.registerCommand(new CmdReload());
-        ClientCommandHandler.instance.registerCommand(new CmdGetLangpack());
-        ClientCommandHandler.instance.registerCommand(new CmdUpload());
-        ClientCommandHandler.instance.registerCommand(new CmdToken());
-
-        // 热键注册
-        if (!I18nConfig.key.closedKey) {
-            MinecraftForge.EVENT_BUS.register(new HotKeyHandler());
-        }
+    private static boolean isChinese() {
+        Locale locale = Locale.getDefault();
+        return locale.getLanguage().toLowerCase().equals("zh");
     }
 }

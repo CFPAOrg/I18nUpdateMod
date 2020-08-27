@@ -1,0 +1,14 @@
+modLoader = "javafml"
+loaderVersion = "[28,)"
+license="MIT"
+[[mods]]
+modId = "i18nupdate"
+version = "${file.jarVersion}"
+displayName = "I18Update"
+#updateJSONURL="http://myurl.me/"
+displayURL="https://cfpa.team/"
+#logoFile="I18nShow.png" #optional
+authors="jihuayu"
+description = '''
+中文汉化更新模组
+'''
