@@ -2,11 +2,13 @@ package org.cfpa.i18nupdatemod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.Language;
+import net.minecraft.resources.IPackFinder;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.versions.mcp.MCPVersion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +24,17 @@ public class I18nUpdateMod {
 
     public I18nUpdateMod() {
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            Minecraft.getInstance().getResourcePackList().addPackFinder(I18nUpdateModPackFinder116.RESOUCE);
+            try{
+                if(MCPVersion.getMCVersion().toLowerCase().startsWith("1.15")){
+                    Minecraft.getInstance().getResourcePackList().addPackFinder((IPackFinder)Class.forName("org.cfpa.i18nupdatemod.mc115.I18nUpdateModPackFinder").getField("RESOUCE").get(null));
+                }
+                else if(MCPVersion.getMCVersion().toLowerCase().startsWith("1.16")){
+                    Minecraft.getInstance().getResourcePackList().addPackFinder((IPackFinder)Class.forName("org.cfpa.i18nupdatemod.mc115.I18nUpdateModPackFinder").getField("RESOUCE").get(null));
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
 //            if (isChinese())
                 Minecraft.getInstance().gameSettings.language = "zh_cn";
         }
@@ -32,7 +44,7 @@ public class I18nUpdateMod {
     public static void onClientStarting(FMLClientSetupEvent event) {
 //        if (isChinese())
             Minecraft.getInstance().getLanguageManager().setCurrentLanguage(new Language("zh_cn", "CN", "简体中文", false));
-        String path = System.getProperty("user.home") + "/.i18n/1.16";
+        String path = System.getProperty("user.home") + "/.i18n/"+MCPVersion.getMCVersion();
         File filename = new File(path + "/update.txt");
         try {
             if (filename.exists()) {
@@ -45,7 +57,7 @@ public class I18nUpdateMod {
                     return;
                 }
             }
-            FileDownloadManager t = new FileDownloadManager("https://ae01.alicdn.com/kf/H571a877f36ce405eb8d6dacc0a54e243P.jpg", "i18n.zip", path);
+            FileDownloadManager t = new FileDownloadManager("https://ae01.alicdn.com/kf/H0733a1a38d6d4406b0b8e304d0b1f83bU.jpg", "i18n.zip", path);
             t.setSuccessTask(() -> {
                 try {
                     File writename = new File(path + "/update.txt");
