@@ -1,5 +1,6 @@
 package org.cfpa.i18nupdatemod.mc115;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.*;
 import net.minecraft.resources.ResourcePackInfo.IFactory;
 import net.minecraftforge.versions.mcp.MCPVersion;
@@ -17,7 +18,10 @@ public final class I18nUpdateModPackFinder implements IPackFinder {
 
         this.loaderDirectory = loaderDirectory;
     }
+    public static void init(){
+        Minecraft.getInstance().getResourcePackList().addPackFinder(RESOUCE);
 
+    }
     @Override
     public <T extends ResourcePackInfo> void addPackInfosToMap (Map<String, T> packs, IFactory<T> factory) {
         final String packName = "i18n";

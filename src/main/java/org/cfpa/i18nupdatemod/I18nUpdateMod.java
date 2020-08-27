@@ -26,10 +26,10 @@ public class I18nUpdateMod {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             try{
                 if(MCPVersion.getMCVersion().toLowerCase().startsWith("1.15")){
-                    Minecraft.getInstance().getResourcePackList().addPackFinder((IPackFinder)Class.forName("org.cfpa.i18nupdatemod.mc115.I18nUpdateModPackFinder").getField("RESOUCE").get(null));
+                  Class.forName("org.cfpa.i18nupdatemod.mc115.I18nUpdateModPackFinder").getMethod("init").invoke(null);
                 }
                 else if(MCPVersion.getMCVersion().toLowerCase().startsWith("1.16")){
-                    Minecraft.getInstance().getResourcePackList().addPackFinder((IPackFinder)Class.forName("org.cfpa.i18nupdatemod.mc115.I18nUpdateModPackFinder").getField("RESOUCE").get(null));
+                    Class.forName("org.cfpa.i18nupdatemod.mc116.I18nUpdateModPackFinder").getMethod("init").invoke(null);
                 }
             }
             catch (Exception e){
