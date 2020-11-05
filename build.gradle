@@ -89,7 +89,7 @@ shadowJar {
     classifier = null
     dependencies {
         exclude(dependency('org.apache.httpcomponents:httpclient:4.3.3'))
-        exclude(dependency('org.apache.httpcomponents:httpcore:4.3.2'))
+        exclude(dependency('org.apache.httpcomponents:httpcore:4.4.13'))
         exclude(dependency('commons-codec:commons-codec:1.6'))
         exclude(dependency('commons-logging:commons-logging:1.2'))
     }
